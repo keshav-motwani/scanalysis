@@ -50,7 +50,7 @@ seurat_assay_to_sce = function(seurat, assay) {
 
   if (!is.null(seurat@assays[[assay]]@misc)) metadata(result) = seurat@assays[[assay]]@misc
   metadata(result)$scaled = seurat@assays[[assay]]@scale.data
-  metadata(result)$variable_features = VariableFeatures(seurat)
+  metadata(result)$variable_features = VariableFeatures(seurat, assay = assay)
 
   return(result)
 }
