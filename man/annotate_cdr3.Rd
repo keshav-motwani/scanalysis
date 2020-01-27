@@ -17,17 +17,17 @@ annotate_cdr3(
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{reference}{data frame containing reference dataset for use in annotating query sequences}
+\item{reference}{reference dataset for use in annotating query sequences}
 
-\item{reference_cdr3_column}{string scalar indicating column in reference which contains the CDR3 region}
+\item{reference_cdr3_column}{column in reference which contains the CDR3 region}
 
-\item{reference_annotation_column}{string scalar indicating column in reference to annotate onto query dataset}
+\item{reference_annotation_column}{column in reference to annotate onto query dataset}
 
-\item{chain_match}{string vector indicating chain(s) to match (for example, c("TRA", "TRB"))}
+\item{chain_match}{chain(s) to match (for example, c("TRA", "TRB"))}
 
-\item{max_dist}{integer indicating maximum distance to allow between query and reference sequence}
+\item{max_dist}{maximum distance to allow between query and reference sequence}
 
-\item{method}{character scalar indicating distance metric- one of "osa", "lv", "dl", "hamming", "lcs", "qgram", "cosine", "jaccard", "jw", "soundex"}
+\item{method}{distance metric- one of "osa", "lv", "dl", "hamming", "lcs", "qgram", "cosine", "jaccard", "jw", "soundex"}
 }
 \value{
 SingleCellExperiment object with additional column with the same name as reference_annotation_column

@@ -9,13 +9,11 @@
 #' @param y_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param x_log Boolean to use log x-axis
 #' @param y_log Boolean to use log y-axis
+#' @param text_size Font size for annotations
 #' @param facet_rows Columns to facet on
 #' @param facet_columns Columns to facet on
 #' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param facet_scales Either NULL, "fixed", "free", "free_x", "free_y", same as ggplot
-#' @param facet_switch Either NULL, "x", "y", "both", same as ggplot
-#' @param nrow Number of rows if facet_type is "wrap"
-#' @param text_size Font size for annotations
+#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom ggexp theme_ggexp plot_facets
@@ -105,9 +103,7 @@ plot_qc_scatterplot = function(sce_list,
                      facet_rows,
                      facet_columns,
                      facet_type,
-                     facet_scales,
-                     facet_switch,
-                     nrow)
+                     ...)
 
   return(plot)
 }

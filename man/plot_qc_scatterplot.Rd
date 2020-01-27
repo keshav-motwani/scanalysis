@@ -48,13 +48,9 @@ plot_qc_scatterplot(
 
 \item{facet_type}{Either "wrap" or "grid", same as ggplot}
 
-\item{facet_scales}{Either NULL, "fixed", "free", "free_x", "free_y", same as ggplot}
-
-\item{facet_switch}{Either NULL, "x", "y", "both", same as ggplot}
-
-\item{nrow}{Number of rows if facet_type is "wrap"}
-
 \item{text_size}{Font size for annotations}
+
+\item{...}{params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 

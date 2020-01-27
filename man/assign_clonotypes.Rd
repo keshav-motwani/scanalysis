@@ -17,11 +17,11 @@ assign_clonotypes(
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{clonotype_fields}{character vector indicating fields to include in clonotype definition (e.g., c("v_gene", "cdr3", "j_gene", etc.))}
+\item{clonotype_fields}{fields to include in clonotype definition (e.g., c("v_gene", "cdr3", "j_gene", etc.))}
 
-\item{chains}{character vector indicating chains which to include in clonotype definition(e.g., c("TRA", "TRB"))}
+\item{chains}{chains which to include in clonotype definition(e.g., c("TRA", "TRB"))}
 
-\item{tra/trb/igl/igh_range}{integer vector of length 2 with minimum and maximum number of unique chains (inclusive)}
+\item{tra/trb/igl/igh_range}{vector of length 2 with minimum and maximum number of unique chains (inclusive)}
 }
 \value{
 SingleCellExperiment object with added columns to colData including "clonotype", "clonotype_count", and "clonotype_count_2:10"

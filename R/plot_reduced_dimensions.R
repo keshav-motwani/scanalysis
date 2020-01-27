@@ -11,8 +11,10 @@
 #' @param assay Assay to obtain data from (ex: counts, logcounts)
 #' @param alt_exp Alternate experiment to obtain data from
 #' @param features Features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot
+#' @param label_value Boolean to annotate text label for the value - only works if all features are discrete
 #' @param alpha Alpha for points
-#' @param pt_size Size of points
+#' @param point_size Size of points
+#' @param text_size Size of font for text annotation
 #' @param facet_rows Variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_columns Variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_type Either "wrap" or "grid", same as ggplot
@@ -25,6 +27,7 @@
 #' @importFrom purrr imap_dfr
 #' @importFrom tidyr pivot_longer
 #' @importFrom ggexp plot_facets theme_ggexp
+#' @importFrom ggrepel geom_label_repel
 #' @importFrom gtools mixedsort
 #'
 #' @return ggplot object
@@ -42,8 +45,10 @@ plot_reduced_dimensions = function(sce_list,
                                    assay = "logcounts",
                                    alt_exp = NULL,
                                    features,
+                                   label = NULL,
                                    alpha = 0.3,
-                                   pt_size = 1,
+                                   point_size = 1,
+                                   text_size = 1,
                                    facet_rows = c(),
                                    facet_columns = c(".feature"),
                                    facet_type = "grid",
@@ -55,7 +60,7 @@ plot_reduced_dimensions = function(sce_list,
 
   data = imap_dfr(
     sce_list,
-    ~ get_cell_features(.x, c(features, facet_rows, facet_columns), assay, alt_exp) %>%
+    ~ get_cell_features(.x, c(features, facet_rows, facet_columns, label), assay, alt_exp) %>%
       mutate(., .sample = .y) %>%
       bind_cols(get_reduced_dims(.x, type))
   ) %>%
@@ -65,6 +70,7 @@ plot_reduced_dimensions = function(sce_list,
       values_to = "value"
     )
 
+  data$.sample = factor(data$.sample, levels = names(sce_list))
   data$.feature = factor(data$.feature, levels = features)
 
   if (is.numeric(data$value)) {
@@ -84,7 +90,8 @@ plot_reduced_dimensions = function(sce_list,
                         levels = c("NA", mixedsort(as.character(
                           unique(data$value[data$value != "NA"])
                         ), na.last = FALSE)))
-    data = arrange(data, value)
+
+    data = data[sample(1:nrow(data), nrow(data)), ]
   }
 
   plot = ggplot(data, aes_string(
@@ -93,7 +100,7 @@ plot_reduced_dimensions = function(sce_list,
     color = "value"
   )) +
     geom_point(alpha = alpha,
-               size = pt_size) +
+               size = point_size) +
     theme_ggexp() +
     theme(
       axis.text.x = element_blank(),
@@ -102,7 +109,7 @@ plot_reduced_dimensions = function(sce_list,
       axis.ticks.y = element_blank()
     )
 
-  if (is.numeric(data$value))
+  if (is.numeric(data$value)) {
     plot = plot + geom_text(
       data = min_max,
       aes(x = Inf, y = Inf, label = value),
@@ -111,6 +118,29 @@ plot_reduced_dimensions = function(sce_list,
       size = 3,
       inherit.aes = FALSE
     )
+  }
+
+  if (!is.null(label)) {
+    if (label %in% features) label = "value"
+
+    annotations = data %>%
+      group_by(.dots = c(facet_rows, facet_columns, label)) %>%
+      summarize(x = median(!!as.name(paste0((type), "_1"))),
+                y = median(!!as.name(paste0((type), "_2"))))
+
+    if (label %in% features) {
+      color = color
+    } else {
+      color = NULL
+    }
+
+    plot = plot + geom_label_repel(data = annotations,
+                                   aes_string(x = "x", y = "y", label = label, color = color),
+                                   label.padding = unit(0.1, "lines"),
+                                   alpha = 1,
+                                   fill = "white",
+                                   size = text_size)
+  }
 
   plot = plot_facets(plot,
                      facet_rows,
@@ -124,13 +154,7 @@ plot_reduced_dimensions = function(sce_list,
     plot = plot +
       guides(colour = guide_legend(override.aes = list(alpha = 1, size = 5)))
   } else {
-    plot = plot + scale_color_gradient(
-      low = "#E8E8E8",
-      high = "firebrick",
-      breaks = c(0, 1),
-      labels = c("min", "max"),
-      limits = c(0, 1)
-    )
+    plot = plot + scale_color_viridis_c()
   }
 
   return(plot + theme(legend.title = element_blank()))

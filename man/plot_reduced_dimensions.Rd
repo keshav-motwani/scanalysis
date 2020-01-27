@@ -10,8 +10,10 @@ plot_reduced_dimensions(
   assay = "logcounts",
   alt_exp = NULL,
   features,
+  label = NULL,
   alpha = 0.3,
-  pt_size = 1,
+  point_size = 1,
+  text_size = 1,
   facet_rows = c(),
   facet_columns = c(".feature"),
   facet_type = "grid",
@@ -33,7 +35,9 @@ plot_reduced_dimensions(
 
 \item{alpha}{Alpha for points}
 
-\item{pt_size}{Size of points}
+\item{point_size}{Size of points}
+
+\item{text_size}{Size of font for text annotation}
 
 \item{facet_rows}{Variables from colData to facet on, can also include ".sample" or ".feature" as described below}
 
@@ -46,6 +50,8 @@ plot_reduced_dimensions(
 \item{facet_switch}{Either NULL, "x", "y", "both", same as ggplot}
 
 \item{nrow}{Number of rows if facet_type is "wrap"}
+
+\item{label_value}{Boolean to annotate text label for the value - only works if all features are discrete}
 }
 \value{
 ggplot object

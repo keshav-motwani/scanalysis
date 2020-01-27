@@ -1,9 +1,9 @@
 #' Function to use for assigning clonotypes based on custom definition
 #'
 #' @param sce SingleCellExperiment object
-#' @param clonotype_fields character vector indicating fields to include in clonotype definition (e.g., c("v_gene", "cdr3", "j_gene", etc.))
-#' @param chains character vector indicating chains which to include in clonotype definition(e.g., c("TRA", "TRB"))
-#' @param tra/trb/igl/igh_range integer vector of length 2 with minimum and maximum number of unique chains (inclusive)
+#' @param clonotype_fields fields to include in clonotype definition (e.g., c("v_gene", "cdr3", "j_gene", etc.))
+#' @param chains chains which to include in clonotype definition(e.g., c("TRA", "TRB"))
+#' @param tra/trb/igl/igh_range vector of length 2 with minimum and maximum number of unique chains (inclusive)
 #'
 #' @importFrom dplyr as_tibble filter group_by summarise_all select left_join
 #' @importFrom tidyr unite

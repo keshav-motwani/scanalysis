@@ -4,13 +4,11 @@
 #' @param ambient_rna_filters Named list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order
 #' @param color Column from colData that is in all objects in sce_list
 #' @param shape Column from colData that is in all objects in sce_list
+#' @param text_size Font size for annotations
 #' @param facet_rows Columns to facet on
 #' @param facet_columns Columns to facet on
 #' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param facet_scales Either NULL, "fixed", "free", "free_x", "free_y", same as ggplot
-#' @param facet_switch Either NULL, "x", "y", "both", same as ggplot
-#' @param nrow Number of rows if facet_type is "wrap"
-#' @param text_size Font size for annotations
+#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom DropletUtils barcodeRanks
@@ -41,14 +39,14 @@ plot_barcode_qc = function(sce_list,
   stopifnot(names(sce_list) == names(ambient_rna_filters))
 
   data = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
-                  prepare_barcode_plot_data)
+                  .prepare_barcode_plot_data)
 
   hlines = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
                     prepare_barcode_cutoffs)
 
   counts = pmap_dfr(
     list(sce_list, names(sce_list), ambient_rna_filters),
-    ~ prepare_barcode_counts(..1, ..2, ..3, setdiff(
+    ~ .prepare_barcode_counts(..1, ..2, ..3, setdiff(
       c(facet_rows, facet_columns), ".sample"
     ))
   )
@@ -97,9 +95,7 @@ plot_barcode_qc = function(sce_list,
     facet_rows,
     facet_columns,
     facet_type,
-    facet_scales,
-    facet_switch,
-    nrow
+    ...
   )
 
   return(rank_vs_umi)
@@ -119,7 +115,7 @@ plot_barcode_qc = function(sce_list,
 #'
 #' @examples
 #' NULL
-prepare_barcode_plot_data = function(sce, sample_name, ambient_rna_filter) {
+.prepare_barcode_plot_data = function(sce, sample_name, ambient_rna_filter) {
   bcrank = barcodeRanks(counts(sce))
 
   rank_total =
@@ -173,7 +169,7 @@ prepare_barcode_cutoffs = function(sce, sample_name, ambient_rna_filter) {
 #'
 #' @examples
 #' NULL
-prepare_barcode_counts = function(sce,
+.prepare_barcode_counts = function(sce,
                                   sample_name,
                                   ambient_rna_filter,
                                   facets) {

@@ -7,6 +7,7 @@
 #'
 #' @importFrom SingleCellExperiment colData
 #' @importFrom purrr map2_dfr
+#' @importFrom dplyr mutate
 #'
 #' @return
 #' @export
@@ -24,12 +25,12 @@ encode_cell_identity_frequency_matrix = function(sce_list,
     sce_list,
     names(sce_list),
     ~ as.data.frame(colData(.x)) %>%
-      dplyr::mutate(.sample = .y)
+      mutate(.sample = .y)
   )
 
   group_by = unique(c(group_by, ".sample"))
 
-  return(encode_identity_frequency_matrix(data, attributes, group_by, normalize))
+  return(.encode_identity_frequency_matrix(data, attributes, group_by, normalize))
 }
 
 #' Encode frequencies of (combinations) of values in columns from colData into a long data frame
@@ -61,7 +62,7 @@ encode_cell_identity_frequency_long = function(sce_list,
 
   group_by = unique(c(group_by, ".sample"))
 
-  return(encode_identity_frequency_long(data, attributes, group_by, normalize))
+  return(convert_identity_frequency_matrix_to_long(data, attributes, group_by, normalize))
 }
 
 #' Encode frequencies of (combinations) of values in columns from colData into a matrix with rows as groups and columns as features
@@ -85,11 +86,11 @@ encode_vdj_identity_frequency_matrix = function(sce_list,
                                                 normalize = "none") {
   data = imap_dfr(sce_list,
                   ~ unnest_vdj(.x) %>%
-                    dplyr::mutate(.sample = .y))
+                    mutate(.sample = .y))
 
   group_by = unique(c(group_by, ".sample"))
 
-  return(encode_identity_frequency_matrix(data, attributes, group_by, normalize))
+  return(.encode_identity_frequency_matrix(data, attributes, group_by, normalize))
 }
 
 #' Encode frequencies of (combinations) of values in columns from colData into long data frame
@@ -115,33 +116,49 @@ encode_vdj_identity_frequency_long = function(sce_list,
                   ~ unnest_vdj(.x) %>%
                     mutate(.sample = .y))
 
-  return(encode_identity_frequency_long(data, attributes, group_by, normalize))
+  return(convert_identity_frequency_matrix_to_long(data, attributes, group_by, normalize))
 }
 
 
-encode_identity_frequency_matrix = function(data, attributes, group_by, normalize) {
+#' Helper function to encode identity frequency matrix given data frame
+#'
+#' @param data data frame to encode
+#' @param attributes columns to use to define features
+#' @param group_by columns to use to define groups
+#' @param normalize normalization method
+#'
+#' @importFrom dplyr group_by group_keys group_split pull bind_rows
+#' @importFrom tidyr unite separate
+#' @importFrom purrr map
+#' @importFrom plyr ldply
+#'
+#' @return
+#'
+#' @examples
+#' NULL
+.encode_identity_frequency_matrix = function(data, attributes, group_by, normalize) {
   data[, attributes][is.na(data[, attributes])] = "NA"
 
   data = data %>%
-    dplyr::group_by(.dots = group_by) %>%
-    tidyr::unite(identity, !!attributes, remove = FALSE, sep = "///")
+    group_by(.dots = group_by) %>%
+    unite(identity, !!attributes, remove = FALSE, sep = "///")
 
-  row_annotations = dplyr::group_keys(data)
+  row_annotations = group_keys(data)
 
   if (ncol(row_annotations) > 0) {
-    groups = tidyr::unite(row_annotations, col = group, !!group_by)$group
+    groups = unite(row_annotations, col = group, !!group_by)$group
   } else {
     groups = ""
     row_annotations = data.frame(annotation = c("1"))
   }
 
   count_vectors = data %>%
-    dplyr::group_split() %>%
-    purrr::map(~ dplyr::pull(.x, identity)) %>%
-    purrr::map(~ table(.x, useNA = "no"))
+    group_split() %>%
+    map(~ pull(.x, identity)) %>%
+    map(~ table(.x, useNA = "no"))
   names(count_vectors) = groups
 
-  data = plyr::ldply(count_vectors, dplyr::bind_rows)
+  data = ldply(count_vectors, bind_rows)
   data$.id = NULL
   data[, "NA"] = NULL
 
@@ -158,7 +175,7 @@ encode_identity_frequency_matrix = function(data, attributes, group_by, normaliz
   column_annotations = data.frame(feature = colnames(matrix))
 
   attributes(matrix)$group_annotations = row_annotations
-  attributes(matrix)$feature_annotations = tidyr::separate(
+  attributes(matrix)$feature_annotations = separate(
     column_annotations,
     feature,
     into = attributes,
@@ -169,14 +186,29 @@ encode_identity_frequency_matrix = function(data, attributes, group_by, normaliz
   return(matrix)
 }
 
-encode_identity_frequency_long = function(data, attributes, group_by, normalize) {
-  matrix = encode_identity_frequency_matrix(data, attributes, group_by, normalize)
-  data = dplyr::bind_cols(
+#' Convert an identity frequency matrix
+#'
+#' @param data data frame to encode
+#' @param attributes columns to use to define features
+#' @param group_by columns to use to define groups
+#' @param normalize normalization method
+#'
+#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr bind_cols left_join
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' NULL
+convert_identity_frequency_matrix_to_long = function(data, attributes, group_by, normalize) {
+  matrix = .encode_identity_frequency_matrix(data, attributes, group_by, normalize)
+  data = bind_cols(
     data.frame(attributes(matrix)$group_annotations),
     as.data.frame(matrix),
     data.frame(group = rownames(matrix))
   ) %>%
-    tidyr::pivot_longer(cols = colnames(matrix), names_to = "feature") %>%
-    dplyr::left_join(attributes(matrix)$feature_annotations, by = "feature")
+    pivot_longer(cols = colnames(matrix), names_to = "feature") %>%
+    left_join(attributes(matrix)$feature_annotations, by = "feature")
   return(data)
 }

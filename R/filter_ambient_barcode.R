@@ -18,10 +18,10 @@
 filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 100) {
 
   filters = list()
-  filters$inflection = filter_ambient_barcode_inflection(sce)
-  filters$empty_drops = filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit)
-  filters$knee = filter_ambient_barcode_knee(sce)
-  filters$cellranger = filter_ambient_barcode_cellranger(sce, n_cells)
+  filters$inflection = .filter_ambient_barcode_inflection(sce)
+  filters$empty_drops = .filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit)
+  filters$knee = .filter_ambient_barcode_knee(sce)
+  filters$cellranger = .filter_ambient_barcode_cellranger(sce, n_cells)
 
   return(filters)
 }
@@ -37,7 +37,7 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #'
 #' @examples
 #' NULL
-filter_ambient_barcode_inflection = function(sce) {
+.filter_ambient_barcode_inflection = function(sce) {
   bcrank = barcodeRanks(counts(sce))
   inflection = bcrank@metadata$inflection
   filter = bcrank$total > inflection
@@ -59,7 +59,7 @@ filter_ambient_barcode_inflection = function(sce) {
 #'
 #' @examples
 #' NULL
-filter_ambient_barcode_empty_drops = function(sce, fdr, lower_umi_limit) {
+.filter_ambient_barcode_empty_drops = function(sce, fdr, lower_umi_limit) {
   out = emptyDrops(counts(sce), lower_umi_limit) %>%
     as_tibble() %>%
     mutate(cell = FDR <= fdr) %>%
@@ -81,7 +81,7 @@ filter_ambient_barcode_empty_drops = function(sce, fdr, lower_umi_limit) {
 #'
 #' @examples
 #' NULL
-filter_ambient_barcode_knee = function(sce) {
+.filter_ambient_barcode_knee = function(sce) {
   bcrank = barcodeRanks(counts(sce))
   knee = bcrank@metadata$knee
   filter = bcrank$total > knee
@@ -101,7 +101,7 @@ filter_ambient_barcode_knee = function(sce) {
 #'
 #' @examples
 #' NULL
-filter_ambient_barcode_cellranger = function(sce, n_cells) {
+.filter_ambient_barcode_cellranger = function(sce, n_cells) {
   bcrank = barcodeRanks(counts(sce))
   cutoff = quantile(sort(bcrank$total, decreasing = TRUE)[1:n_cells], 0.99, na.rm = TRUE)/10
   filter = bcrank$total > cutoff
