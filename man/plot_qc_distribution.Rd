@@ -12,13 +12,11 @@ plot_qc_distribution(
   shape = NULL,
   x_filters = NULL,
   x_log = TRUE,
+  text_size = 3,
   facet_rows = NULL,
   facet_columns = NULL,
   facet_type = "wrap",
-  facet_scales = NULL,
-  facet_switch = NULL,
-  nrow = 2,
-  text_size = 3
+  ...
 )
 }
 \arguments{
@@ -36,19 +34,15 @@ plot_qc_distribution(
 
 \item{x_log}{Boolean to use log x-axis}
 
+\item{text_size}{Font size for annotations}
+
 \item{facet_rows}{Columns to facet on}
 
 \item{facet_columns}{Columns to facet on}
 
 \item{facet_type}{Either "wrap" or "grid", same as ggplot}
 
-\item{facet_scales}{Either NULL, "fixed", "free", "free_x", "free_y", same as ggplot}
-
-\item{facet_switch}{Either NULL, "x", "y", "both", same as ggplot}
-
-\item{nrow}{Number of rows if facet_type is "wrap"}
-
-\item{text_size}{Font size for annotations}
+\item{...}{params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 

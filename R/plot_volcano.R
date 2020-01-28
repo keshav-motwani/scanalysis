@@ -91,9 +91,8 @@ plot_volcano = function(data,
                      facet_rows,
                      facet_columns,
                      facet_type,
-                     facet_scales,
-                     facet_switch,
-                     nrow) + theme_ggexp()
+                     ...) +
+    theme_ggexp()
 
   plot = plot + labs(x = "log(Fold Change)", y = "-log10(p-value)")
 

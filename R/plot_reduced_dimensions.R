@@ -18,9 +18,7 @@
 #' @param facet_rows Variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_columns Variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param facet_scales Either "fixed", "free", "free_x", "free_y", same as ggplot
-#' @param facet_switch Either NULL, "x", "y", "both", same as ggplot
-#' @param nrow Number of rows if facet_type is "wrap"
+#' @param ... Other parameters to be passed to ggexp::plot_pairwise_scatterplot
 #'
 #' @import ggplot2
 #' @importFrom dplyr mutate bind_cols group_by summarize arrange
@@ -34,12 +32,18 @@
 #' @export
 #'
 #' @examples
-#' sce = scater::mockSCE() %>% scater::logNormCounts() %>% scater::runPCA()
+#' library(scanalysis)
+#' library(scater)
+#'
+#' sce = mockSCE() %>%
+#'     logNormCounts() %>%
+#'     scater::runPCA()
+#'
 #' plot_reduced_dimensions(sce_list = list(sample_1 = sce, sample_2 = sce),
 #'                         features = c("Gene_0001", "Gene_0002", "Gene_0003"),
 #'                         facet_columns = ".sample",
 #'                         facet_rows = ".feature",
-#'                         facet_switch = "y")
+#'                         switch = "y")
 plot_reduced_dimensions = function(sce_list,
                                    type = "PCA",
                                    assay = "logcounts",
@@ -52,9 +56,7 @@ plot_reduced_dimensions = function(sce_list,
                                    facet_rows = c(),
                                    facet_columns = c(".feature"),
                                    facet_type = "grid",
-                                   facet_scales = "free",
-                                   facet_switch = NULL,
-                                   nrow = 2) {
+                                   ...) {
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
 
@@ -62,7 +64,7 @@ plot_reduced_dimensions = function(sce_list,
     sce_list,
     ~ get_cell_features(.x, c(features, facet_rows, facet_columns, label), assay, alt_exp) %>%
       mutate(., .sample = .y) %>%
-      bind_cols(get_reduced_dims(.x, type))
+      bind_cols(.get_reduced_dims(.x, type))
   ) %>%
     pivot_longer(
       cols = intersect(features, colnames(.)),
@@ -121,18 +123,18 @@ plot_reduced_dimensions = function(sce_list,
   }
 
   if (!is.null(label)) {
-    if (label %in% features) label = "value"
+
+    if (label %in% features) {
+      color = "value"
+      label = "value"
+    } else {
+      color = NULL
+    }
 
     annotations = data %>%
       group_by(.dots = c(facet_rows, facet_columns, label)) %>%
       summarize(x = median(!!as.name(paste0((type), "_1"))),
                 y = median(!!as.name(paste0((type), "_2"))))
-
-    if (label %in% features) {
-      color = color
-    } else {
-      color = NULL
-    }
 
     plot = plot + geom_label_repel(data = annotations,
                                    aes_string(x = "x", y = "y", label = label, color = color),
@@ -146,9 +148,7 @@ plot_reduced_dimensions = function(sce_list,
                      facet_rows,
                      facet_columns,
                      facet_type,
-                     facet_scales,
-                     facet_switch,
-                     nrow)
+                     ...)
 
   if (!is.numeric(data$value)) {
     plot = plot +
@@ -160,15 +160,27 @@ plot_reduced_dimensions = function(sce_list,
   return(plot + theme(legend.title = element_blank()))
 }
 
-get_reduced_dims = function(sce, type) {
+#' Get reduced dimensions of object
+#'
+#' @param sce SingleCellExperiment object
+#' @param type Name of reduction type in reducedDims
+#'
+#' @importFrom SingleCellExperiment reducedDims
+#' @importFrom SummarizedExperiment colData colData<-
+#'
+#' @return
+#'
+#' @examples
+#' NULL
+.get_reduced_dims = function(sce, type) {
   reduced_dims = data.frame(
-    dim1 = SingleCellExperiment::reducedDims(sce)@listData[[type]][, 1],
-    dim2 = SingleCellExperiment::reducedDims(sce)@listData[[type]][, 2]
+    dim1 = reducedDims(sce)@listData[[type]][, 1],
+    dim2 = reducedDims(sce)@listData[[type]][, 2]
   )
 
   colnames(reduced_dims) = paste0(type, "_", c(1, 2))
 
-  reduced_dims$barcode = SummarizedExperiment::colData(sce)$Barcode
+  reduced_dims$barcode = colData(sce)$Barcode
 
   return(reduced_dims)
 }

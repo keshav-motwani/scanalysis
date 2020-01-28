@@ -12,10 +12,8 @@ plot_barcode_qc(
   facet_rows = NULL,
   facet_columns = NULL,
   facet_type = "grid",
-  facet_scales = "fixed",
-  facet_switch = NULL,
-  nrow = 2,
-  text_size = 1
+  text_size = 1,
+  ...
 )
 }
 \arguments{

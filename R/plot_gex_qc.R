@@ -35,13 +35,11 @@ plot_qc_scatterplot = function(sce_list,
                                y_filters = NULL,
                                x_log = TRUE,
                                y_log = TRUE,
+                               text_size = 3,
                                facet_rows = NULL,
                                facet_columns = NULL,
                                facet_type = "grid",
-                               facet_scales = "fixed",
-                               facet_switch = NULL,
-                               nrow = 2,
-                               text_size = 3) {
+                               ...) {
 
   if (is.null(x_filters)) {
     x_filters = rep(list(NULL), length(sce_list))
@@ -55,9 +53,9 @@ plot_qc_scatterplot = function(sce_list,
     stopifnot(names(sce_list) == names(y_filters))
   }
 
-  data = imap(sce_list, prepare_gex_data)
+  data = imap(sce_list, .prepare_gex_data)
 
-  counts = pmap_dfr(list(data, x_filters, y_filters, names(data)), ~ prepare_gex_bivariate_counts(..1, x, y, ..2, ..3, x_log, y_log, ..4, c(facet_rows, facet_columns)))
+  counts = pmap_dfr(list(data, x_filters, y_filters, names(data)), ~ .prepare_gex_bivariate_counts(..1, x, y, ..2, ..3, x_log, y_log, ..4, c(facet_rows, facet_columns)))
 
   data = bind_rows(data)
 
@@ -117,13 +115,11 @@ plot_qc_scatterplot = function(sce_list,
 #' @param shape Column from colData that is in all objects in sce_list
 #' @param x_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param x_log Boolean to use log x-axis
+#' @param text_size Font size for annotations
 #' @param facet_rows Columns to facet on
 #' @param facet_columns Columns to facet on
 #' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param facet_scales Either NULL, "fixed", "free", "free_x", "free_y", same as ggplot
-#' @param facet_switch Either NULL, "x", "y", "both", same as ggplot
-#' @param nrow Number of rows if facet_type is "wrap"
-#' @param text_size Font size for annotations
+#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom ggexp theme_ggexp plot_facets
@@ -144,17 +140,15 @@ plot_qc_distribution = function(sce_list,
                                 shape = NULL,
                                 x_filters = NULL,
                                 x_log = TRUE,
+                                text_size = 3,
                                 facet_rows = NULL,
                                 facet_columns = NULL,
                                 facet_type = "wrap",
-                                facet_scales = NULL,
-                                facet_switch = NULL,
-                                nrow = 2,
-                                text_size = 3) {
+                                ...) {
 
-  data = imap(sce_list, prepare_gex_data)
+  data = imap(sce_list, .prepare_gex_data)
 
-  counts = pmap_dfr(list(data, x_filters, names(data)), ~ prepare_gex_univariate_counts(..1, x, ..2, x_log, ..3, c(facet_rows, facet_columns, y)))
+  counts = pmap_dfr(list(data, x_filters, names(data)), ~ .prepare_gex_univariate_counts(..1, x, ..2, x_log, ..3, c(facet_rows, facet_columns, y)))
 
   data = bind_rows(data)
 
@@ -189,9 +183,7 @@ plot_qc_distribution = function(sce_list,
                      facet_rows,
                      facet_columns,
                      facet_type,
-                     facet_scales,
-                     facet_switch,
-                     nrow)
+                     ...)
 
   if (y == ".null") {
     plot = plot + labs(y = NULL)
@@ -225,7 +217,7 @@ plot_qc_distribution = function(sce_list,
 #'
 #' @examples
 #' NULL
-prepare_gex_data = function(sce, sample_name) {
+.prepare_gex_data = function(sce, sample_name) {
   colData(sce) %>%
     as.data.frame() %>%
     mutate(.sample = sample_name)
@@ -233,7 +225,7 @@ prepare_gex_data = function(sce, sample_name) {
 
 #' Prepare counts of cells that meet filter criteria to annotate based on a single filter
 #'
-#' @param data Result from prepare_gex_data
+#' @param data Result from .prepare_gex_data
 #' @param x Feature from colData to plot distribution of
 #' @param x_filter Filter for a sample from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param x_log Boolean to plot x on log-scale or not
@@ -247,8 +239,8 @@ prepare_gex_data = function(sce, sample_name) {
 #'
 #' @examples
 #' NULL
-prepare_gex_univariate_counts = function(data, x, x_filter, x_log, sample_name, facets) {
-  x_scale_limits = prepare_gex_scale_limits(data, x, x_filter)
+.prepare_gex_univariate_counts = function(data, x, x_filter, x_log, sample_name, facets) {
+  x_scale_limits = .prepare_gex_scale_limits(data, x, x_filter)
 
   counts = data.frame(
     filter = paste0("filter_", 1:3),
@@ -290,7 +282,7 @@ prepare_gex_univariate_counts = function(data, x, x_filter, x_log, sample_name, 
 
 #' Prepare counts of cells that meet filter criteria to annotate based on two filters
 #'
-#' @param data Result from prepare_gex_data
+#' @param data Result from .prepare_gex_data
 #' @param x Feature from colData to plot distribution of
 #' @param x_filter Filter for a sample from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param y Feature from colData to plot distribution of
@@ -307,9 +299,9 @@ prepare_gex_univariate_counts = function(data, x, x_filter, x_log, sample_name, 
 #'
 #' @examples
 #' NULL
-prepare_gex_bivariate_counts = function(data, x, y, x_filter, y_filter, x_log, y_log, sample_name, facets) {
-  x_scale_limits = prepare_gex_scale_limits(data, x, x_filter)
-  y_scale_limits = prepare_gex_scale_limits(data, y, y_filter)
+.prepare_gex_bivariate_counts = function(data, x, y, x_filter, y_filter, x_log, y_log, sample_name, facets) {
+  x_scale_limits = .prepare_gex_scale_limits(data, x, x_filter)
+  y_scale_limits = .prepare_gex_scale_limits(data, y, y_filter)
 
   counts = data.frame(
     filter = paste0("filter_", 1:9),
@@ -366,7 +358,7 @@ prepare_gex_bivariate_counts = function(data, x, y, x_filter, y_filter, x_log, y
 
 #' Prepare the limits of plot scale
 #'
-#' @param data Result from prepare_gex_data
+#' @param data Result from .prepare_gex_data
 #' @param var Feature from data that is being plotted
 #' @param filter Filter for a sample from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #'
@@ -374,7 +366,7 @@ prepare_gex_bivariate_counts = function(data, x, y, x_filter, y_filter, x_log, y
 #'
 #' @examples
 #' NULL
-prepare_gex_scale_limits = function(data, var, filter) {
+.prepare_gex_scale_limits = function(data, var, filter) {
   if (!is.null(filter)) {
     scale_limits = c(
       min =  min(data[, var, drop = TRUE]),

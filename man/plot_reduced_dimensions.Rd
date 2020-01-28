@@ -17,9 +17,7 @@ plot_reduced_dimensions(
   facet_rows = c(),
   facet_columns = c(".feature"),
   facet_type = "grid",
-  facet_scales = "free",
-  facet_switch = NULL,
-  nrow = 2
+  ...
 )
 }
 \arguments{
@@ -45,11 +43,7 @@ plot_reduced_dimensions(
 
 \item{facet_type}{Either "wrap" or "grid", same as ggplot}
 
-\item{facet_scales}{Either "fixed", "free", "free_x", "free_y", same as ggplot}
-
-\item{facet_switch}{Either NULL, "x", "y", "both", same as ggplot}
-
-\item{nrow}{Number of rows if facet_type is "wrap"}
+\item{...}{Other parameters to be passed to ggexp::plot_pairwise_scatterplot}
 
 \item{label_value}{Boolean to annotate text label for the value - only works if all features are discrete}
 }
@@ -65,10 +59,16 @@ If multiple SingleCellExperiments are provided in the sce_list, and you want to 
 In almost all cases, you would want to facet by feature. This is by default included in facet_columns, but if you add additional faceting variables to facet_columns, be sure to also include ".feature". To be clear, ".feature" can also be included in facet_rows. This is not included within the code to allow for flexibility if you want features to be faceted in the rows or columns.
 }
 \examples{
-sce = scater::mockSCE() \%>\% scater::logNormCounts() \%>\% scater::runPCA()
+library(scanalysis)
+library(scater)
+
+sce = mockSCE() \%>\%
+    logNormCounts() \%>\%
+    scater::runPCA()
+
 plot_reduced_dimensions(sce_list = list(sample_1 = sce, sample_2 = sce),
                         features = c("Gene_0001", "Gene_0002", "Gene_0003"),
                         facet_columns = ".sample",
                         facet_rows = ".feature",
-                        facet_switch = "y")
+                        switch = "y")
 }
