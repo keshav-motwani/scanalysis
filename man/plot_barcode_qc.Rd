@@ -12,7 +12,9 @@ plot_barcode_qc(
   facet_rows = NULL,
   facet_columns = NULL,
   facet_type = "grid",
-  text_size = 1,
+  point_size = 1,
+  text_size = 2,
+  alpha = 0.5,
   ...
 )
 }

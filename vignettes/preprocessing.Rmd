@@ -67,7 +67,8 @@ Each one of these results contains a list of booleans indicating which barcodes 
 plot_barcode_qc(sce_list = dataset,
                 ambient_rna_filters = ambient_rna_filters,
                 facet_columns = ".sample",
-                facet_rows = "timepoint")
+                facet_rows = "timepoint",
+                )
 ```
 
 Here, for each sample, and timepoint within each sample, we have a barcode distribution plot, fully annotated with the cutoffs based on each of the methods, as well as the number of cells retained by each of the individual filters. We now use this visualization to decide that using the emptyDrops filter looks fine, and, as expected, gives us the most number of cells recovered. 
