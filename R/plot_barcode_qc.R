@@ -31,7 +31,9 @@ plot_barcode_qc = function(sce_list,
                            facet_rows = NULL,
                            facet_columns = NULL,
                            facet_type = "grid",
-                           text_size = 1,
+                           point_size = 1,
+                           text_size = 2,
+                           alpha = 0.5,
                            ...) {
 
   stopifnot(names(sce_list) == names(ambient_rna_filters))
@@ -52,7 +54,8 @@ plot_barcode_qc = function(sce_list,
   rank_vs_umi = ggplot(mapping = aes(rank, total_umi)) +
     geom_point(data = data,
                aes_string(color = color, shape = shape),
-               alpha = 0.2) +
+               size = point_size,
+               alpha = alpha) +
     geom_hline(data = hlines, aes_string(yintercept = "y")) +
     scale_x_log10(
       breaks = trans_breaks("log10", function(x)
@@ -85,7 +88,7 @@ plot_barcode_qc = function(sce_list,
       aes(x = 0, y = 0, label = label),
       hjust = 0,
       vjust = 0,
-      size = 2
+      size = text_size
     )
 
   rank_vs_umi = plot_facets(

@@ -27,10 +27,8 @@ library(purrr)
 library(magrittr)
 
 bfc = BiocFileCache("raw_data", ask = FALSE)
-raw.path = bfcrpath(
-  bfc,
-  "http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"
-)
+link = "http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"
+raw.path = bfcrpath(bfc, link)
 untar(raw.path, exdir = file.path("raw_data/pbmc10k"))
 ```
 
@@ -45,7 +43,7 @@ subset_data = function(indices) {
   sce[, Matrix::colSums(SummarizedExperiment::assay(sce)) > 0]
 }
 
-dataset = map(split(1:ncol(pbmc_10k), paste0("patient_", 1:4)), ~ subset_data)
+dataset = map(split(1:ncol(pbmc_10k), paste0("patient_", 1:4)), subset_data)
 
 rm(pbmc_10k)
 ```
