@@ -25,6 +25,7 @@ library(scanalysis)
 library(BiocFileCache)
 library(purrr)
 library(magrittr)
+library(scater)
 
 bfc = BiocFileCache("raw_data", ask = FALSE)
 link = "http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"
@@ -72,3 +73,46 @@ plot_barcode_qc(sce_list = dataset,
 
 Here, for each sample, and timepoint within each sample, we have a barcode distribution plot, fully annotated with the cutoffs based on each of the methods, as well as the number of cells retained by each of the individual filters. We now use this visualization to decide that using the emptyDrops filter looks fine, and, as expected, gives us the most number of cells recovered. 
 
+```{r ambient_filter}
+cell_dataset = map2(dataset, ambient_rna_filters, ~ .x[,  .y$empty_drops == TRUE])
+```
+
+Now that we have identified barcode-containing cells, we now filter cells based on common QC measures, such as the total number of UMIs/genes expressed per cell to identify low-content cells and doublets and the percentage of mitochondrial reads to identify low-quality dying cells. We first must annotate these values into the colData of each dataset.
+
+```{r annotate}
+cell_dataset = map(cell_dataset, ~ .x %>%
+                     annotate_total_umi_count %>%
+                     annotate_n_genes_expr %>%
+                     annotate_pct_gene_set("^MT-", "pct_mito"))
+```
+
+Now that these values are annotated, we can use the `scater::isOutlier` to identify outliers based on these values. We consider values greater than 2 median absolute deviations on both sides an outlier for total UMI count and number of genes expressed, and values greater than 1 median absolute deviations above for the percentage of mitochondrial reads, though it should be noted that this parameter was adjusted based off of the below plots to remove most of the upper mode total UMI/number of genes expressed in the data which likely corresponds to doublets.
+
+```{r filter_qc}
+total_umi_filters = map(cell_dataset, ~ isOutlier(colData(.x)$total_umi,
+                                                   nmads = 1,
+                                                   type = "both",
+                                                   log = TRUE))
+
+n_genes_expr_filters = map(cell_dataset, ~ !isOutlier(colData(.x)$n_genes_expr,
+                                                      nmads = 1,
+                                                      type = "both",
+                                                      log = TRUE))
+
+pct_mito_filters = map(cell_dataset, ~ !isOutlier(colData(.x)$pct_mito,
+                                                  nmads = 2,
+                                                  type = "higher",
+                                                  log = FALSE))
+```
+
+With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously. 
+
+```{r plot_qc, fig.height=6, fig.width=8}
+plot_qc_distribution(cell_dataset, x_filters = total_umi_filters, x = "total_umi", color = "pct_mito", facet_columns = ".sample")
+
+plot_qc_distribution(cell_dataset, x_filters = n_genes_expr_filters, x = "n_genes_expr", color = "pct_mito", facet_columns = ".sample")
+
+plot_qc_distribution(cell_dataset, x_filters = pct_mito_filters, x = "pct_mito", color = "total_umi", facet_columns = ".sample", x_log = FALSE)
+
+plot_qc_scatterplot(cell_dataset, x_filters = total_umi_filters, y_filters = n_genes_expr_filters, x = "total_umi", y = "n_genes_expr", color = "pct_mito", facet_columns = ".sample",  facet_type = "wrap")
+```
