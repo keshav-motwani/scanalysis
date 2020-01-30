@@ -109,11 +109,11 @@ plot_qc_scatterplot = function(sce_list,
 #' Scatterplot of two features of interest from colData with annotated thresholds and counts based on filters
 #'
 #' @param sce_list List of SingleCellExperiment object
+#' @param x_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param x Numeric column from colData that is in all objects in sce_list
 #' @param y Discrete column from colData that is in all objects in sce_list to split histograms by
 #' @param color Column from colData that is in all objects in sce_list
 #' @param shape Column from colData that is in all objects in sce_list
-#' @param x_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #' @param x_log Boolean to use log x-axis
 #' @param text_size Font size for annotations
 #' @param facet_rows Columns to facet on
@@ -134,11 +134,11 @@ plot_qc_scatterplot = function(sce_list,
 #' @examples
 #' NULL
 plot_qc_distribution = function(sce_list,
+                                x_filters = NULL,
                                 x,
                                 y = NULL,
                                 color = NULL,
                                 shape = NULL,
-                                x_filters = NULL,
                                 x_log = TRUE,
                                 text_size = 3,
                                 facet_rows = NULL,

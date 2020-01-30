@@ -6,11 +6,11 @@
 \usage{
 plot_qc_distribution(
   sce_list,
+  x_filters = NULL,
   x,
   y = NULL,
   color = NULL,
   shape = NULL,
-  x_filters = NULL,
   x_log = TRUE,
   text_size = 3,
   facet_rows = NULL,
@@ -22,6 +22,8 @@ plot_qc_distribution(
 \arguments{
 \item{sce_list}{List of SingleCellExperiment object}
 
+\item{x_filters}{List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
+
 \item{x}{Numeric column from colData that is in all objects in sce_list}
 
 \item{y}{Discrete column from colData that is in all objects in sce_list to split histograms by}
@@ -29,8 +31,6 @@ plot_qc_distribution(
 \item{color}{Column from colData that is in all objects in sce_list}
 
 \item{shape}{Column from colData that is in all objects in sce_list}
-
-\item{x_filters}{List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
 
 \item{x_log}{Boolean to use log x-axis}
 
