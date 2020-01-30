@@ -42,7 +42,7 @@ plot_barcode_qc = function(sce_list,
                   .prepare_barcode_plot_data)
 
   hlines = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
-                    prepare_barcode_cutoffs)
+                    .prepare_barcode_cutoffs)
 
   counts = pmap_dfr(
     list(sce_list, names(sce_list), ambient_rna_filters),
@@ -142,7 +142,7 @@ plot_barcode_qc = function(sce_list,
 #'
 #' @examples
 #' NULL
-prepare_barcode_cutoffs = function(sce, sample_name, ambient_rna_filter) {
+.prepare_barcode_cutoffs = function(sce, sample_name, ambient_rna_filter) {
   hlines = data.frame(
     y = c(
       attributes(ambient_rna_filter$knee)$value,

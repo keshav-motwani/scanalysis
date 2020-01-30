@@ -14,7 +14,6 @@
 #' @importFrom fuzzyjoin stringdist_left_join
 #'
 #' @return SingleCellExperiment object with additional column with the same name as reference_annotation_column
-#' @export
 #'
 #' @examples
 #' NULL

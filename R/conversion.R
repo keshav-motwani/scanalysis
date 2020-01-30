@@ -18,10 +18,10 @@ seurat_to_sce = function(seurat) {
     default_assay = "RNA"
   }
 
-  result = seurat_assay_to_sce(seurat, default_assay)
+  result = .seurat_assay_to_sce(seurat, default_assay)
 
   for (assay in setdiff(names(seurat@assays), default_assay)) {
-    value = seurat_assay_to_sce(seurat, assay)
+    value = .seurat_assay_to_sce(seurat, assay)
     altExps(result) = c(altExps(result), list(value))
     names(altExps(result))[length(names(altExps(result)))] = assay
   }
@@ -40,11 +40,10 @@ seurat_to_sce = function(seurat) {
 #' @importFrom Seurat as.SingleCellExperiment VariableFeatures
 #'
 #' @return
-#' @export
 #'
 #' @examples
 #' NULL
-seurat_assay_to_sce = function(seurat, assay) {
+.seurat_assay_to_sce = function(seurat, assay) {
 
   result = as.SingleCellExperiment(seurat, assay = assay)
 
@@ -71,10 +70,10 @@ seurat_assay_to_sce = function(seurat, assay) {
 #' NULL
 sce_to_seurat = function(sce) {
 
-  main = sce_to_assay(sce, return_assay = FALSE)
+  main = .sce_to_assay(sce, return_assay = FALSE)
 
   alt_exps = as.list(altExps(sce))
-  alt_exps = map(alt_exps, sce_to_assay)
+  alt_exps = map(alt_exps, .sce_to_assay)
 
   assays = c(list(main@assays[[1]]), alt_exps)
 
@@ -102,11 +101,10 @@ sce_to_seurat = function(sce) {
 #' @importFrom purrr map
 #'
 #' @return
-#' @export
 #'
 #' @examples
 #' NULL
-sce_to_assay = function(sce, return_assay = TRUE) {
+.sce_to_assay = function(sce, return_assay = TRUE) {
   if ("logcounts" %in% names(assays(sce))) {
     data = "logcounts"
   } else {

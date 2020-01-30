@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>QC plot of UMI rank vs total number of UMIs per barcode — plot_barcode_qc • scanalysis</title>
+<title>Prepare cutoff values for each method — .prepare_barcode_cutoffs • scanalysis</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="QC plot of UMI rank vs total number of UMIs per barcode — plot_barcode_qc" />
-<meta property="og:description" content="QC plot of UMI rank vs total number of UMIs per barcode" />
+<meta property="og:title" content="Prepare cutoff values for each method — .prepare_barcode_cutoffs" />
+<meta property="og:description" content="Prepare cutoff values for each method" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,73 +120,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>QC plot of UMI rank vs total number of UMIs per barcode</h1>
+    <h1>Prepare cutoff values for each method</h1>
     <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/plot_barcode_qc.R'><code>R/plot_barcode_qc.R</code></a></small>
-    <div class="hidden name"><code>plot_barcode_qc.Rd</code></div>
+    <div class="hidden name"><code>dot-prepare_barcode_cutoffs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>QC plot of UMI rank vs total number of UMIs per barcode</p>
+    <p>Prepare cutoff values for each method</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_barcode_qc</span>(
-  <span class='no'>sce_list</span>,
-  <span class='no'>ambient_rna_filters</span>,
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"empty_drops"</span>,
-  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>facet_type</span> <span class='kw'>=</span> <span class='st'>"grid"</span>,
-  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>.prepare_barcode_cutoffs</span>(<span class='no'>sce</span>, <span class='no'>sample_name</span>, <span class='no'>ambient_rna_filter</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>sce_list</th>
-      <td><p>Named list of SingleCellExperiment objects</p></td>
+      <th>sce</th>
+      <td><p>SingleCellExperiment object</p></td>
     </tr>
     <tr>
-      <th>ambient_rna_filters</th>
-      <td><p>Named list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order</p></td>
+      <th>sample_name</th>
+      <td><p>Name of sample</p></td>
     </tr>
     <tr>
-      <th>color</th>
-      <td><p>Column from colData that is in all objects in sce_list</p></td>
-    </tr>
-    <tr>
-      <th>shape</th>
-      <td><p>Column from colData that is in all objects in sce_list</p></td>
-    </tr>
-    <tr>
-      <th>facet_rows</th>
-      <td><p>Columns to facet on</p></td>
-    </tr>
-    <tr>
-      <th>facet_columns</th>
-      <td><p>Columns to facet on</p></td>
-    </tr>
-    <tr>
-      <th>facet_type</th>
-      <td><p>Either "wrap" or "grid", same as ggplot</p></td>
-    </tr>
-    <tr>
-      <th>text_size</th>
-      <td><p>Font size for annotations</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
+      <th>ambient_rna_filter</th>
+      <td><p>Result from filter_ambient_rna function</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>ggplot with plot of UMI rank vs total number of UMIs per barcode</p>
+    
+
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>NULL</span></div><div class='output co'>#&gt; NULL</div></pre>

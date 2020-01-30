@@ -13,9 +13,9 @@
 #' @examples
 #' NULL
 get_cell_features = function(sce, features, assay, alt_exp = NULL) {
-  assay_data = get_cell_features_assay(sce, features, assay, alt_exp)
-  coldata_data = get_cell_features_coldata(sce, features)
-  reduced_dimensions_data = get_cell_features_reduced_dimensions(sce, features)
+  assay_data = .get_cell_features_assay(sce, features, assay, alt_exp)
+  coldata_data = .get_cell_features_coldata(sce, features)
+  reduced_dimensions_data = .get_cell_features_reduced_dimensions(sce, features)
   result = bind_cols(assay_data, coldata_data, reduced_dimensions_data)
   result$barcode = colData(sce)$Barcode
   return(result)
@@ -32,7 +32,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #'
 #' @examples
 #' NULL
-get_cell_features_assay = function(sce, features, assay, alt_exp) {
+.get_cell_features_assay = function(sce, features, assay, alt_exp) {
   rownames_intersection = intersect(features, rownames(get_assay_data(sce, assay, alt_exp)))
   matrix = t(as.matrix(get_assay_data(sce, assay, alt_exp)[rownames_intersection, , drop = FALSE]))
   feature_values = data.frame(matrix)
@@ -49,7 +49,7 @@ get_cell_features_assay = function(sce, features, assay, alt_exp) {
 #'
 #' @examples
 #' NULL
-get_cell_features_coldata = function(sce, features) {
+..get_cell_features_coldata = function(sce, features) {
   colnames_intersection = intersect(features, colnames(SummarizedExperiment::colData(sce)))
   feature_values = as.data.frame(SummarizedExperiment::colData(sce)[, colnames_intersection, drop = FALSE])
   return(feature_values)
@@ -67,7 +67,7 @@ get_cell_features_coldata = function(sce, features) {
 #'
 #' @examples
 #' NULL
-get_cell_features_reduced_dimensions = function(sce, features) {
+.get_cell_features_reduced_dimensions = function(sce, features) {
   if (length(reducedDims(sce)) > 0) {
     reduced_dimensions_names = names(reducedDims(sce))
     reduced_dimensions = map_dfc(reduced_dimensions_names, ~ {

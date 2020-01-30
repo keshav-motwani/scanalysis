@@ -33,7 +33,6 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' @importFrom DropletUtils barcodeRanks
 #'
 #' @return Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named value containing total UMI at inflection point.
-#' @export
 #'
 #' @examples
 #' NULL
@@ -55,7 +54,6 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' @importFrom dplyr as_tibble mutate
 #'
 #' @return Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named data containing output of emptyDrops function
-#' @export
 #'
 #' @examples
 #' NULL
@@ -77,7 +75,6 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' @importFrom DropletUtils barcodeRanks
 #'
 #' @return Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named value containing total UMI at knee point.
-#' @export
 #'
 #' @examples
 #' NULL
@@ -97,7 +94,6 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' @importFrom DropletUtils barcodeRanks
 #'
 #' @return Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named value containing total UMI at the cutoff point.
-#' @export
 #'
 #' @examples
 #' NULL

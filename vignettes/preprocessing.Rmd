@@ -50,7 +50,7 @@ rm(pbmc_10k)
 
 The next step is to identify droplets that actually contain cells. The `filter_ambient_barcode` function is used for this. It runs four different methods for identification of cell-containing barcodes:
 
-* [emptyDrops](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y)
+* [emptyDrops](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y) (empty_drops)
 * Total UMI cutoff of 10% of the 99th percentile of UMI counts from the top N barcodes (cellranger)
 * Total UMI cutoff based on the inflection point in the barcode distribution (inflection)
 * Total UMI cutoff based on the knee point in the barcode distribution (knee)
@@ -67,8 +67,7 @@ Each one of these results contains a list of booleans indicating which barcodes 
 plot_barcode_qc(sce_list = dataset,
                 ambient_rna_filters = ambient_rna_filters,
                 facet_columns = ".sample",
-                facet_rows = "timepoint",
-                )
+                facet_rows = "timepoint")
 ```
 
 Here, for each sample, and timepoint within each sample, we have a barcode distribution plot, fully annotated with the cutoffs based on each of the methods, as well as the number of cells retained by each of the individual filters. We now use this visualization to decide that using the emptyDrops filter looks fine, and, as expected, gives us the most number of cells recovered. 

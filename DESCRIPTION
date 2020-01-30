@@ -15,5 +15,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/keshavmot2/scanalysis
+URL: https://keshavmot2.github.io/scanalysis/, https://github.com/keshavmot2/scanalysis
 BugReports: https://github.com/keshavmot2/scanalysis/issues

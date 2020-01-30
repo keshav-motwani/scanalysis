@@ -100,11 +100,9 @@
 <span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(magrittr)</span>
 <span id="cb1-5"><a href="#cb1-5"></a></span>
 <span id="cb1-6"><a href="#cb1-6"></a>bfc =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">BiocFileCache</a></span>(<span class="st">"raw_data"</span>, <span class="dt">ask =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a>raw.path =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">bfcrpath</a></span>(</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  bfc,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="st">"http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="kw"><a href="https://rdrr.io/r/utils/untar.html">untar</a></span>(raw.path, <span class="dt">exdir =</span> <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"raw_data/pbmc10k"</span>))</span></code></pre></div>
+<span id="cb1-7"><a href="#cb1-7"></a>link =<span class="st"> "http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>raw.path =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">bfcrpath</a></span>(bfc, link)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw"><a href="https://rdrr.io/r/utils/untar.html">untar</a></span>(raw.path, <span class="dt">exdir =</span> <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"raw_data/pbmc10k"</span>))</span></code></pre></div>
 <p>Next, we load the dataset, and also split this data randomly to represent the a use-case where we have 4 patient samples, each containing cells from 3 timepoints (obtained using cell-hashing for example). This is to highlight the multi-sample capabilities of <code>scanalysis</code>. Additionally, we immediately remove barcodes with zero UMI counts.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>pbmc_10k =<span class="st"> </span><span class="kw"><a href="../reference/read_10x.html">read_10x</a></span>(<span class="st">"raw_data/pbmc10k/raw_feature_bc_matrix/"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
@@ -114,18 +112,19 @@
 <span id="cb2-6"><a href="#cb2-6"></a>  sce[, Matrix<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html">colSums</a></span>(SummarizedExperiment<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html">assay</a></span>(sce)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>]</span>
 <span id="cb2-7"><a href="#cb2-7"></a>}</span>
 <span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a>dataset =<span class="st"> </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/split.html">split</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(pbmc_10k), <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"patient_"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)), subset_data)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>dataset =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/split.html">split</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(pbmc_10k), <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"patient_"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)), subset_data)</span>
 <span id="cb2-10"><a href="#cb2-10"></a></span>
 <span id="cb2-11"><a href="#cb2-11"></a><span class="kw"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(pbmc_10k)</span></code></pre></div>
 <p>The next step is to identify droplets that actually contain cells. The <code>filter_ambient_barcode</code> function is used for this. It runs four different methods for identification of cell-containing barcodes:</p>
 <ul>
-<li><a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y">emptyDrops</a></li>
+<li>
+<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y">emptyDrops</a> (empty_drops)</li>
 <li>Total UMI cutoff of 10% of the 99th percentile of UMI counts from the top N barcodes (cellranger)</li>
 <li>Total UMI cutoff based on the inflection point in the barcode distribution (inflection)</li>
 <li>Total UMI cutoff based on the knee point in the barcode distribution (knee)</li>
 </ul>
 <p>All four methods are always run to understand how each of the methods compare, as the results are often dataset-dependent.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>ambient_rna_filters =<span class="st"> </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(dataset, <span class="op">~</span><span class="st"> </span><span class="kw"><a href="../reference/filter_ambient_barcode.html">filter_ambient_barcode</a></span>(.x, <span class="dv">2500</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>ambient_rna_filters =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(dataset, <span class="op">~</span><span class="st"> </span><span class="kw"><a href="../reference/filter_ambient_barcode.html">filter_ambient_barcode</a></span>(.x, <span class="dv">2500</span>))</span></code></pre></div>
 <p>Each one of these results contains a list of booleans indicating which barcodes contain cells. Additionally, each result has attributes that are used in the following plotting function. We now plot the results of each of these filtering methods.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="../reference/plot_barcode_qc.html">plot_barcode_qc</a></span>(<span class="dt">sce_list =</span> dataset,</span>
 <span id="cb4-2"><a href="#cb4-2"></a>                <span class="dt">ambient_rna_filters =</span> ambient_rna_filters,</span>
