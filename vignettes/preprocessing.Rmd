@@ -10,10 +10,10 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  cache = TRUE
+  cache = TRUE,
+  message=FALSE, 
+  warning=FALSE
 )
-options(warn=-1)
 ```
 
 For this tutorial, we run preprocessing on the `10k PBMCs from a Healthy Donor (v3 chemistry)` dataset from 10X Genomics, starting with the raw feature-barcode matrix. 
@@ -39,17 +39,19 @@ Next, we load the dataset, and also split this data randomly to represent the a 
 ```{r load}
 pbmc_10k = read_10x("raw_data/pbmc10k/raw_feature_bc_matrix/")
 
-dataset = map(split(1:ncol(pbmc_10k), paste0("patient_", 1:4)), ~
-                {
-                  sce = pbmc_10k[, .x]
-                  sce$timepoint = sample(paste0("Week ", 0:2), length(.x), replace = TRUE)
-                  sce[, Matrix::colSums(SummarizedExperiment::assay(sce)) > 0]
-                })
+subset_data = function(indices) {
+  sce = pbmc_10k[, indices]
+  sce$timepoint = sample(paste0("Week ", 0:2), length(indices), replace = TRUE)
+  sce[, Matrix::colSums(SummarizedExperiment::assay(sce)) > 0]
+}
+
+dataset = map(split(1:ncol(pbmc_10k), paste0("patient_", 1:4)), ~ subset_data)
 
 rm(pbmc_10k)
 ```
 
 The next step is to identify droplets that actually contain cells. The `filter_ambient_barcode` function is used for this. It runs four different methods for identification of cell-containing barcodes:
+
 * [emptyDrops](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y)
 * Total UMI cutoff of 10% of the 99th percentile of UMI counts from the top N barcodes (cellranger)
 * Total UMI cutoff based on the inflection point in the barcode distribution (inflection)
@@ -63,7 +65,7 @@ ambient_rna_filters = map(dataset, ~ filter_ambient_barcode(.x, 2500))
 
 Each one of these results contains a list of booleans indicating which barcodes contain cells. Additionally, each result has attributes that are used in the following plotting function. We now plot the results of each of these filtering methods.
 
-```{r ambient_barcode_plot, fig.width=12, fig.height=8}
+```{r ambient_barcode_plot, fig.width=9, fig.height=6}
 plot_barcode_qc(sce_list = dataset,
                 ambient_rna_filters = ambient_rna_filters,
                 facet_columns = ".sample",

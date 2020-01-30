@@ -131,11 +131,11 @@
 
     <pre class="usage"><span class='fu'>plot_qc_distribution</span>(
   <span class='no'>sce_list</span>,
+  <span class='kw'>x_filters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>x</span>,
   <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>x_filters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>x_log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -152,6 +152,10 @@
       <td><p>List of SingleCellExperiment object</p></td>
     </tr>
     <tr>
+      <th>x_filters</th>
+      <td><p>List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
+    </tr>
+    <tr>
       <th>x</th>
       <td><p>Numeric column from colData that is in all objects in sce_list</p></td>
     </tr>
@@ -166,10 +170,6 @@
     <tr>
       <th>shape</th>
       <td><p>Column from colData that is in all objects in sce_list</p></td>
-    </tr>
-    <tr>
-      <th>x_filters</th>
-      <td><p>List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
     </tr>
     <tr>
       <th>x_log</th>

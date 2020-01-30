@@ -96,21 +96,15 @@
 <p>First, we load in some required packages and download the dataset.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(scanalysis)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(BiocFileCache)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt; Loading required package: dbplyr</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(purrr)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(magrittr)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">#&gt; </span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; Attaching package: 'magrittr'</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; The following object is masked from 'package:purrr':</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; </span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt;     set_names</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a>bfc =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">BiocFileCache</a></span>(<span class="st">"raw_data"</span>, <span class="dt">ask =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb1-13"><a href="#cb1-13"></a>raw.path =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">bfcrpath</a></span>(</span>
-<span id="cb1-14"><a href="#cb1-14"></a>  bfc,</span>
-<span id="cb1-15"><a href="#cb1-15"></a>  <span class="st">"http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a>)</span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="kw"><a href="https://rdrr.io/r/utils/untar.html">untar</a></span>(raw.path, <span class="dt">exdir =</span> <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"raw_data/pbmc10k"</span>))</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(purrr)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(magrittr)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a>bfc =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">BiocFileCache</a></span>(<span class="st">"raw_data"</span>, <span class="dt">ask =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7"></a>raw.path =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/BiocFileCache/man/BiocFileCache-class.html">bfcrpath</a></span>(</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  bfc,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="st">"http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="kw"><a href="https://rdrr.io/r/utils/untar.html">untar</a></span>(raw.path, <span class="dt">exdir =</span> <span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"raw_data/pbmc10k"</span>))</span></code></pre></div>
 <p>Next, we load the dataset, and also split this data randomly to represent the a use-case where we have 4 patient samples, each containing cells from 3 timepoints (obtained using cell-hashing for example). This is to highlight the multi-sample capabilities of <code>scanalysis</code>. Additionally, we immediately remove barcodes with zero UMI counts.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>pbmc_10k =<span class="st"> </span><span class="kw"><a href="../reference/read_10x.html">read_10x</a></span>(<span class="st">"raw_data/pbmc10k/raw_feature_bc_matrix/"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
@@ -129,34 +123,8 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="../reference/plot_barcode_qc.html">plot_barcode_qc</a></span>(<span class="dt">sce_list =</span> dataset,</span>
 <span id="cb4-2"><a href="#cb4-2"></a>                <span class="dt">ambient_rna_filters =</span> ambient_rna_filters,</span>
 <span id="cb4-3"><a href="#cb4-3"></a>                <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>                <span class="dt">facet_rows =</span> <span class="st">"timepoint"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): Unequal factor levels: coercing to character</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a></span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): Unequal factor levels: coercing to character</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="co">#&gt; into character vector</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="co">#&gt; Warning: Transformation introduced infinite values in continuous x-axis</span></span>
-<span id="cb4-30"><a href="#cb4-30"></a><span class="co">#&gt; Warning: Transformation introduced infinite values in continuous y-axis</span></span></code></pre></div>
-<p><img src="preprocessing_files/figure-html/ambient_barcode_plot-1.png" width="700"></p>
+<span id="cb4-4"><a href="#cb4-4"></a>                <span class="dt">facet_rows =</span> <span class="st">"timepoint"</span>)</span></code></pre></div>
+<p><img src="preprocessing_files/figure-html/ambient_barcode_plot-1.png" width="1152"></p>
 <p>Here, for each sample, and timepoint within each sample, we have a barcode distribution plot, fully annotated with the cutoffs based on each of the methods, as well as the number of cells retained by each of the individual filters. We now use this visualization to decide that using the emptyDrops filter looks fine, and, as expected, gives us the most number of cells recovered.</p>
   </div>
 
