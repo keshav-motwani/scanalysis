@@ -107,12 +107,9 @@ pct_mito_filters = map(cell_dataset, ~ !isOutlier(colData(.x)$pct_mito,
 
 With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously. 
 
-```{r plot_qc, fig.height=6, fig.width=8}
+```{r plot_qc, fig.height=4, fig.width=6}
 plot_qc_distribution(cell_dataset, x_filters = total_umi_filters, x = "total_umi", color = "pct_mito", facet_columns = ".sample")
-
 plot_qc_distribution(cell_dataset, x_filters = n_genes_expr_filters, x = "n_genes_expr", color = "pct_mito", facet_columns = ".sample")
-
 plot_qc_distribution(cell_dataset, x_filters = pct_mito_filters, x = "pct_mito", color = "total_umi", facet_columns = ".sample", x_log = FALSE)
-
 plot_qc_scatterplot(cell_dataset, x_filters = total_umi_filters, y_filters = n_genes_expr_filters, x = "total_umi", y = "n_genes_expr", color = "pct_mito", facet_columns = ".sample",  facet_type = "wrap")
 ```
