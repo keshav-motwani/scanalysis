@@ -17,10 +17,10 @@
 #' NULL
 read_10x = function(gene_expr_path = getwd(),
                     vdj_path = NA) {
-  sce = read_10x_gene_expr(gene_expr_path)
+  sce = .read_10x_gene_expr(gene_expr_path)
 
   if (!is.na(vdj_path)) {
-    vdj = read_10x_vdj(vdj_path)
+    vdj = .read_10x_vdj(vdj_path)
     colData(sce)$vdj = split(vdj, factor(vdj$barcode, colData(sce)$Barcode))
   }
 
@@ -38,10 +38,11 @@ read_10x = function(gene_expr_path = getwd(),
 #' @importFrom SingleCellExperiment rowData
 #'
 #' @return SingleCellExperiment object
+#' @keywords internal
 #'
 #' @examples
 #' NULL
-read_10x_gene_expr = function(path) {
+.read_10x_gene_expr = function(path) {
   sce = read10xCounts(path, col.names = TRUE)
   rownames(sce) = uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
   return(sce)
@@ -58,10 +59,11 @@ read_10x_gene_expr = function(path) {
 #' @importClassesFrom S4Vectors DataFrame
 #'
 #' @return DataFrame with vdj information
+#' @keywords internal
 #'
 #' @examples
 #' NULL
-read_10x_vdj = function(path) {
+.read_10x_vdj = function(path) {
   vdj = read_csv(file.path(path, "all_contig_annotations.csv")) %>%
     filter(
       high_confidence,

@@ -12,18 +12,16 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   cache = TRUE,
   message = FALSE, 
-  warning = FALSE,
-  results='asis'
+  warning = FALSE
 )
 ```
 
 For this tutorial, we demonstrate the conversion utilities in `scanalysis` to streamline the analysis process by using functions from Bioconductor and Seurat interchangably. In the current implementation of `Seurat::as.SingleCellExperiment` and `Seurat::as.Seurat`, lots of information is lost, preventing downstream analysis and causing errors if the object was converted at some point. Some examples of this are shown below before we begin to use the functionality in this package.
 
-In this example, we aim to integrate two Seurat objects with the overall analysis plan as below:
+In this example, we aim to integrate two `Seurat` objects with the overall analysis plan as below:
 
-1. Normalize using SCTransform (includes identifying highly variable genes)
-2. Run PCA on highly variable genes
-3. Convert to `SingleCellExperiment` and back to `Seurat` objects (many possible reasons for this in practice, but we keep it general by just converting back and forth)
+1. Normalize using `SCTransform` (includes identifying highly variable genes)
+2. Convert to `SingleCellExperiment` and back to `Seurat` objects (many possible reasons for this in practice, but we keep it general by just converting back and forth)
 3. Integrate objects
 
 We will note some roadblocks using the `Seurat` conversion implementation and introduce our implementation. Note that our implementation utilizes the `Seurat` implementation but adds upon it. 
@@ -40,8 +38,7 @@ Next we normalize using `SCTransform` and run PCA on the highly variable genes.
 
 ```{r normalize}
 seurat_normalized = seurat_original %>%
-  Seurat::SCTransform(verbose = FALSE) %>%
-  Seurat::RunPCA(verbose = FALSE, features = Seurat::VariableFeatures(.))
+  Seurat::SCTransform(verbose = FALSE)
 ```
 
 Next we convert to a `SingleCellExperiment` object, using the `Seurat` implementation.
@@ -60,9 +57,9 @@ seurat_converted = sce_converted %>%
 First we try to look for the highly variable genes in the converted object. 
 
 ```{r hvg}
-cat("Variable Features pre-conversion:")
-head(Seurat::VariableFeatures(seurat_converted))
 cat("Variable Features post-conversion:")
+head(Seurat::VariableFeatures(seurat_converted))
+cat("Variable Features pre-conversion:")
 head(Seurat::VariableFeatures(seurat_normalized))
 ```
 
@@ -91,7 +88,7 @@ features = Seurat::SelectIntegrationFeatures(object.list = integration_list, nfe
 integration_list = Seurat::PrepSCTIntegration(integration_list, anchor.features = features)
 ```
 
-This fails, because the SCT assay information was not carried over. In fact, even if the assay was converted into an alternate experiment and back into an assay, it would still fail. It requires the information from each of the slots in an `Assay` object to be converted into a `SingleCellExperiment` and vice versa. In this particular case, the data from the `misc` slot of each assay must be transferred to the `metadata` of the `SingleCellExperiment`. For example, some information like `VariableFeatures` in the `Seurat` object, requires the addition of some new slots to the `SingleCellExperiment` object, which we detail below. For now, we illustrate how our implementation avoids all the above problems. 
+This fails, because the `SCT` assay information was not carried over. In fact, even if the assay was converted into an alternate experiment and back into an assay, it would still fail. It requires the information from each of the slots in an `Assay` object to be converted into a `SingleCellExperiment` and vice versa. In this particular case, the data from the `misc` slot of each assay must be transferred to the `metadata` of the `SingleCellExperiment`. For example, some information like `VariableFeatures` in the `Seurat` object, requires the addition of some new slots to the `SingleCellExperiment` object, which we detail below. For now, we illustrate how our implementation avoids all the above problems. 
 
 We start with the normalized object, and convert into SCE and immediately back into Seurat. 
 ```{r conversion_1}
@@ -113,18 +110,22 @@ head(Seurat::VariableFeatures(seurat_normalized))
 
 The highly variable genes were successfully retained during the conversion process. 
 
-Now assay information: 
+Now we look at the assay information: 
 
 ```{r assays_1}
-cat("Alternate Experiment (SingleCellExperiment) names:")
+# Alternate Experiment (SingleCellExperiment) names:
 SingleCellExperiment::altExps(sce_converted_new)
-cat("Assay (Seurat) names post-conversion:")
+
+# Assay (Seurat) names post-conversion:
 Seurat::Assays(seurat_converted_new)
-cat("Assay (Seurat) names pre-conversion:")
+
+# Assay (Seurat) names pre-conversion:
 Seurat::Assays(seurat_normalized)
-cat("Default Assay post-conversion:")
+
+# Default Assay post-conversion:
 Seurat::DefaultAssay(seurat_converted_new)
-cat("Default Assay pre-conversion:")
+
+# Default Assay pre-conversion:
 Seurat::DefaultAssay(seurat_normalized)
 ```
 
@@ -142,8 +143,8 @@ integration_list = Seurat::PrepSCTIntegration(integration_list, anchor.features 
 
 We don't finish the integration, as this was just to illustrate an error caused by the `Seurat` conversion implementation. 
 
-Now we describe briefly the implementation of conversion and corresponding places for information in the `Seurat` and `SingleCellExperiment` objects. As both of these data types may evolve over time, these conversion implementations will also need to, and if there is any loss of data not covered by this implementation, we ask that you create an [issue](https://github.com/keshavmot2/scanalysis/issues). 
+Now we describe briefly the implementation of conversion and corresponding places for information in the `Seurat` and `SingleCellExperiment` objects. As both of these data types may evolve over time, these conversion implementations will also need to, and if there is any loss of data not covered by this implementation, we ask that you create an [issue](https://github.com/keshavmot2/scanalysis/issues) so that we are aware and can implement a solution. 
 
 Each `Assay` in the `Seurat` object is stored as an `altExp` in the `SingleCellExperiment` object. Of note, the `SingleCellExperiment` has the `altExps` stored as `SingleCellExperiment`s under one main `SingleCellExperiment`. However, the `Seurat` object treats all `Assay`s at the same level, but there is a `DefaultAssay` attribute. When objects are converted, the `Assay` to be treated as the main one can be specified in the `default_assay` argument to `seurat_to_sce`. Right now it is not supported to interactively swap the main experiment in the `SingleCellExperiment` as would be done using the `DefaultAssay` function in `Seurat`. However, all functions in this package take an `altExp` argument where it makes sense, and if `altExp = NULL`, it uses the main highest-level data. 
 
-Within each object, information from each `Assay` is added into each (`altExp`) `SingleCellExperiment`. Information from the `misc` slot in the `Seurat` objects is transferred to the `metadata` attribute of the `SingleCellExperiment`. There is no slot for the scaled data in a `SingleCellExperiment`, so this is added to the `metadata(sce)$scaled`. This is also the case for the variable features, so this is added to the `metadata(sce)$variable_features.
+Within each object, information from each `Assay` is added into each (`altExp`) `SingleCellExperiment`. Information from the `misc` slot in the `Seurat` objects is transferred to the `metadata` attribute of the `SingleCellExperiment`. There is no slot for the scaled data in a `SingleCellExperiment`, so this is added to the `metadata(sce)$scaled`. This is also the case for the variable features, so this is added to the `metadata(sce)$variable_features`.
