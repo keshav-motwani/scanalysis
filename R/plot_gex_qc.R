@@ -202,6 +202,8 @@ plot_qc_distribution = function(sce_list,
       )
   }
 
+  plot = plot + scale_y_discrete(expand = c(0, 0))
+
   return(plot)
 }
 

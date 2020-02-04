@@ -84,7 +84,7 @@ pct_mito_filters = purrr::map(cell_dataset, ~ !scater::isOutlier(colData(.x)$pct
 
 With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously. 
 
-```{r plot_qc, fig.height=2.5, fig.width=9}
+```{r plot_qc, fig.height=5*2/3, fig.width=18*2/3}
 plot_qc_distribution(
   cell_dataset,
   x_filters = total_umi_filters,
@@ -124,6 +124,16 @@ plot_qc_scatterplot(
   facet_type = "wrap",
   nrow = 1
 )
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = pct_mito_filters,
+  x = "pct_mito",
+  color = "total_umi",
+  facet_columns = ".sample",
+  x_log = FALSE,
+  y = NULL,
+  nrow = 1
+)
 ```
 
 We can use these filters to drop the outliers as follows:
@@ -135,7 +145,7 @@ cell_dataset = purrr::pmap(list(cell_dataset, total_umi_filters, n_genes_expr_fi
 
 We plot the data again to show the post-filtering dataset:
 
-```{r plot_qc_post, fig.height=2.5, fig.width=9}
+```{r plot_qc_post, fig.height=5*2/3, fig.width=18*2/3}
 plot_qc_distribution(
   cell_dataset,
   x_filters = total_umi_filters,
