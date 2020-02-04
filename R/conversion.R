@@ -11,11 +11,14 @@
 #'
 #' @examples
 #' NULL
-seurat_to_sce = function(seurat) {
-  if ("SCT" %in% names(seurat@assays)) {
-    default_assay = "SCT"
-  } else {
-    default_assay = "RNA"
+seurat_to_sce = function(seurat, default_assay = NULL) {
+
+  if (is.null(default_assay)) {
+    if ("SCT" %in% names(seurat@assays)) {
+      default_assay = "SCT"
+    } else {
+      default_assay = "RNA"
+    }
   }
 
   result = .seurat_assay_to_sce(seurat, default_assay)

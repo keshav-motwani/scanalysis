@@ -1,5 +1,5 @@
 ---
-title: "Preprocessing Visualizations"
+title: "Preprocessing Vignette"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{preprocessing}
@@ -23,7 +23,7 @@ First, we load `scanalysis` and load the dataset.
 ```{r setup}
 library(scanalysis)
 
-dataset = get_pbmc_10k_data()
+dataset = get_multi_sample_pbmc_10k()
 ```
 
 The next step is to identify droplets that actually contain cells. The `filter_ambient_barcode` function is used for this. It runs four different methods for identification of cell-containing barcodes:
@@ -66,10 +66,10 @@ cell_dataset = purrr::map(cell_dataset, ~ .x %>%
 Now that these values are annotated, we can use the `scater::isOutlier` to identify outliers based on these values. We consider values greater than 2 median absolute deviations on both sides an outlier for total UMI count and number of genes expressed, and values greater than 1 median absolute deviations above for the percentage of mitochondrial reads, though it should be noted that this parameter was adjusted based off of the below plots to remove most of the upper mode total UMI/number of genes expressed in the data which likely corresponds to doublets.
 
 ```{r filter_qc}
-total_umi_filters = purrr::map(cell_dataset, ~ scater::isOutlier(colData(.x)$total_umi,
-                                                                 nmads = 1,
-                                                                 type = "both",
-                                                                 log = TRUE))
+total_umi_filters = purrr::map(cell_dataset, ~ !scater::isOutlier(colData(.x)$total_umi,
+                                                                  nmads = 1,
+                                                                  type = "both",
+                                                                  log = TRUE))
 
 n_genes_expr_filters = purrr::map(cell_dataset, ~ !scater::isOutlier(colData(.x)$n_genes_expr,
                                                                      nmads = 1,
@@ -85,8 +85,94 @@ pct_mito_filters = purrr::map(cell_dataset, ~ !scater::isOutlier(colData(.x)$pct
 With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously. 
 
 ```{r plot_qc, fig.height=2.5, fig.width=9}
-plot_qc_distribution(cell_dataset, x_filters = total_umi_filters, x = "total_umi", color = "pct_mito", facet_columns = ".sample", y = "timepoint", nrow = 1)
-plot_qc_distribution(cell_dataset, x_filters = n_genes_expr_filters, x = "n_genes_expr", color = "pct_mito", facet_columns = ".sample", y = "timepoint", nrow = 1)
-plot_qc_distribution(cell_dataset, x_filters = pct_mito_filters, x = "pct_mito", color = "total_umi", facet_columns = ".sample", x_log = FALSE, y = "timepoint", nrow = 1)
-plot_qc_scatterplot(cell_dataset, x_filters = total_umi_filters, y_filters = n_genes_expr_filters, x = "total_umi", y = "n_genes_expr", color = "pct_mito", facet_columns = ".sample",  facet_type = "wrap", nrow = 1)
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = total_umi_filters,
+  x = "total_umi",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = n_genes_expr_filters,
+  x = "n_genes_expr",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = pct_mito_filters,
+  x = "pct_mito",
+  color = "total_umi",
+  facet_columns = ".sample",
+  x_log = FALSE,
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_scatterplot(
+  cell_dataset,
+  x_filters = total_umi_filters,
+  y_filters = n_genes_expr_filters,
+  x = "total_umi",
+  y = "n_genes_expr",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  facet_type = "wrap",
+  nrow = 1
+)
+```
+
+We can use these filters to drop the outliers as follows:
+
+```{r filter, fig.height=2.5, fig.width=9}
+cell_dataset = purrr::pmap(list(cell_dataset, total_umi_filters, n_genes_expr_filters, pct_mito_filters),
+                           ~ ..1[, ..2 & ..3 & ..4])
+```
+
+We plot the data again to show the post-filtering dataset:
+
+```{r plot_qc_post, fig.height=2.5, fig.width=9}
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = total_umi_filters,
+  x = "total_umi",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = n_genes_expr_filters,
+  x = "n_genes_expr",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_distribution(
+  cell_dataset,
+  x_filters = pct_mito_filters,
+  x = "pct_mito",
+  color = "total_umi",
+  facet_columns = ".sample",
+  x_log = FALSE,
+  y = "timepoint",
+  nrow = 1
+)
+plot_qc_scatterplot(
+  cell_dataset,
+  x_filters = total_umi_filters,
+  y_filters = n_genes_expr_filters,
+  x = "total_umi",
+  y = "n_genes_expr",
+  color = "pct_mito",
+  facet_columns = ".sample",
+  facet_type = "wrap",
+  nrow = 1
+)
 ```

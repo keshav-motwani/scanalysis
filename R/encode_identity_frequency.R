@@ -133,6 +133,7 @@ encode_vdj_identity_frequency_long = function(sce_list,
 #' @importFrom plyr ldply
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

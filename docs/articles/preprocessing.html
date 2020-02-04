@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preprocessing Visualizations • scanalysis</title>
+<title>Preprocessing Vignette • scanalysis</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Preprocessing Visualizations">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Preprocessing Vignette">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -54,7 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/preprocessing.html">Preprocessing Visualizations</a>
+      <a href="../articles/conversion.html">Conversion Vignette</a>
+    </li>
+    <li>
+      <a href="../articles/preprocessing.html">Preprocessing Vignette</a>
     </li>
   </ul>
 </li>
@@ -82,7 +85,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Preprocessing Visualizations</h1>
+      <h1>Preprocessing Vignette</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/keshavmot2/scanalysis/blob/master/vignettes/preprocessing.Rmd"><code>vignettes/preprocessing.Rmd</code></a></small>
@@ -96,7 +99,7 @@
 <p>First, we load <code>scanalysis</code> and load the dataset.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(scanalysis)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a>dataset =<span class="st"> </span><span class="kw"><a href="../reference/get_pbmc_10k_data.html">get_pbmc_10k_data</a></span>()</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a>dataset =<span class="st"> </span><span class="kw"><a href="../reference/get_multi_sample_pbmc_10k.html">get_multi_sample_pbmc_10k</a></span>()</span></code></pre></div>
 <p>The next step is to identify droplets that actually contain cells. The <code>filter_ambient_barcode</code> function is used for this. It runs four different methods for identification of cell-containing barcodes:</p>
 <ul>
 <li>
@@ -121,10 +124,10 @@
 <span id="cb5-3"><a href="#cb5-3"></a><span class="st">                            </span>annotate_n_genes_expr <span class="op">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="st">                            </span><span class="kw"><a href="../reference/annotate_pct_gene_set.html">annotate_pct_gene_set</a></span>(<span class="st">"^MT-"</span>, <span class="st">"pct_mito"</span>))</span></code></pre></div>
 <p>Now that these values are annotated, we can use the <code><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">scater::isOutlier</a></code> to identify outliers based on these values. We consider values greater than 2 median absolute deviations on both sides an outlier for total UMI count and number of genes expressed, and values greater than 1 median absolute deviations above for the percentage of mitochondrial reads, though it should be noted that this parameter was adjusted based off of the below plots to remove most of the upper mode total UMI/number of genes expressed in the data which likely corresponds to doublets.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>total_umi_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>total_umi,</span>
-<span id="cb6-2"><a href="#cb6-2"></a>                                                                 <span class="dt">nmads =</span> <span class="dv">1</span>,</span>
-<span id="cb6-3"><a href="#cb6-3"></a>                                                                 <span class="dt">type =</span> <span class="st">"both"</span>,</span>
-<span id="cb6-4"><a href="#cb6-4"></a>                                                                 <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>total_umi_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>total_umi,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>                                                                  <span class="dt">nmads =</span> <span class="dv">1</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>                                                                  <span class="dt">type =</span> <span class="st">"both"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>                                                                  <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
 <span id="cb6-5"><a href="#cb6-5"></a></span>
 <span id="cb6-6"><a href="#cb6-6"></a>n_genes_expr_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>n_genes_expr,</span>
 <span id="cb6-7"><a href="#cb6-7"></a>                                                                     <span class="dt">nmads =</span> <span class="dv">1</span>,</span>
@@ -136,14 +139,96 @@
 <span id="cb6-13"><a href="#cb6-13"></a>                                                                 <span class="dt">type =</span> <span class="st">"higher"</span>,</span>
 <span id="cb6-14"><a href="#cb6-14"></a>                                                                 <span class="dt">log =</span> <span class="ot">FALSE</span>))</span></code></pre></div>
 <p>With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(cell_dataset, <span class="dt">x_filters =</span> total_umi_filters, <span class="dt">x =</span> <span class="st">"total_umi"</span>, <span class="dt">color =</span> <span class="st">"pct_mito"</span>, <span class="dt">facet_columns =</span> <span class="st">".sample"</span>, <span class="dt">y =</span> <span class="st">"timepoint"</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  cell_dataset,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-1.png" width="864"></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(cell_dataset, <span class="dt">x_filters =</span> n_genes_expr_filters, <span class="dt">x =</span> <span class="st">"n_genes_expr"</span>, <span class="dt">color =</span> <span class="st">"pct_mito"</span>, <span class="dt">facet_columns =</span> <span class="st">".sample"</span>, <span class="dt">y =</span> <span class="st">"timepoint"</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  cell_dataset,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="dt">x_filters =</span> n_genes_expr_filters,</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="dt">x =</span> <span class="st">"n_genes_expr"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-2.png" width="864"></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(cell_dataset, <span class="dt">x_filters =</span> pct_mito_filters, <span class="dt">x =</span> <span class="st">"pct_mito"</span>, <span class="dt">color =</span> <span class="st">"total_umi"</span>, <span class="dt">facet_columns =</span> <span class="st">".sample"</span>, <span class="dt">x_log =</span> <span class="ot">FALSE</span>, <span class="dt">y =</span> <span class="st">"timepoint"</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  cell_dataset,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="dt">x_filters =</span> pct_mito_filters,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="dt">x =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="dt">color =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="dt">x_log =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-3.png" width="864"></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw"><a href="../reference/plot_qc_scatterplot.html">plot_qc_scatterplot</a></span>(cell_dataset, <span class="dt">x_filters =</span> total_umi_filters, <span class="dt">y_filters =</span> n_genes_expr_filters, <span class="dt">x =</span> <span class="st">"total_umi"</span>, <span class="dt">y =</span> <span class="st">"n_genes_expr"</span>, <span class="dt">color =</span> <span class="st">"pct_mito"</span>, <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,  <span class="dt">facet_type =</span> <span class="st">"wrap"</span>, <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw"><a href="../reference/plot_qc_scatterplot.html">plot_qc_scatterplot</a></span>(</span>
+<span id="cb10-2"><a href="#cb10-2"></a>  cell_dataset,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="dt">y_filters =</span> n_genes_expr_filters,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>  <span class="dt">y =</span> <span class="st">"n_genes_expr"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>  <span class="dt">facet_type =</span> <span class="st">"wrap"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-4.png" width="864"></p>
+<p>We can use these filters to drop the outliers as follows:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map2.html">pmap</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(cell_dataset, total_umi_filters, n_genes_expr_filters, pct_mito_filters),</span>
+<span id="cb11-2"><a href="#cb11-2"></a>                           <span class="op">~</span><span class="st"> </span>..<span class="dv">1</span>[, ..<span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>..<span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>..<span class="dv">4</span>])</span></code></pre></div>
+<p>We plot the data again to show the post-filtering dataset:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  cell_dataset,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>)</span></code></pre></div>
+<p><img src="preprocessing_files/figure-html/plot_qc_post-1.png" width="864"></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  cell_dataset,</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="dt">x_filters =</span> n_genes_expr_filters,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="dt">x =</span> <span class="st">"n_genes_expr"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>)</span></code></pre></div>
+<p><img src="preprocessing_files/figure-html/plot_qc_post-2.png" width="864"></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw"><a href="../reference/plot_qc_distribution.html">plot_qc_distribution</a></span>(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  cell_dataset,</span>
+<span id="cb14-3"><a href="#cb14-3"></a>  <span class="dt">x_filters =</span> pct_mito_filters,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>  <span class="dt">x =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>  <span class="dt">color =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7"></a>  <span class="dt">x_log =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb14-8"><a href="#cb14-8"></a>  <span class="dt">y =</span> <span class="st">"timepoint"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a>)</span></code></pre></div>
+<p><img src="preprocessing_files/figure-html/plot_qc_post-3.png" width="864"></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw"><a href="../reference/plot_qc_scatterplot.html">plot_qc_scatterplot</a></span>(</span>
+<span id="cb15-2"><a href="#cb15-2"></a>  cell_dataset,</span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="dt">y_filters =</span> n_genes_expr_filters,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="dt">y =</span> <span class="st">"n_genes_expr"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="dt">color =</span> <span class="st">"pct_mito"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="dt">facet_columns =</span> <span class="st">".sample"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9"></a>  <span class="dt">facet_type =</span> <span class="st">"wrap"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>)</span></code></pre></div>
+<p><img src="preprocessing_files/figure-html/plot_qc_post-4.png" width="864"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

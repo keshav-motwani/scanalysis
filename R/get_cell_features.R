@@ -49,7 +49,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #'
 #' @examples
 #' NULL
-..get_cell_features_coldata = function(sce, features) {
+.get_cell_features_coldata = function(sce, features) {
   colnames_intersection = intersect(features, colnames(SummarizedExperiment::colData(sce)))
   feature_values = as.data.frame(SummarizedExperiment::colData(sce)[, colnames_intersection, drop = FALSE])
   return(feature_values)

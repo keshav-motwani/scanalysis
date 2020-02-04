@@ -4,7 +4,7 @@
 \alias{seurat_to_sce}
 \title{Convert Seurat object to SingleCellExperiment and retain multi-modal data}
 \usage{
-seurat_to_sce(seurat)
+seurat_to_sce(seurat, default_assay = NULL)
 }
 \arguments{
 \item{seurat}{Seurat object}
