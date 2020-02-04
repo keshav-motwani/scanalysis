@@ -28,3 +28,4 @@ Prepare counts of cells that meet filter criteria to annotate based on a single 
 \examples{
 NULL
 }
+\keyword{internal}

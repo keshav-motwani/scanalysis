@@ -43,6 +43,7 @@ seurat_to_sce = function(seurat, default_assay = NULL) {
 #' @importFrom Seurat as.SingleCellExperiment VariableFeatures
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -68,6 +69,7 @@ seurat_to_sce = function(seurat, default_assay = NULL) {
 #'
 #' @return
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -104,6 +106,7 @@ sce_to_seurat = function(sce) {
 #' @importFrom purrr map
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

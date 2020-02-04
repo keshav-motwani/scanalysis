@@ -176,3 +176,7 @@ plot_qc_scatterplot(
   nrow = 1
 )
 ```
+
+Now the data falls within the filters as expected. Note that the numbers annotated here are smaller than those within the filters on the univariate/bivariate plots above. This is because the intersection of all 3 filters are used.
+
+The data is ready to be used in downstream analysis!

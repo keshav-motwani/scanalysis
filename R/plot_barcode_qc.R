@@ -113,6 +113,7 @@ plot_barcode_qc = function(sce_list,
 #' @importFrom SingleCellExperiment colData
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -139,6 +140,7 @@ plot_barcode_qc = function(sce_list,
 #' @param ambient_rna_filter Result from filter_ambient_rna function
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -167,6 +169,7 @@ plot_barcode_qc = function(sce_list,
 #' @importFrom dplyr summarize group_by mutate
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

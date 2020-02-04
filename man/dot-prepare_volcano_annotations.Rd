@@ -53,3 +53,4 @@ Prepare annotations for volcano plot
 \examples{
 NULL
 }
+\keyword{internal}

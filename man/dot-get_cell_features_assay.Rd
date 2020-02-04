@@ -24,3 +24,4 @@ Get feature from assay (from alternate experiment)
 \examples{
 NULL
 }
+\keyword{internal}

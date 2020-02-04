@@ -20,3 +20,4 @@ Convert Seurat assay to SingleCellExperiment
 \examples{
 NULL
 }
+\keyword{internal}

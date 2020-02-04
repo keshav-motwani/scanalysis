@@ -169,6 +169,7 @@ plot_reduced_dimensions = function(sce_list,
 #' @importFrom SummarizedExperiment colData colData<-
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

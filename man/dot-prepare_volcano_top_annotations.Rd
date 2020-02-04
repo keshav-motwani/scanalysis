@@ -35,3 +35,4 @@ Prepare the top N annotations for volcano plot
 \examples{
 NULL
 }
+\keyword{internal}

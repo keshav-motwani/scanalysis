@@ -22,3 +22,4 @@ Prepare data for plotting barcode QC plot
 \examples{
 NULL
 }
+\keyword{internal}

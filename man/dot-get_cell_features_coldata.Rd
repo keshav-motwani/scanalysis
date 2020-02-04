@@ -20,3 +20,4 @@ Get feature from column metadata
 \examples{
 NULL
 }
+\keyword{internal}

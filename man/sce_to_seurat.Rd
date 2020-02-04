@@ -18,3 +18,4 @@ Convert SingleCellExperiment object to Seurat and retain multi-modal data
 \examples{
 NULL
 }
+\keyword{internal}

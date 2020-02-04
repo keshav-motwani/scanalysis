@@ -214,6 +214,7 @@ plot_qc_distribution = function(sce_list,
 #' @importFrom dplyr mutate
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -236,6 +237,7 @@ plot_qc_distribution = function(sce_list,
 #' @importFrom tidyr unnest
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -296,6 +298,7 @@ plot_qc_distribution = function(sce_list,
 #' @importFrom tidyr unnest
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -363,6 +366,7 @@ plot_qc_distribution = function(sce_list,
 #' @param filter Filter for a sample from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

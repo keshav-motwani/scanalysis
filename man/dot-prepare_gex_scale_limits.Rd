@@ -22,3 +22,4 @@ Prepare the limits of plot scale
 \examples{
 NULL
 }
+\keyword{internal}

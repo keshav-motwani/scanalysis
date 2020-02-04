@@ -20,3 +20,4 @@ Get feature from reduced dimensional representation
 \examples{
 NULL
 }
+\keyword{internal}

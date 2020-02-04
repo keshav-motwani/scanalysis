@@ -29,6 +29,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @param alt_exp Name of the altExp to use (if any)
 #'
 #' @return data.frame with rows as cells and columns as features
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -46,6 +47,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @param features Column names from column metadata
 #'
 #' @return data.frame with rows as cells and columns as features
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -64,6 +66,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @importFrom SingleCellExperiment reducedDims
 #'
 #' @return data.frame with rows as cells and columns as features
+#' @keywords internal
 #'
 #' @examples
 #' NULL

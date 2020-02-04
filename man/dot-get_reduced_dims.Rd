@@ -20,3 +20,4 @@ Get reduced dimensions of object
 \examples{
 NULL
 }
+\keyword{internal}

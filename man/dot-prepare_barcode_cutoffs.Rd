@@ -22,3 +22,4 @@ Prepare cutoff values for each method
 \examples{
 NULL
 }
+\keyword{internal}

@@ -117,6 +117,7 @@ plot_volcano = function(data,
 #' @importFrom dplyr filter group_by mutate top_n filter bind_rows
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL
@@ -173,6 +174,7 @@ plot_volcano = function(data,
 #' @importFrom dplyr arrange mutate group_by top_n
 #'
 #' @return
+#' @keywords internal
 #'
 #' @examples
 #' NULL

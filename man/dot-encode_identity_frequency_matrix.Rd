@@ -24,3 +24,4 @@ Helper function to encode identity frequency matrix given data frame
 \examples{
 NULL
 }
+\keyword{internal}

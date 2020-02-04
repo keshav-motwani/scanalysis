@@ -24,3 +24,4 @@ Prepare count annotations for number of cells passing each filtering method
 \examples{
 NULL
 }
+\keyword{internal}

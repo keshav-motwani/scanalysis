@@ -20,3 +20,4 @@ Prepare data frame to plot for gene expression related QC plots
 \examples{
 NULL
 }
+\keyword{internal}

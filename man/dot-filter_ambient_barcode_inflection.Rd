@@ -18,3 +18,4 @@ Get filter for cells based on inflection point
 \examples{
 NULL
 }
+\keyword{internal}

@@ -22,3 +22,4 @@ Get filter for cells based on emptyDrops algorithm
 \examples{
 NULL
 }
+\keyword{internal}
