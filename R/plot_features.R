@@ -19,15 +19,15 @@
 #'
 #' @examples
 #' NULL
-plot_distributions = function(sce_list,
-                              assay,
-                              alt_exp = NULL,
-                              features,
-                              x,
-                              color = x,
-                              facet_rows = c(".feature"),
-                              facet_columns = c(".sample"),
-                              ...) {
+plot_features = function(sce_list,
+                         assay,
+                         alt_exp = NULL,
+                         features,
+                         x,
+                         color = x,
+                         facet_rows = c(".feature"),
+                         facet_columns = c(".sample"),
+                         ...) {
   if (is.null(names(sce_list))) {
     names(sce_list) = paste0("sample_", 1:length(sce_list))
   }
@@ -37,16 +37,20 @@ plot_distributions = function(sce_list,
 
   id_cols = unique(c("barcode", x, color, facet_rows, facet_columns, ".sample"))
 
-  data = purrr::imap_dfr(sce_list,
-                         ~ get_cell_features(.x, features, assay, alt_exp) %>%
-                           mutate(., .sample = .y))
+  data = purrr::imap_dfr(
+    sce_list,
+    ~ get_cell_features(.x, features, assay, alt_exp) %>%
+      mutate(., .sample = .y)
+  )
 
   id_cols = intersect(id_cols, colnames(data))
 
-  data = tidyr::pivot_longer(data,
-                             cols = -id_cols,
-                             names_to = ".feature",
-                             values_to = "value")
+  data = tidyr::pivot_longer(
+    data,
+    cols = -id_cols,
+    names_to = ".feature",
+    values_to = "value"
+  )
 
   levels = intersect(original_features, data$.feature)
 

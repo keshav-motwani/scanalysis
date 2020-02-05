@@ -26,20 +26,24 @@
 #'
 #' @examples
 #' NULL
-plot_qc_scatterplot = function(sce_list,
-                               x,
-                               y,
-                               color = NULL,
-                               shape = NULL,
-                               x_filters = NULL,
-                               y_filters = NULL,
-                               x_log = TRUE,
-                               y_log = TRUE,
-                               text_size = 3,
-                               facet_rows = NULL,
-                               facet_columns = NULL,
-                               facet_type = "grid",
-                               ...) {
+plot_gex_bivariate_qc = function(sce_list,
+                                 x,
+                                 y,
+                                 color = NULL,
+                                 shape = NULL,
+                                 x_filters = NULL,
+                                 y_filters = NULL,
+                                 x_log = TRUE,
+                                 y_log = TRUE,
+                                 text_size = 3,
+                                 facet_rows = NULL,
+                                 facet_columns = NULL,
+                                 facet_type = "grid",
+                                 ...) {
+
+  if (is.null(names(sce_list))) {
+    names(sce_list) = paste0("sample_", 1:length(sce_list))
+  }
 
   if (is.null(x_filters)) {
     x_filters = rep(list(NULL), length(sce_list))
@@ -55,12 +59,30 @@ plot_qc_scatterplot = function(sce_list,
 
   data = imap(sce_list, .prepare_gex_data)
 
-  counts = pmap_dfr(list(data, x_filters, y_filters, names(data)), ~ .prepare_gex_bivariate_counts(..1, x, y, ..2, ..3, x_log, y_log, ..4, c(facet_rows, facet_columns)))
+  counts = pmap_dfr(
+    list(data, x_filters, y_filters, names(data)),
+    ~ .prepare_gex_bivariate_counts(
+      ..1,
+      x,
+      y,
+      ..2,
+      ..3,
+      x_log,
+      y_log,
+      ..4,
+      c(facet_rows, facet_columns)
+    )
+  )
 
   data = bind_rows(data)
 
   plot = data %>%
-    ggplot(aes_string(x = x, y = y, color = color, shape = shape)) +
+    ggplot(aes_string(
+      x = x,
+      y = y,
+      color = color,
+      shape = shape
+    )) +
     geom_point(alpha = 0.5) +
     geom_density2d(color = "blue", alpha = 0.5) +
     theme_ggexp() +
@@ -91,11 +113,32 @@ plot_qc_scatterplot = function(sce_list,
   }
 
   plot = plot +
-    geom_label(data = counts %>% filter(count != 0), aes(label = count, x = x, y = y, vjust  = vjust, hjust = hjust), color = "black", size = text_size, label.padding = unit(0.1, "lines"), alpha = 0.5) +
-    geom_vline(data = counts %>% filter(x1_anno == 1), aes(xintercept = x1), linetype = "dashed") +
-    geom_vline(data = counts %>% filter(x2_anno == 1), aes(xintercept = x2), linetype = "dashed") +
-    geom_hline(data = counts %>% filter(y1_anno == 1), aes(yintercept = y1), linetype = "dashed") +
-    geom_hline(data = counts %>% filter(y2_anno == 1), aes(yintercept = y2), linetype = "dashed")
+    geom_label(
+      data = counts %>% filter(count != 0),
+      aes(
+        label = count,
+        x = x,
+        y = y,
+        vjust  = vjust,
+        hjust = hjust
+      ),
+      color = "black",
+      size = text_size,
+      label.padding = unit(0.1, "lines"),
+      alpha = 0.5
+    ) +
+    geom_vline(data = counts %>% filter(x1_anno == 1),
+               aes(xintercept = x1),
+               linetype = "dashed") +
+    geom_vline(data = counts %>% filter(x2_anno == 1),
+               aes(xintercept = x2),
+               linetype = "dashed") +
+    geom_hline(data = counts %>% filter(y1_anno == 1),
+               aes(yintercept = y1),
+               linetype = "dashed") +
+    geom_hline(data = counts %>% filter(y2_anno == 1),
+               aes(yintercept = y2),
+               linetype = "dashed")
 
   plot = plot_facets(plot,
                      facet_rows,
@@ -133,22 +176,24 @@ plot_qc_scatterplot = function(sce_list,
 #'
 #' @examples
 #' NULL
-plot_qc_distribution = function(sce_list,
-                                x_filters = NULL,
-                                x,
-                                y = NULL,
-                                color = NULL,
-                                shape = NULL,
-                                x_log = TRUE,
-                                text_size = 3,
-                                facet_rows = NULL,
-                                facet_columns = NULL,
-                                facet_type = "wrap",
-                                ...) {
-
+plot_gex_univariate_qc = function(sce_list,
+                                  x_filters = NULL,
+                                  x,
+                                  y = NULL,
+                                  color = NULL,
+                                  shape = NULL,
+                                  x_log = TRUE,
+                                  text_size = 3,
+                                  facet_rows = NULL,
+                                  facet_columns = NULL,
+                                  facet_type = "wrap",
+                                  ...) {
   data = imap(sce_list, .prepare_gex_data)
 
-  counts = pmap_dfr(list(data, x_filters, names(data)), ~ .prepare_gex_univariate_counts(..1, x, ..2, x_log, ..3, c(facet_rows, facet_columns, y)))
+  counts = pmap_dfr(
+    list(data, x_filters, names(data)),
+    ~ .prepare_gex_univariate_counts(..1, x, ..2, x_log, ..3, c(facet_rows, facet_columns, y))
+  )
 
   data = bind_rows(data)
 
@@ -161,22 +206,47 @@ plot_qc_distribution = function(sce_list,
   plot = ggplot(data, aes_string(x = x, y = y)) +
     geom_density_ridges2(
       aes_string(point_color = color, point_shape = shape),
-      alpha = .2, point_alpha = 0.5, jittered_points = TRUE
+      alpha = .2,
+      point_alpha = 0.5,
+      jittered_points = TRUE
     ) +
     theme_ggexp()
 
   if (x_log) {
     plot = plot +
-      scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
-                    labels = trans_format("log10", math_format(10^.x)),
-                    limits = c(min(data[, x, drop = TRUE]), max(data[, x, drop = TRUE])))
+      scale_x_log10(
+        breaks = trans_breaks("log10", function(x)
+          10 ^ x),
+        labels = trans_format("log10", math_format(10 ^ .x)),
+        limits = c(min(data[, x, drop = TRUE]), max(data[, x, drop = TRUE]))
+      )
   }
 
   if (!is.null(x_filters)) {
     plot = plot +
-      geom_label(data = counts %>% filter(count != 0), aes(label = count, x = x, hjust = hjust), color = "black", size = text_size, label.padding = unit(0.1, "lines"), alpha = 0.5, vjust = -0.5) +
-      geom_vline(data = counts %>% filter(x1_anno == 1), aes(xintercept = x1), linetype = "dashed") +
-      geom_vline(data = counts %>% filter(x2_anno == 1), aes(xintercept = x2), linetype = "dashed")
+      geom_label(
+        data = counts %>% filter(count != 0),
+        aes(
+          label = count,
+          x = x,
+          hjust = hjust
+        ),
+        color = "black",
+        size = text_size,
+        label.padding = unit(0.1, "lines"),
+        alpha = 0.5,
+        vjust = -0.5
+      ) +
+      geom_vline(
+        data = counts %>% filter(x1_anno == 1),
+        aes(xintercept = x1),
+        linetype = "dashed"
+      ) +
+      geom_vline(
+        data = counts %>% filter(x2_anno == 1),
+        aes(xintercept = x2),
+        linetype = "dashed"
+      )
   }
 
   plot = plot_facets(plot,
@@ -191,18 +261,14 @@ plot_qc_distribution = function(sce_list,
 
   if (is.numeric(data[, color, drop = TRUE])) {
     plot = plot +
-      scale_color_viridis_c(
-        aesthetics = c("point_colour"),
-        guide = guide_colorbar(available_aes = c("point_colour"))
-      )
+      scale_color_viridis_c(aesthetics = c("point_colour"),
+                            guide = guide_colorbar(available_aes = c("point_colour")))
   } else {
     plot = plot +
-      scale_color_viridis_d(
-        aesthetics = c("point_colour")
-      )
+      scale_color_viridis_d(aesthetics = c("point_colour"))
   }
 
-  plot = plot + scale_y_discrete(expand = c(0, 0))
+  plot = plot + scale_y_discrete(expand = c(0, 0.005))
 
   return(plot)
 }
@@ -243,7 +309,12 @@ plot_qc_distribution = function(sce_list,
 #'
 #' @examples
 #' NULL
-.prepare_gex_univariate_counts = function(data, x, x_filter, x_log, sample_name, facets) {
+.prepare_gex_univariate_counts = function(data,
+                                          x,
+                                          x_filter,
+                                          x_log,
+                                          sample_name,
+                                          facets) {
   x_scale_limits = .prepare_gex_scale_limits(data, x, x_filter)
 
   counts = data.frame(
@@ -260,8 +331,9 @@ plot_qc_distribution = function(sce_list,
     data.frame(
       filter = paste0("filter_", 1:3),
       count = apply(as.matrix(counts[, c("x1", "x2")]), 1,
-                    function(row) sum(x >= row["x1"] &
-                                      x < row["x2"]))
+                    function(row)
+                      sum(x >= row["x1"] &
+                            x < row["x2"]))
     )
   }
 
@@ -304,7 +376,15 @@ plot_qc_distribution = function(sce_list,
 #'
 #' @examples
 #' NULL
-.prepare_gex_bivariate_counts = function(data, x, y, x_filter, y_filter, x_log, y_log, sample_name, facets) {
+.prepare_gex_bivariate_counts = function(data,
+                                         x,
+                                         y,
+                                         x_filter,
+                                         y_filter,
+                                         x_log,
+                                         y_log,
+                                         sample_name,
+                                         facets) {
   x_scale_limits = .prepare_gex_scale_limits(data, x, x_filter)
   y_scale_limits = .prepare_gex_scale_limits(data, y, y_filter)
 
@@ -315,9 +395,13 @@ plot_qc_distribution = function(sce_list,
     x2 = x_scale_limits[2:4],
     x2_anno = ifelse(is.null(x_filter), 0, list(c(1, 1, 0)))[[1]],
     y1 = rep(y_scale_limits[1:3], each = 3),
-    y1_anno = ifelse(is.null(y_filter), 0, list(rep(c(0, 1, 1), each = 3)))[[1]],
+    y1_anno = ifelse(is.null(y_filter), 0, list(rep(c(
+      0, 1, 1
+    ), each = 3)))[[1]],
     y2 = rep(y_scale_limits[2:4], each = 3),
-    y2_anno = ifelse(is.null(y_filter), 0, list(rep(c(1, 1, 0), each = 3)))[[1]],
+    y2_anno = ifelse(is.null(y_filter), 0, list(rep(c(
+      1, 1, 0
+    ), each = 3)))[[1]],
     hjust = 0.5,
     vjust = 0.5
   )
@@ -326,7 +410,8 @@ plot_qc_distribution = function(sce_list,
     data.frame(
       filter = paste0("filter_", 1:9),
       count = apply(as.matrix(counts[, c("x1", "x2", "y1", "y2")]), 1,
-          function(row) sum(x >= row["x1"] &
+                    function(row)
+                      sum(x >= row["x1"] &
                             x < row["x2"] &
                             y > row["y1"] &
                             y <= row["y2"]))

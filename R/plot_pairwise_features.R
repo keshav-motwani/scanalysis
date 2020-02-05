@@ -19,17 +19,17 @@
 #'
 #' @examples
 #' NULL
-plot_pairwise_scatterplot = function(sce_list,
-                                     assay = "logcounts",
-                                     alt_exp = NULL,
-                                     x,
-                                     y = x,
-                                     color = NULL,
-                                     shape = NULL,
-                                     size = NULL,
-                                     facet_rows = c(),
-                                     facet_columns = c(),
-                                     ...) {
+plot_pairwise_features = function(sce_list,
+                                  assay = "logcounts",
+                                  alt_exp = NULL,
+                                  x,
+                                  y = x,
+                                  color = NULL,
+                                  shape = NULL,
+                                  size = NULL,
+                                  facet_rows = c(),
+                                  facet_columns = c(),
+                                  ...) {
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
 
