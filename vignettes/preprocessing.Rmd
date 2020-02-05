@@ -124,16 +124,6 @@ plot_qc_scatterplot(
   facet_type = "wrap",
   nrow = 1
 )
-plot_qc_distribution(
-  cell_dataset,
-  x_filters = pct_mito_filters,
-  x = "pct_mito",
-  color = "total_umi",
-  facet_columns = ".sample",
-  x_log = FALSE,
-  y = NULL,
-  nrow = 1
-)
 ```
 
 We can use these filters to drop the outliers as follows:

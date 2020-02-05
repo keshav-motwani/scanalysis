@@ -57,9 +57,10 @@ seurat_converted = sce_converted %>%
 First we try to look for the highly variable genes in the converted object. 
 
 ```{r hvg}
-cat("Variable Features post-conversion:")
+# Variable Features post-conversion:
 head(Seurat::VariableFeatures(seurat_converted))
-cat("Variable Features pre-conversion:")
+
+#Variable Features pre-conversion:
 head(Seurat::VariableFeatures(seurat_normalized))
 ```
 
@@ -68,11 +69,13 @@ In the converted object, the HVGs are lost - this makes sense as they were never
 Let's look at some assay specific information now also. When `SCTransform` is run, it creates a new assay named `SCT` (or alternate experiment in `SingleCellExperiment` terminology). The details shown below generalize to any other assays, such as hashtags (commonly named `HTO`) or antibodies in a CITE-seq experiment (commonly named `ADT`). 
 
 ```{r assays}
-cat("Alternate Experiment (SingleCellExperiment) names:")
+# Alternate Experiment (SingleCellExperiment) names:
 SingleCellExperiment::altExps(sce_converted)
-cat("Assay (Seurat) names post-conversion:")
+
+# Assay (Seurat) names post-conversion:
 Seurat::Assays(seurat_converted)
-cat("Assay (Seurat) names pre-conversion:")
+
+# Assay (Seurat) names pre-conversion:
 Seurat::Assays(seurat_normalized)
 ```
 
@@ -102,9 +105,10 @@ seurat_converted_new = sce_converted_new %>%
 Now we try to look for the highly variable genes in the converted object. 
 
 ```{r hvg_1}
-cat("Variable Features post-conversion:")
+# Variable Features post-conversion:
 head(Seurat::VariableFeatures(seurat_converted_new))
-cat("Variable Features pre-conversion:")
+
+# Variable Features pre-conversion:
 head(Seurat::VariableFeatures(seurat_normalized))
 ```
 

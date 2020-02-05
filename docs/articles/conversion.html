@@ -117,29 +117,27 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>seurat_converted =<span class="st"> </span>sce_converted <span class="op">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span>Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/as.Seurat.html">as.Seurat</a></span>()</span></code></pre></div>
 <p>First we try to look for the highly variable genes in the converted object.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Variable Features post-conversion:"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="co">## Variable Features post-conversion:</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_converted))</span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co">## logical(0)</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Variable Features pre-conversion:"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">## Variable Features pre-conversion:</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_normalized))</span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Variable Features post-conversion:</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_converted))</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">## logical(0)</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#Variable Features pre-conversion:</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_normalized))</span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span></code></pre></div>
 <p>In the converted object, the HVGs are lost - this makes sense as they were never stored in the SCE object either.</p>
 <p>Let’s look at some assay specific information now also. When <code>SCTransform</code> is run, it creates a new assay named <code>SCT</code> (or alternate experiment in <code>SingleCellExperiment</code> terminology). The details shown below generalize to any other assays, such as hashtags (commonly named <code>HTO</code>) or antibodies in a CITE-seq experiment (commonly named <code>ADT</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Alternate Experiment (SingleCellExperiment) names:"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## Alternate Experiment (SingleCellExperiment) names:</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>SingleCellExperiment<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html">altExps</a></span>(sce_converted)</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## List of length 0</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## names(0):</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Assay (Seurat) names post-conversion:"</span>)</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">## Assay (Seurat) names post-conversion:</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/Assays.html">Assays</a></span>(seurat_converted)</span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="co">## [1] "RNA"</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Assay (Seurat) names pre-conversion:"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co">## Assay (Seurat) names pre-conversion:</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a>Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/Assays.html">Assays</a></span>(seurat_normalized)</span>
-<span id="cb6-13"><a href="#cb6-13"></a><span class="co">## [1] "RNA" "SCT"</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Alternate Experiment (SingleCellExperiment) names:</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>SingleCellExperiment<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html">altExps</a></span>(sce_converted)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## List of length 0</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## names(0):</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># Assay (Seurat) names post-conversion:</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/Assays.html">Assays</a></span>(seurat_converted)</span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">## [1] "RNA"</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># Assay (Seurat) names pre-conversion:</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/Assays.html">Assays</a></span>(seurat_normalized)</span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">## [1] "RNA" "SCT"</span></span></code></pre></div>
 <p>Here, we see that the <code>SCT</code> assay was not converted into an alternate experiment in the <code>SingleCellExperiment</code> object, and that the converted <code>Seurat</code> object subsequently lost that information. This means that downstream analysis on the normalized data would not be possible after converting to <code>SingleCellExperiment</code> and back. If there were other assays such as <code>ADT</code> or <code>HTO</code> in the <code>Seurat</code> object, this would be lost in the <code>SingleCellExperiment</code> and subsequently the <code>Seurat</code> object.</p>
 <p>We illustrate an example where this is an issue in an integration workflow. For simplicity and to not go out of scope of this tutorial, we begin to integrate an object with itself, according to this <a href="https://satijalab.org/seurat/v3.0/integration.html">vignette</a> under the <code>SCTransform</code> tab. In practice, integrating an object with itself would not be actually done, but it still illustrates the need for comprehensive conversion between object types.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>integration_list =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(seurat_converted, seurat_converted)</span>
@@ -158,14 +156,13 @@
 <span id="cb8-4"><a href="#cb8-4"></a>seurat_converted_new =<span class="st"> </span>sce_converted_new <span class="op">%&gt;%</span></span>
 <span id="cb8-5"><a href="#cb8-5"></a><span class="st">  </span><span class="kw"><a href="../reference/sce_to_seurat.html">sce_to_seurat</a></span>()</span></code></pre></div>
 <p>Now we try to look for the highly variable genes in the converted object.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Variable Features post-conversion:"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="co">## Variable Features post-conversion:</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_converted_new))</span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"Variable Features pre-conversion:"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="co">## Variable Features pre-conversion:</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_normalized))</span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Variable Features post-conversion:</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_converted_new))</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Variable Features pre-conversion:</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(Seurat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/Seurat/man/VariableFeatures.html">VariableFeatures</a></span>(seurat_normalized))</span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">## [1] "NKG7"  "PPBP"  "GNLY"  "PF4"   "GNG11" "GZMB"</span></span></code></pre></div>
 <p>The highly variable genes were successfully retained during the conversion process.</p>
 <p>Now we look at the assay information:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Alternate Experiment (SingleCellExperiment) names:</span></span>
