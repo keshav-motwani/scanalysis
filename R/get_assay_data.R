@@ -13,10 +13,10 @@
 #' @examples
 #' NULL
 get_assay_data = function(sce, assay, alt_exp = NULL) {
-  if (!is.null(alt_exp)) {
-    data = altExp(sce, alt_exp)
-  } else {
+  if (is.null(alt_exp) | alt_exp == metadata(sce)$default_assay) {
     data = sce
+  } else {
+    data = altExp(sce, alt_exp)
   }
   return(assay(data, assay))
 }

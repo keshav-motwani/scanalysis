@@ -8,8 +8,6 @@
 }
 \arguments{
 \item{path}{Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified}
-
-\item{sample_name}{Sample name to be used in traversing the file directory structure if general output path is specified}
 }
 \value{
 SingleCellExperiment object

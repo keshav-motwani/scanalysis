@@ -340,8 +340,8 @@ plot_gex_univariate_qc = function(sce_list,
   counts = data %>%
     group_by(.dots = facets) %>%
     summarize(counts = list(count_fn(!!as.name(x)))) %>%
-    unnest() %>%
-    left_join(counts)
+    unnest(cols = c(counts)) %>%
+    left_join(counts, by = "filter")
 
   if (x_log) {
     counts = counts %>%
@@ -421,8 +421,8 @@ plot_gex_univariate_qc = function(sce_list,
   counts = data %>%
     group_by(.dots = facets) %>%
     summarize(counts = list(count_fn(!!as.name(x), !!as.name(y)))) %>%
-    unnest() %>%
-    left_join(counts)
+    unnest(cols = c(counts)) %>%
+    left_join(counts, by = "filter")
 
   if (x_log) {
     counts = counts %>%

@@ -14,9 +14,10 @@
 #' NULL
 get_cell_features = function(sce, features, assay, alt_exp = NULL) {
   assay_data = .get_cell_features_assay(sce, features, assay, alt_exp)
+  exp_assay_data = .get_cell_features_assay_explicit_exp(sce, features, assay)
   coldata_data = .get_cell_features_coldata(sce, features)
   reduced_dimensions_data = .get_cell_features_reduced_dimensions(sce, features)
-  result = bind_cols(assay_data, coldata_data, reduced_dimensions_data)
+  result = bind_cols(assay_data, exp_assay_data, coldata_data, reduced_dimensions_data)
   result$barcode = colData(sce)$Barcode
   return(result)
 }
@@ -39,6 +40,33 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
   feature_values = data.frame(matrix)
   colnames(feature_values) = rownames_intersection
   return(feature_values)
+}
+
+#' Get feature from assay (from alternate experiment)
+#'
+#' @param sce SingleCellExperiment object
+#' @param features Row names from assay object of relevant alternate experiment
+#' @param assay Assay to use (counts, logcounts, etc.)
+#' @param alt_exp Name of the altExp to use (if any)
+#'
+#' @importFrom purrr map
+#' @importFrom dplyr bind_rows
+#'
+#' @return data.frame with rows as cells and columns as features
+#' @keywords internal
+#'
+#' @examples
+#' NULL
+.get_cell_features_assay_explicit_exp = function(sce, features, assay) {
+  exps = unique(unlist(map(strsplit(features, "///"), 1)))
+  result = list()
+  for (exp in exps) {
+    exp_features = unique(unlist(map(strsplit(features[grepl(exp, features)], "///"), 2)))
+    exp_features = .get_cell_features_assay(sce, features = exp_features, assay = assay, alt_exp = exp)
+    colnames(exp_features) = paste0(exp, "///", colnames(exp_features))
+    result = c(result, list(exp_features))
+  }
+  return(bind_rows(result))
 }
 
 #' Get feature from column metadata

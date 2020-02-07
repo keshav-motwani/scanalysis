@@ -109,7 +109,7 @@
 <li>Total UMI cutoff based on the knee point in the barcode distribution (knee)</li>
 </ul>
 <p>All four methods are always run to understand how each of the methods compare, as the results are often dataset-dependent.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>ambient_rna_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(dataset, <span class="op">~</span><span class="st"> </span><span class="kw"><a href="../reference/filter_ambient_barcode.html">filter_ambient_barcode</a></span>(.x, <span class="dv">2500</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>ambient_rna_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(dataset, <span class="op">~</span><span class="st"> </span><span class="kw"><a href="../reference/filter_ambient_barcode.html">filter_ambient_barcode</a></span>(.x, <span class="dv">2500</span>))</span></code></pre></div>
 <p>Each one of these results contains a list of booleans indicating which barcodes contain cells. Additionally, each result has attributes that are used in the following plotting function. We now plot the results of each of these filtering methods.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="../reference/plot_barcode_qc.html">plot_barcode_qc</a></span>(<span class="dt">sce_list =</span> dataset,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>                <span class="dt">ambient_rna_filters =</span> ambient_rna_filters,</span>
@@ -117,29 +117,29 @@
 <span id="cb3-4"><a href="#cb3-4"></a>                <span class="dt">facet_rows =</span> <span class="st">"timepoint"</span>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/ambient_barcode_plot-1.png" width="864"></p>
 <p>Here, for each sample, and timepoint within each sample, we have a barcode distribution plot, fully annotated with the cutoffs based on each of the methods, as well as the number of cells retained by each of the individual filters. We now use this visualization to decide that using the emptyDrops filter looks fine, and, as expected, gives us the most number of cells recovered.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span>(dataset, ambient_rna_filters, <span class="op">~</span><span class="st"> </span>.x[,  .y<span class="op">$</span>empty_drops <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map2.html">map2</a></span>(dataset, ambient_rna_filters, <span class="op">~</span><span class="st"> </span>.x[,  .y<span class="op">$</span>empty_drops <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>])</span></code></pre></div>
 <p>Now that we have identified barcode-containing cells, we now filter cells based on common QC measures, such as the total number of UMIs/genes expressed per cell to identify low-content cells and doublets and the percentage of mitochondrial reads to identify low-quality dying cells. We first must annotate these values into the colData of each dataset.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span>.x <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span>.x <span class="op">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="st">                            </span>annotate_total_umi_count <span class="op">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="st">                            </span>annotate_n_genes_expr <span class="op">%&gt;%</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="st">                            </span><span class="kw"><a href="../reference/annotate_pct_gene_set.html">annotate_pct_gene_set</a></span>(<span class="st">"^MT-"</span>, <span class="st">"pct_mito"</span>))</span></code></pre></div>
 <p>Now that these values are annotated, we can use the <code><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">scater::isOutlier</a></code> to identify outliers based on these values. We consider values greater than 2 median absolute deviations on both sides an outlier for total UMI count and number of genes expressed, and values greater than 1 median absolute deviations above for the percentage of mitochondrial reads, though it should be noted that this parameter was adjusted based off of the below plots to remove most of the upper mode total UMI/number of genes expressed in the data which likely corresponds to doublets.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>total_umi_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>total_umi,</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>total_umi_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>total_umi,</span>
 <span id="cb6-2"><a href="#cb6-2"></a>                                                                  <span class="dt">nmads =</span> <span class="dv">1</span>,</span>
 <span id="cb6-3"><a href="#cb6-3"></a>                                                                  <span class="dt">type =</span> <span class="st">"both"</span>,</span>
 <span id="cb6-4"><a href="#cb6-4"></a>                                                                  <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
 <span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a>n_genes_expr_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>n_genes_expr,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>n_genes_expr_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>n_genes_expr,</span>
 <span id="cb6-7"><a href="#cb6-7"></a>                                                                     <span class="dt">nmads =</span> <span class="dv">1</span>,</span>
 <span id="cb6-8"><a href="#cb6-8"></a>                                                                     <span class="dt">type =</span> <span class="st">"both"</span>,</span>
 <span id="cb6-9"><a href="#cb6-9"></a>                                                                     <span class="dt">log =</span> <span class="ot">TRUE</span>))</span>
 <span id="cb6-10"><a href="#cb6-10"></a></span>
-<span id="cb6-11"><a href="#cb6-11"></a>pct_mito_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>pct_mito,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>pct_mito_filters =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span>(cell_dataset, <span class="op">~</span><span class="st"> </span><span class="op">!</span>scater<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/scater/man/isOutlier.html">isOutlier</a></span>(<span class="kw">colData</span>(.x)<span class="op">$</span>pct_mito,</span>
 <span id="cb6-12"><a href="#cb6-12"></a>                                                                 <span class="dt">nmads =</span> <span class="dv">2</span>,</span>
 <span id="cb6-13"><a href="#cb6-13"></a>                                                                 <span class="dt">type =</span> <span class="st">"higher"</span>,</span>
 <span id="cb6-14"><a href="#cb6-14"></a>                                                                 <span class="dt">log =</span> <span class="ot">FALSE</span>))</span></code></pre></div>
 <p>With these filters, we can plot univariate distributions as well as scatterplots to show the outliers when considering two measures simultaneously.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  cell_dataset,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
 <span id="cb7-4"><a href="#cb7-4"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
@@ -149,7 +149,7 @@
 <span id="cb7-8"><a href="#cb7-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb7-9"><a href="#cb7-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-1.png" width="1152"></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb8-2"><a href="#cb8-2"></a>  cell_dataset,</span>
 <span id="cb8-3"><a href="#cb8-3"></a>  <span class="dt">x_filters =</span> n_genes_expr_filters,</span>
 <span id="cb8-4"><a href="#cb8-4"></a>  <span class="dt">x =</span> <span class="st">"n_genes_expr"</span>,</span>
@@ -159,7 +159,7 @@
 <span id="cb8-8"><a href="#cb8-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb8-9"><a href="#cb8-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-2.png" width="1152"></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>  cell_dataset,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="dt">x_filters =</span> pct_mito_filters,</span>
 <span id="cb9-4"><a href="#cb9-4"></a>  <span class="dt">x =</span> <span class="st">"pct_mito"</span>,</span>
@@ -170,7 +170,7 @@
 <span id="cb9-9"><a href="#cb9-9"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb9-10"><a href="#cb9-10"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-3.png" width="1152"></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_bivariate_qc.html">plot_gex_bivariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw"><a href="../reference/plot_gex_bivariate_qc.html">plot_gex_bivariate_qc</a></span>(</span>
 <span id="cb10-2"><a href="#cb10-2"></a>  cell_dataset,</span>
 <span id="cb10-3"><a href="#cb10-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
 <span id="cb10-4"><a href="#cb10-4"></a>  <span class="dt">y_filters =</span> n_genes_expr_filters,</span>
@@ -183,10 +183,10 @@
 <span id="cb10-11"><a href="#cb10-11"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc-4.png" width="1152"></p>
 <p>We can use these filters to drop the outliers as follows:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map2.html">pmap</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(cell_dataset, total_umi_filters, n_genes_expr_filters, pct_mito_filters),</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>cell_dataset =<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/purrr/man/map2.html">pmap</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(cell_dataset, total_umi_filters, n_genes_expr_filters, pct_mito_filters),</span>
 <span id="cb11-2"><a href="#cb11-2"></a>                           <span class="op">~</span><span class="st"> </span>..<span class="dv">1</span>[, ..<span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>..<span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span>..<span class="dv">4</span>])</span></code></pre></div>
 <p>We plot the data again to show the post-filtering dataset:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb12-2"><a href="#cb12-2"></a>  cell_dataset,</span>
 <span id="cb12-3"><a href="#cb12-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
 <span id="cb12-4"><a href="#cb12-4"></a>  <span class="dt">x =</span> <span class="st">"total_umi"</span>,</span>
@@ -196,7 +196,7 @@
 <span id="cb12-8"><a href="#cb12-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb12-9"><a href="#cb12-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc_post-1.png" width="1152"></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb13-2"><a href="#cb13-2"></a>  cell_dataset,</span>
 <span id="cb13-3"><a href="#cb13-3"></a>  <span class="dt">x_filters =</span> n_genes_expr_filters,</span>
 <span id="cb13-4"><a href="#cb13-4"></a>  <span class="dt">x =</span> <span class="st">"n_genes_expr"</span>,</span>
@@ -206,7 +206,7 @@
 <span id="cb13-8"><a href="#cb13-8"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb13-9"><a href="#cb13-9"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc_post-2.png" width="1152"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw"><a href="../reference/plot_gex_univariate_qc.html">plot_gex_univariate_qc</a></span>(</span>
 <span id="cb14-2"><a href="#cb14-2"></a>  cell_dataset,</span>
 <span id="cb14-3"><a href="#cb14-3"></a>  <span class="dt">x_filters =</span> pct_mito_filters,</span>
 <span id="cb14-4"><a href="#cb14-4"></a>  <span class="dt">x =</span> <span class="st">"pct_mito"</span>,</span>
@@ -217,7 +217,7 @@
 <span id="cb14-9"><a href="#cb14-9"></a>  <span class="dt">nrow =</span> <span class="dv">1</span></span>
 <span id="cb14-10"><a href="#cb14-10"></a>)</span></code></pre></div>
 <p><img src="preprocessing_files/figure-html/plot_qc_post-3.png" width="1152"></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw"><a href="https://rdrr.io/pkg/scanalysis/man/plot_gex_bivariate_qc.html">plot_gex_bivariate_qc</a></span>(</span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw"><a href="../reference/plot_gex_bivariate_qc.html">plot_gex_bivariate_qc</a></span>(</span>
 <span id="cb15-2"><a href="#cb15-2"></a>  cell_dataset,</span>
 <span id="cb15-3"><a href="#cb15-3"></a>  <span class="dt">x_filters =</span> total_umi_filters,</span>
 <span id="cb15-4"><a href="#cb15-4"></a>  <span class="dt">y_filters =</span> n_genes_expr_filters,</span>

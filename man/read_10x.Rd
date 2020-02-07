@@ -10,10 +10,6 @@ read_10x(gene_expr_path = getwd(), vdj_path = NA)
 \item{gene_expr_path}{Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified}
 
 \item{vdj_path}{Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified}
-
-\item{gene_expr_sample_name}{Sample name to be used in traversing the file directory structure if general output path is specified}
-
-\item{vdj_sample_name}{Sample name to be used in traversing the file directory structure if general output path is specified}
 }
 \value{
 
