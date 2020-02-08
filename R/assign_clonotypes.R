@@ -3,7 +3,7 @@
 #' @param sce SingleCellExperiment object
 #' @param clonotype_fields fields to include in clonotype definition (e.g., c("v_gene", "cdr3", "j_gene", etc.))
 #' @param chains chains which to include in clonotype definition(e.g., c("TRA", "TRB"))
-#' @param tra/trb/igl/igh_range vector of length 2 with minimum and maximum number of unique chains (inclusive)
+#' @param tra/trb/igl/igk/igh_range vector of length 2 with minimum and maximum number of unique chains (inclusive)
 #'
 #' @importFrom dplyr as_tibble filter group_by summarise_all select left_join
 #' @importFrom tidyr unite
@@ -18,18 +18,22 @@
 assign_clonotypes = function(sce,
                              clonotype_fields = c("v_gene", "cdr3", "j_gene"),
                              chains = c("TRA", "TRB"),
-                             tra_range = c(0, 1),
+                             tra_range = c(0, 2),
                              trb_range = c(0, 1),
                              igl_range = c(0, 2),
+                             igk_range = c(0, 2),
                              igh_range = c(0, 1)) {
+
   col_data = colData(sce)
   indices = col_data$count_TRA >= tra_range[1] &
     col_data$count_TRB >= trb_range[1] &
     col_data$count_IGL >= igl_range[1] &
+    col_data$count_IGK >= igk_range[1] &
     col_data$count_IGH >= igh_range[1] &
     col_data$count_TRA <= tra_range[2] &
     col_data$count_TRB <= trb_range[2] &
     col_data$count_IGL <= igl_range[2] &
+    col_data$count_IGK <= igk_range[2] &
     col_data$count_IGH <= igh_range[2]
 
   col_data = col_data[indices, c("Barcode", "vdj")]

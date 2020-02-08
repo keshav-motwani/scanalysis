@@ -1,6 +1,6 @@
-#' Annotate number of TRA, TRB, IGL, and IGH reads per barcode
+#' Annotate number of TRA, TRB, IGL, IGK, and IGH reads per barcode
 #'
-#' Columns count_TRA, count_TRB, count_IGL, count_IGH, and count_TRA_TRB_IGL_IGH (underscore delimited concatenation of previous 4 columns) are added to colData(sce)
+#' Columns count_TRA, count_TRB, count_IGL, count_IGK,  count_IGH, and count_TRA_TRB_IGL_IGK_IGH (underscore delimited concatenation of previous 5 columns) are added to colData(sce)
 #'
 #' @param sce SingleCellExperiment object with a column named vdj containing contig_annotations in colData
 #'
@@ -25,7 +25,8 @@ annotate_chain_count = function(sce) {
 
     chain_count = column_to_rownames(chain_count, "barcode")[colData(sce)$Barcode, ]
 
-    chain_types = c("TRA", "TRB", "IGL", "IGH")
+    chain_types = c("TRA", "TRB", "IGL", "IGK", "IGH")
+
     for (type in chain_types) {
       if (!type %in% colnames(chain_count)) {
         chain_count[, type] = 0
@@ -35,7 +36,7 @@ annotate_chain_count = function(sce) {
 
     colnames(chain_count) = paste0("count_", colnames(chain_count))
     chain_count = chain_count[, paste0("count_", chain_types)]
-    chain_count$count_TRA_TRB_IGL_IGH = paste0(chain_count$count_TRA, "_", chain_count$count_TRB, "_", chain_count$count_IGL, "_", chain_count$count_IGH)
+    chain_count$count_TRA_TRB_IGL_IGK_IGH = paste0(chain_count$count_TRA, "_", chain_count$count_TRB, "_", chain_count$count_IGL, "_", chain_count$count_IGK, "_", chain_count$count_IGH)
 
     colData(sce) = cbind(colData(sce), chain_count)
   }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/annotate_chain_count.R
 \name{annotate_chain_count}
 \alias{annotate_chain_count}
-\title{Annotate number of TRA, TRB, IGL, and IGH reads per barcode}
+\title{Annotate number of TRA, TRB, IGL, IGK, and IGH reads per barcode}
 \usage{
 annotate_chain_count(sce)
 }
@@ -13,7 +13,7 @@ annotate_chain_count(sce)
 SingleCellExperiment object with new count columns in colData
 }
 \description{
-Columns count_TRA, count_TRB, count_IGL, count_IGH, and count_TRA_TRB_IGL_IGH (underscore delimited concatenation of previous 4 columns) are added to colData(sce)
+Columns count_TRA, count_TRB, count_IGL, count_IGK,  count_IGH, and count_TRA_TRB_IGL_IGK_IGH (underscore delimited concatenation of previous 5 columns) are added to colData(sce)
 }
 \examples{
 NULL

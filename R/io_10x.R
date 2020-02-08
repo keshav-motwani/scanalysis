@@ -74,7 +74,7 @@ read_10x = function(gene_expr_path = getwd(),
       high_confidence,
       is_cell,
       productive == "True" | productive,
-      chain %in% c("TRA", "TRB", "IGL", "IGH")
+      chain %in% c("TRA", "TRB", "IGL", "IGK", "IGH")
     ) %>%
     as("DataFrame")
 

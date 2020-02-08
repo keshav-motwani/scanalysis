@@ -8,9 +8,10 @@ assign_clonotypes(
   sce,
   clonotype_fields = c("v_gene", "cdr3", "j_gene"),
   chains = c("TRA", "TRB"),
-  tra_range = c(0, 1),
+  tra_range = c(0, 2),
   trb_range = c(0, 1),
   igl_range = c(0, 2),
+  igk_range = c(0, 2),
   igh_range = c(0, 1)
 )
 }
@@ -21,7 +22,7 @@ assign_clonotypes(
 
 \item{chains}{chains which to include in clonotype definition(e.g., c("TRA", "TRB"))}
 
-\item{tra/trb/igl/igh_range}{vector of length 2 with minimum and maximum number of unique chains (inclusive)}
+\item{tra/trb/igl/igk/igh_range}{vector of length 2 with minimum and maximum number of unique chains (inclusive)}
 }
 \value{
 SingleCellExperiment object with added columns to colData including "clonotype", "clonotype_count", and "clonotype_count_2:10"
