@@ -1,8 +1,8 @@
 #' Get assay data from either the main experiment or altExps
 #'
 #' @param sce SingleCellExperiment object
-#' @param assay Assay to get data from (counts, logcounts, etc.)
-#' @param alt_exp Alternate experiment to get assay data from
+#' @param assay assay to get data from (counts, logcounts, etc.)
+#' @param alt_exp alternate experiment to get assay data from
 #'
 #' @importFrom SingleCellExperiment altExp
 #' @importFrom SummarizedExperiment assay
@@ -13,7 +13,9 @@
 #' @examples
 #' NULL
 get_assay_data = function(sce, assay, alt_exp = NULL) {
-  if (is.null(alt_exp) | alt_exp == metadata(sce)$default_assay) {
+  if (is.null(alt_exp) ||
+      alt_exp == metadata(sce)$default_assay ||
+      (is.null(metadata(sce)$default_assay) && alt_exp == "RNA")) {
     data = sce
   } else {
     data = altExp(sce, alt_exp)

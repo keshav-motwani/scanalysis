@@ -13,15 +13,15 @@ compute_evenness_profile_matrix(
 )
 }
 \arguments{
-\item{sce_list}{Named list of SingleCellExperiment objects}
+\item{sce_list}{list of SingleCellExperiment objects}
 
-\item{group_by}{Character vector of column names from colData to use to construct groups for clonotype counting}
+\item{group_by}{column names from colData to use to construct groups for clonotype counting}
 
-\item{min_alpha}{Minimum Renyi entropy alpha}
+\item{min_alpha}{minimum Renyi entropy alpha}
 
-\item{max_alpha}{Maximum Renyi entropy alpha}
+\item{max_alpha}{maximum Renyi entropy alpha}
 
-\item{alpha_steps}{Number of steps in between min_alpha and max_alpha}
+\item{alpha_steps}{number of steps in between min_alpha and max_alpha}
 }
 \value{
 

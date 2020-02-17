@@ -1,46 +1,46 @@
-#' Plot number of VDJ chains versus colData variable of interest with annotated filters
+#' Scatterplot of two features of interest from colData with annotated thresholds and counts based on filters
 #'
-#' @param sce SingleCellExperiment object
-#' @param y Numeric column from colData
-#' @param vdj_doublet_filter Filter returned from filter_vdj_doublets
-#' @param y_filter Filter result from scater::isOutlier or from scanalysis::filter_gex_outliers
-#' @param y_log Boolean to use log y-axis
+#' @param sce_list list of SingleCellExperiment objects
+#' @param x_filters list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
+#' @param x numeric column from colData that is in all objects in sce_list
+#' @param y discrete column from colData that is in all objects in sce_list to split histograms by
+#' @param color column from colData that is in all objects in sce_list
+#' @param shape column from colData that is in all objects in sce_list
+#' @param x_log whether to use log x-axis
+#' @param text_size font size for annotations
+#' @param facet_rows columns to facet on
+#' @param facet_columns columns to facet on
+#' @param facet_type either "wrap" or "grid", same as ggplot
+#' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
-#' @importFrom ggbeeswarm geom_quasirandom
-#' @importFrom ggexp theme_ggexp
-#' @importFrom dplyr mutate as_tibble group_by tally
+#' @importFrom purrr map map2
+#' @importFrom dplyr summarise select group_by arrange desc
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' NULL
-plot_vdj_qc = function(sce, y, vdj_doublet_filter, y_filter, y_log = TRUE, y_label = y) {
-  data = as_tibble(colData(sce)) %>%
-    mutate(chain_count = vdj_doublet_filter)
-  plot = ggplot(data, aes_string(x = "count_TRA_TRB_IGL_IGK_IGH", y = y, color = "chain_count")) +
-    geom_quasirandom(size = 0.5) +
-    theme_ggexp() +
-    scale_color_manual(values = c("gray", "black"), guide = "none") +
-    geom_hline(aes(yintercept = attributes(y_filter)$threshold["lower"])) +
-    geom_hline(aes(yintercept = attributes(y_filter)$threshold["higher"]))
-  counts = data %>%
-    group_by(.dots = "count_TRA_TRB_IGL_IGK_IGH") %>%
-    tally()
-  plot = plot + geom_text(
-    data = counts,
-    aes_string(label = "n",
-               x = "count_TRA_TRB_IGL_IGK_IGH",
-               y = min(data[, y])),
-    hjust = 0.5,
-    vjust = 1,
-    size = 2,
-    color = "black",
-    angle = 0
-  ) + labs(x = "Count: TRA_TRB_IGL_IGK_IGH", y = y_label)
-  if (y_log) {
-    plot = plot + scale_y_log10()
-  }
+plot_vdj_gex_univariate_qc = function(sce_list,
+                                      x_filters = NULL,
+                                      vdj_filters = NULL,
+                                      x,
+                                      ...) {
+  plot = plot_gex_univariate_qc(sce_list,
+                                x_filters = x_filters,
+                                x = x,
+                                y = "count_TRA_TRB_IGL_IGK_IGH",
+                                ...)
+
+  order = attributes(vdj_filters[[1]])$allowed_values %>%
+    arrange(desc(allowed), count_TRA_TRB_IGL_IGK_IGH)
+
+  plot$data$count_TRA_TRB_IGL_IGK_IGH = factor(plot$data$count_TRA_TRB_IGL_IGK_IGH,
+                                               levels = order$count_TRA_TRB_IGL_IGK_IGH)
+
+  plot = plot + geom_hline(yintercept = sum(order$allowed) + 0.90,
+                           linetype = "dashed")
+
   return(plot)
 }

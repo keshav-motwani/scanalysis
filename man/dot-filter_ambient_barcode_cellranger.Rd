@@ -9,7 +9,7 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{n_cells}{Number of cells expected}
+\item{n_cells}{number of cells expected}
 }
 \value{
 Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named value containing total UMI at the cutoff point.

@@ -19,23 +19,23 @@ plot_barcode_qc(
 )
 }
 \arguments{
-\item{sce_list}{Named list of SingleCellExperiment objects}
+\item{sce_list}{list of SingleCellExperiment objects}
 
-\item{ambient_rna_filters}{Named list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order}
+\item{ambient_rna_filters}{list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order}
 
-\item{color}{Column from colData that is in all objects in sce_list}
+\item{color}{column from colData that is in all objects in sce_list}
 
-\item{shape}{Column from colData that is in all objects in sce_list}
+\item{shape}{column from colData that is in all objects in sce_list}
 
-\item{facet_rows}{Columns to facet on}
+\item{facet_rows}{columns to facet on}
 
-\item{facet_columns}{Columns to facet on}
+\item{facet_columns}{columns to facet on}
 
-\item{facet_type}{Either "wrap" or "grid", same as ggplot}
+\item{facet_type}{either "wrap" or "grid", same as ggplot}
 
-\item{text_size}{Font size for annotations}
+\item{text_size}{font size for annotations}
 
-\item{...}{params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
+\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 ggplot with plot of UMI rank vs total number of UMIs per barcode

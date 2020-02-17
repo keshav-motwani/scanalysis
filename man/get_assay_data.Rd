@@ -9,9 +9,9 @@ get_assay_data(sce, assay, alt_exp = NULL)
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{assay}{Assay to get data from (counts, logcounts, etc.)}
+\item{assay}{assay to get data from (counts, logcounts, etc.)}
 
-\item{alt_exp}{Alternate experiment to get assay data from}
+\item{alt_exp}{alternate experiment to get assay data from}
 }
 \value{
 

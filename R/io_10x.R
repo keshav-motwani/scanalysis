@@ -2,8 +2,8 @@
 #'
 #' VDJ data is stored in colData(sce)$vdj for now. This makes it easy to manipulate using the tidyverse for assignment of clonotypes, etc.
 #'
-#' @param gene_expr_path Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified
-#' @param vdj_path Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified
+#' @param gene_expr_path path to gene expression data - this path must contain mtx, features, and barcodes file
+#' @param vdj_path path to vdj data - this path must contain all_contig_annotations.csv
 #'
 #' @importFrom SummarizedExperiment colData colData<-
 #' @importMethodsFrom S4Vectors split
@@ -14,13 +14,24 @@
 #' @examples
 #' NULL
 read_10x = function(gene_expr_path = getwd(),
-                    vdj_path = NA) {
-
+                    vdj_path = NA,
+                    top_n_barcodes = NULL,
+                    nonzero_barcodes = FALSE) {
   sce = .read_10x_gene_expr(gene_expr_path)
 
   if (!is.na(vdj_path)) {
     vdj = .read_10x_vdj(vdj_path)
     colData(sce)$vdj = split(vdj, factor(vdj$barcode, colData(sce)$Barcode))
+  }
+
+  sce = annotate_total_umi_count(sce)
+
+  if (!is.null(top_n_barcodes)) {
+    sce = sce[, order(sce$total_umi, decreasing = TRUE)[1:top_n_barcodes]]
+  }
+
+  if (nonzero_barcodes) {
+    sce = sce[, sce$total_umi > 0]
   }
 
   return(sce)
@@ -29,7 +40,7 @@ read_10x = function(gene_expr_path = getwd(),
 
 #' Read gene expression matrix from 10X data
 #'
-#' @param path Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified
+#' @param path path to gene expression data - this path must contain mtx, features, and barcodes file
 #'
 #' @importFrom DropletUtils read10xCounts
 #' @importFrom scater uniquifyFeatureNames
@@ -41,7 +52,6 @@ read_10x = function(gene_expr_path = getwd(),
 #' @examples
 #' NULL
 .read_10x_gene_expr = function(path) {
-
   sce = read10xCounts(path, col.names = TRUE) %>%
     splitAltExps(ifelse(grepl("^HTO_", rownames(.)), "HTO", "gene")) %>%
     splitAltExps(ifelse(rowData(.)$Type ==  "Antibody Capture", "ADT", "gene"))
@@ -56,7 +66,7 @@ read_10x = function(gene_expr_path = getwd(),
 
 #' Read VDJ information from 10X data
 #'
-#' @param path Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified
+#' @param path path to vdj data - this path must contain all_contig_annotations.csv
 #'
 #' @importFrom readr read_csv
 #' @importFrom dplyr filter
@@ -68,7 +78,6 @@ read_10x = function(gene_expr_path = getwd(),
 #' @examples
 #' NULL
 .read_10x_vdj = function(path) {
-
   vdj = read_csv(file.path(path, "all_contig_annotations.csv")) %>%
     filter(
       high_confidence,

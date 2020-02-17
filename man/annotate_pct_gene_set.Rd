@@ -4,7 +4,7 @@
 \alias{annotate_pct_gene_set}
 \title{Add percent of gene set defined by a regular expression pattern to colData(sce)}
 \usage{
-annotate_pct_gene_set(sce, pattern, name)
+annotate_pct_gene_set(sce, pattern, name, alt_exp = NULL)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}

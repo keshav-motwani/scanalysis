@@ -7,7 +7,7 @@
 .read_10x_gene_expr(path)
 }
 \arguments{
-\item{path}{Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified}
+\item{path}{path to gene expression data - this path must contain mtx, features, and barcodes file}
 }
 \value{
 SingleCellExperiment object

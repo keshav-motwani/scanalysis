@@ -13,6 +13,7 @@
 #' @importFrom SingleCellExperiment colData
 #' @importFrom scater isOutlier
 #' @importFrom Matrix rowSums
+#' @importFrom dplyr distinct
 #'
 #' @return Boolean filter with TRUE for cells kept and FALSE for cells outside the allowed ranges.
 #' @export
@@ -20,14 +21,13 @@
 #' @examples
 #' NULL
 filter_vdj_chain_count = function(sce,
-                              tra_range = c(0, 2),
-                              trb_range = c(0, 1),
-                              igl_range = c(0, 2),
-                              igk_range = c(0, 2),
-                              igh_range = c(0, 1),
-                              tcr_and_bcr_allowed = TRUE,
-                              only_filter_if_any_vdj_hits = TRUE) {
-
+                                  tra_range = c(0, 2),
+                                  trb_range = c(0, 1),
+                                  igl_range = c(0, 2),
+                                  igk_range = c(0, 2),
+                                  igh_range = c(0, 1),
+                                  tcr_and_bcr_allowed = TRUE,
+                                  only_filter_if_any_vdj_hits = TRUE) {
   stopifnot("count_TRA" %in% colnames(colData(sce)))
 
   min_tra_filter = colData(sce)[, "count_TRA"] >= tra_range[1]
@@ -60,7 +60,9 @@ filter_vdj_chain_count = function(sce,
 
   if (!tcr_and_bcr_allowed) {
     tr_and_ig_filter = !((colData(sce)$count_TRA + colData(sce)$count_TRB) >= 1 &
-                           (colData(sce)$count_IGL + colData(sce)$count_IGK + colData(sce)$count_IGH) >= 1
+                           (
+                             colData(sce)$count_IGL + colData(sce)$count_IGK + colData(sce)$count_IGH
+                           ) >= 1
     )
     filter_list = c(filter_list, list(tr_and_ig_filter))
   }
@@ -69,8 +71,19 @@ filter_vdj_chain_count = function(sce,
 
   if (only_filter_if_any_vdj_hits) {
     result = result |
-      rowSums(as.matrix(colData(sce)[, c("count_TRA", "count_TRB", "count_IGL", "count_IGK", "count_IGH")])) < 1
+      rowSums(as.matrix(colData(sce)[, c("count_TRA",
+                                         "count_TRB",
+                                         "count_IGL",
+                                         "count_IGK",
+                                         "count_IGH")])) < 1
   }
+
+  attributes(result)$allowed_values = distinct(
+    data.frame(
+      count_TRA_TRB_IGL_IGK_IGH = sce$count_TRA_TRB_IGL_IGK_IGH,
+      allowed = result
+    )
+  )
 
   return(result)
 }

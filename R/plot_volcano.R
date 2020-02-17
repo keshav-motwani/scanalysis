@@ -15,7 +15,7 @@
 #' @param facet_rows columns for faceting by row
 #' @param facet_columns columns for faceting by column
 #' @param facet_type either "wrap" or "grid", corresponding to facet_wrap and facet_grid respectively
-#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
+#' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
@@ -122,26 +122,24 @@ plot_volcano = function(data,
 #' @examples
 #' NULL
 .prepare_volcano_annotations = function(data,
-                           fold_change,
-                           p_value,
-                           label,
-                           n_annotate_top,
-                           annotations,
-                           annotations_if_threshold,
-                           p_value_threshold,
-                           fold_change_threshold,
-                           p_value_rank_threshold,
-                           facet_rows,
-                           facet_columns) {
-
+                                        fold_change,
+                                        p_value,
+                                        label,
+                                        n_annotate_top,
+                                        annotations,
+                                        annotations_if_threshold,
+                                        p_value_threshold,
+                                        fold_change_threshold,
+                                        p_value_rank_threshold,
+                                        facet_rows,
+                                        facet_columns) {
   all_annotation_data = data %>%
-    filter(abs(!!as.name(fold_change)) > fold_change_threshold,
-           !!as.name(p_value) < p_value_threshold)
+    filter(abs(!!as.name(fold_change)) > fold_change_threshold,!!as.name(p_value) < p_value_threshold)
 
   requested_annotation_data = all_annotation_data %>%
     group_by(.dots = c(facet_rows, facet_columns)) %>%
     mutate(rank = rank(!!as.name(p_value))) %>%
-    top_n(p_value_rank_threshold,-rank) %>%
+    top_n(p_value_rank_threshold, -rank) %>%
     filter(!!as.name(label) %in% annotations_if_threshold) %>%
     bind_rows(all_annotation_data %>% filter(!!as.name(label) %in% annotations))
 
@@ -157,7 +155,7 @@ plot_volcano = function(data,
   annotation_data = bind_rows(top_annotation_data, requested_annotation_data)
   annotation_data$rank = NULL
 
-  annotation_data = annotation_data[!duplicated(annotation_data), ]
+  annotation_data = annotation_data[!duplicated(annotation_data),]
 
   return(annotation_data)
 }
@@ -179,13 +177,14 @@ plot_volcano = function(data,
 #' @examples
 #' NULL
 .prepare_volcano_top_annotations = function(data,
-                               n_annotate_top,
-                               fold_change,
-                               p_value,
-                               facet_rows,
-                               facet_columns) {
-  arrange(data, !!as.name(p_value), -abs(!!as.name(fold_change))) %>%
+                                            n_annotate_top,
+                                            fold_change,
+                                            p_value,
+                                            facet_rows,
+                                            facet_columns) {
+  arrange(data,!!as.name(p_value),-abs(!!as.name(fold_change))) %>%
     mutate(rank = seq_len(nrow(.))) %>%
-    group_by(.dots = c(facet_rows, facet_columns),!!as.name(fold_change) > 0) %>%
-    top_n(round(n_annotate_top / 2), -rank)
+    group_by(.dots = c(facet_rows, facet_columns),
+             !!as.name(fold_change) > 0) %>%
+    top_n(round(n_annotate_top / 2),-rank)
 }

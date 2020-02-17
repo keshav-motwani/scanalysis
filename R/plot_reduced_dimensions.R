@@ -2,23 +2,23 @@
 #'
 #' Features are min-max normalized per feature, and the range of each feature is annotated per facet to consolidate multiple features into one color scale.
 #'
-#' If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added in.
+#' If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added into the data frame being plotted.
 #'
-#' In almost all cases, you would want to facet by feature. This is by default included in facet_columns, but if you add additional faceting variables to facet_columns, be sure to also include ".feature". To be clear, ".feature" can also be included in facet_rows. This is not included within the code to allow for flexibility if you want features to be faceted in the rows or columns.
+#' In almost all cases, you would want to facet by feature, so be sure to also include ".feature" in either facet_columns or facet_rows
 #'
-#' @param sce_list List of SingleCellExperiment objects to plot
-#' @param type Name of reducedDim attribute to plot
-#' @param assay Assay to obtain data from (ex: counts, logcounts)
-#' @param alt_exp Alternate experiment to obtain data from
-#' @param features Features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot
-#' @param label_value Boolean to annotate text label for the value - only works if all features are discrete
-#' @param alpha Alpha for points
-#' @param point_size Size of points
-#' @param text_size Size of font for text annotation
-#' @param facet_rows Variables from colData to facet on, can also include ".sample" or ".feature" as described below
-#' @param facet_columns Variables from colData to facet on, can also include ".sample" or ".feature" as described below
-#' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param ... Other parameters to be passed to ggexp::plot_pairwise_scatterplot
+#' @param sce_list list of SingleCellExperiment objects to plot
+#' @param features features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot
+#' @param type name of reducedDim attribute to plot
+#' @param label_value boolean to annotate text label for the value - only works if all features are discrete
+#' @param alpha alpha for points
+#' @param point_size size of points
+#' @param text_size size of font for text annotation
+#' @param facet_rows variables from colData to facet on, can also include ".sample" or ".feature" as described below
+#' @param facet_columns variables from colData to facet on, can also include ".sample" or ".feature" as described below
+#' @param facet_type either "wrap" or "grid", same as ggplot
+#' @param assay assay to obtain data from (ex: counts, logcounts)
+#' @param alt_exp alternate experiment to obtain data from
+#' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom dplyr mutate bind_cols group_by summarize arrange
@@ -54,7 +54,7 @@ plot_reduced_dimensions = function(sce_list,
                                    point_size = 1,
                                    text_size = 1,
                                    facet_rows = c(),
-                                   facet_columns = c(".feature"),
+                                   facet_columns = c(),
                                    facet_type = "grid",
                                    ...) {
   if (is.null(names(sce_list)))
@@ -62,7 +62,12 @@ plot_reduced_dimensions = function(sce_list,
 
   data = imap_dfr(
     sce_list,
-    ~ get_cell_features(.x, c(features, facet_rows, facet_columns, label), assay, alt_exp) %>%
+    ~ get_cell_features(
+      .x,
+      c(features, facet_rows, facet_columns, label),
+      assay,
+      alt_exp
+    ) %>%
       mutate(., .sample = .y) %>%
       bind_cols(.get_reduced_dims(.x, type))
   ) %>%
@@ -93,7 +98,7 @@ plot_reduced_dimensions = function(sce_list,
                           unique(data$value[data$value != "NA"])
                         ), na.last = FALSE)))
 
-    data = data[sample(1:nrow(data), nrow(data)), ]
+    data = data[sample(1:nrow(data), nrow(data)),]
   }
 
   plot = ggplot(data, aes_string(
@@ -123,7 +128,6 @@ plot_reduced_dimensions = function(sce_list,
   }
 
   if (!is.null(label)) {
-
     if (label %in% features) {
       color = "value"
       label = "value"
@@ -133,15 +137,26 @@ plot_reduced_dimensions = function(sce_list,
 
     annotations = data %>%
       group_by(.dots = c(facet_rows, facet_columns, label)) %>%
-      summarize(x = median(!!as.name(paste0((type), "_1"))),
-                y = median(!!as.name(paste0((type), "_2"))))
+      summarize(x = median(!!as.name(paste0((
+        type
+      ), "_1"))),
+      y = median(!!as.name(paste0((
+        type
+      ), "_2"))))
 
-    plot = plot + geom_label_repel(data = annotations,
-                                   aes_string(x = "x", y = "y", label = label, color = color),
-                                   label.padding = unit(0.1, "lines"),
-                                   alpha = 1,
-                                   fill = "white",
-                                   size = text_size)
+    plot = plot + geom_label_repel(
+      data = annotations,
+      aes_string(
+        x = "x",
+        y = "y",
+        label = label,
+        color = color
+      ),
+      label.padding = unit(0.1, "lines"),
+      alpha = 1,
+      fill = "white",
+      size = text_size
+    )
   }
 
   plot = plot_facets(plot,
@@ -174,10 +189,8 @@ plot_reduced_dimensions = function(sce_list,
 #' @examples
 #' NULL
 .get_reduced_dims = function(sce, type) {
-  reduced_dims = data.frame(
-    dim1 = reducedDims(sce)@listData[[type]][, 1],
-    dim2 = reducedDims(sce)@listData[[type]][, 2]
-  )
+  reduced_dims = data.frame(dim1 = reducedDims(sce)@listData[[type]][, 1],
+                            dim2 = reducedDims(sce)@listData[[type]][, 2])
 
   colnames(reduced_dims) = paste0(type, "_", c(1, 2))
 

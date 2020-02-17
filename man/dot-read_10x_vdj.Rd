@@ -7,7 +7,7 @@
 .read_10x_vdj(path)
 }
 \arguments{
-\item{path}{Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified}
+\item{path}{path to vdj data - this path must contain all_contig_annotations.csv}
 }
 \value{
 DataFrame with vdj information

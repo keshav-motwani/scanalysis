@@ -6,10 +6,10 @@
 \usage{
 plot_pairwise_features(
   sce_list,
-  assay = "logcounts",
-  alt_exp = NULL,
   x,
   y = x,
+  assay = "logcounts",
+  alt_exp = NULL,
   color = NULL,
   shape = NULL,
   size = NULL,
@@ -19,23 +19,27 @@ plot_pairwise_features(
 )
 }
 \arguments{
-\item{sce_list}{List of SingleCellExperiment objects to plot}
+\item{sce_list}{list of SingleCellExperiment objects to plot}
 
-\item{assay}{Assay to obtain data from (ex: counts, logcounts)}
+\item{x}{numeric features to plot on x axis - can be from reducedDims, colData, or assay data}
 
-\item{alt_exp}{Alternate experiment to obtain data from}
+\item{y}{numeric features to plot on y axis - can be from reducedDims, colData, or assay data}
 
-\item{x}{Numeric features to plot on x axis - can be from reducedDims, colData, or assay data}
+\item{assay}{assay to obtain data from (ex: counts, logcounts)}
 
-\item{y}{Numeric features to plot on y axis - can be from reducedDims, colData, or assay data}
+\item{alt_exp}{alternate experiment to obtain data from}
 
-\item{color}{Column from reducedDims, colData, or assay data to color by}
+\item{color}{column from reducedDims, colData, or assay data to color by}
 
-\item{shape}{Column from reducedDims, colData, or assay data to shape by}
+\item{shape}{column from reducedDims, colData, or assay data to shape by}
 
-\item{size}{Column from reducedDims, colData, or assay data to size by}
+\item{size}{column from reducedDims, colData, or assay data to size by}
 
-\item{...}{Other parameters to be passed to ggexp::plot_pairwise_scatterplot}
+\item{facet_rows}{columns from colData to facet on}
+
+\item{facet_columns}{columns from colData to facet on}
+
+\item{...}{other parameters to be passed to ggexp::plot_pairwise_scatterplot}
 }
 \value{
 ggplot object

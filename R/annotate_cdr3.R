@@ -17,13 +17,28 @@
 #'
 #' @examples
 #' NULL
-annotate_cdr3 = function(sce, reference, reference_cdr3_column, reference_annotation_column, chain_match = "TRB", max_dist = 1, method = "hamming") {
+annotate_cdr3 = function(sce,
+                         reference,
+                         reference_cdr3_column,
+                         reference_annotation_column,
+                         chain_match = "TRB",
+                         max_dist = 1,
+                         method = "hamming") {
   vdj_data_all = unnest_vdj(sce, include_all = FALSE)
   vdj_data = vdj_data_all %>%
     filter(chain == chain_match)
   reference = reference[, c(reference_cdr3_column, reference_annotation_column), drop = FALSE]
-  reference = reference[!duplicated(reference), ]
-  result = stringdist_left_join(vdj_data, reference, by = c(cdr3 = reference_cdr3_column), max_dist = max_dist, method = method)[, c("Barcode", "cdr3", reference_cdr3_column, reference_annotation_column)]
+  reference = reference[!duplicated(reference),]
+  result = stringdist_left_join(
+    vdj_data,
+    reference,
+    by = c(cdr3 = reference_cdr3_column),
+    max_dist = max_dist,
+    method = method
+  )[, c("Barcode",
+        "cdr3",
+        reference_cdr3_column,
+        reference_annotation_column)]
   result = result %>%
     filter(!is.na(!!as.name(reference_annotation_column))) %>%
     group_by(Barcode) %>%

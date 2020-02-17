@@ -4,7 +4,7 @@
 \alias{filter_n_genes_expr}
 \title{Get filter for number of genes expressed per barcode based on log transformed values}
 \usage{
-filter_n_genes_expr(sce, nmads, type)
+filter_n_genes_expr(sce, nmads, type, column = "n_genes_expr")
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}
@@ -12,15 +12,14 @@ filter_n_genes_expr(sce, nmads, type)
 \item{nmads}{Number of median absolute deviations from the median for cutoff}
 
 \item{type}{Either "both", "lower", or "higher", referring to which side to filter on}
+
+\item{column}{column in colData containing number of genes expressed}
 }
 \value{
 Boolean filter with TRUE for cells and FALSE for outliers. Contains attribute with number of median absolute deviations specified.
 }
 \description{
 Wrapper around scater::isOutlier, arguments type and nmads refer to the same thing. For number of genes expressed, uses log transformed values for deciding cutoffs.
-}
-\details{
-Ensure that \code{\link{add_num_genes_expr}} has been run before this or that a column named num_genes_expr is present in colData(sce)
 }
 \examples{
 NULL

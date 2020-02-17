@@ -4,23 +4,22 @@
 \alias{filter_total_umi}
 \title{Get filter for total umis per barcode based on log transformed values outside (either above, below, or both based on type parameter) nmads median absolute deviations from the median}
 \usage{
-filter_total_umi(sce, nmads, type)
+filter_total_umi(sce, nmads, type, column = "total_umi")
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{nmads}{Number of median absolute deviations from the median for cutoff}
+\item{nmads}{number of median absolute deviations from the median for cutoff}
 
-\item{type}{Either "both", "lower", or "higher", referring to which side to filter on}
+\item{type}{either "both", "lower", or "higher", referring to which side to filter on}
+
+\item{column}{column in colData containing total UMI count}
 }
 \value{
 Boolean filter with TRUE for cells and FALSE for outliers. Contains attribute with number of median absolute deviations specified.
 }
 \description{
 Wrapper around scater::isOutlier, arguments type and nmads refer to the same thing. For total_umi, uses log transformed values for deciding cutoffs.
-}
-\details{
-Ensure that \code{\link{add_total_umi}} has been run before this or that a column named total_umi is present in colData(sce)
 }
 \examples{
 NULL

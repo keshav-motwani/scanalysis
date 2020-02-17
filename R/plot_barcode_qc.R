@@ -1,14 +1,14 @@
 #' QC plot of UMI rank vs total number of UMIs per barcode
 #'
-#' @param sce_list Named list of SingleCellExperiment objects
-#' @param ambient_rna_filters Named list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order
-#' @param color Column from colData that is in all objects in sce_list
-#' @param shape Column from colData that is in all objects in sce_list
-#' @param text_size Font size for annotations
-#' @param facet_rows Columns to facet on
-#' @param facet_columns Columns to facet on
-#' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
+#' @param sce_list list of SingleCellExperiment objects
+#' @param ambient_rna_filters list of results from filter_ambient_rna function, one for each SCE object in sce_list - must be the same names and order
+#' @param color column from colData that is in all objects in sce_list
+#' @param shape column from colData that is in all objects in sce_list
+#' @param text_size font size for annotations
+#' @param facet_rows columns to facet on
+#' @param facet_columns columns to facet on
+#' @param facet_type either "wrap" or "grid", same as ggplot
+#' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom DropletUtils barcodeRanks
@@ -35,7 +35,6 @@ plot_barcode_qc = function(sce_list,
                            text_size = 2,
                            alpha = 0.5,
                            ...) {
-
   stopifnot(names(sce_list) == names(ambient_rna_filters))
 
   data = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
@@ -52,10 +51,12 @@ plot_barcode_qc = function(sce_list,
   )
 
   rank_vs_umi = ggplot(mapping = aes(rank, total_umi)) +
-    geom_point(data = data,
-               aes_string(color = color, shape = shape),
-               size = point_size,
-               alpha = alpha) +
+    geom_point(
+      data = data,
+      aes_string(color = color, shape = shape),
+      size = point_size,
+      alpha = alpha
+    ) +
     geom_hline(data = hlines, aes_string(yintercept = "y")) +
     scale_x_log10(
       breaks = trans_breaks("log10", function(x)
@@ -68,10 +69,8 @@ plot_barcode_qc = function(sce_list,
       labels = trans_format("log10", math_format(10 ^ .x))
     ) +
     theme_ggexp() +
-    labs(
-      y = "Total UMI",
-      x = "UMI Rank"
-    ) +
+    labs(y = "Total UMI",
+         x = "UMI Rank") +
     geom_text(
       data = hlines,
       aes(
@@ -91,13 +90,11 @@ plot_barcode_qc = function(sce_list,
       size = text_size
     )
 
-  rank_vs_umi = plot_facets(
-    rank_vs_umi,
-    facet_rows,
-    facet_columns,
-    facet_type,
-    ...
-  )
+  rank_vs_umi = plot_facets(rank_vs_umi,
+                            facet_rows,
+                            facet_columns,
+                            facet_type,
+                            ...)
 
   return(rank_vs_umi)
 }
@@ -105,8 +102,8 @@ plot_barcode_qc = function(sce_list,
 #' Prepare data for plotting barcode QC plot
 #'
 #' @param sce SingleCellExperiment object
-#' @param sample_name Name of sample
-#' @param ambient_rna_filter Result from filter_ambient_rna function
+#' @param sample_name name of sample
+#' @param ambient_rna_filter result from filter_ambient_rna function
 #'
 #' @importFrom DropletUtils barcodeRanks
 #' @importFrom dplyr filter arrange
@@ -136,8 +133,8 @@ plot_barcode_qc = function(sce_list,
 #' Prepare cutoff values for each method
 #'
 #' @param sce SingleCellExperiment object
-#' @param sample_name Name of sample
-#' @param ambient_rna_filter Result from filter_ambient_rna function
+#' @param sample_name name of sample
+#' @param ambient_rna_filter result from filter_ambient_rna function
 #'
 #' @return
 #' @keywords internal
@@ -161,9 +158,9 @@ plot_barcode_qc = function(sce_list,
 #' Prepare count annotations for number of cells passing each filtering method
 #'
 #' @param sce SingleCellExperiment object
-#' @param sample_name Name of sample
-#' @param ambient_rna_filter Result from filter_ambient_rna function
-#' @param facets Columns to group by in plot
+#' @param sample_name name of sample
+#' @param ambient_rna_filter result from filter_ambient_rna function
+#' @param facets columns to group by in plot
 #'
 #' @importFrom SingleCellExperiment colData
 #' @importFrom dplyr summarize group_by mutate
@@ -174,9 +171,9 @@ plot_barcode_qc = function(sce_list,
 #' @examples
 #' NULL
 .prepare_barcode_counts = function(sce,
-                                  sample_name,
-                                  ambient_rna_filter,
-                                  facets) {
+                                   sample_name,
+                                   ambient_rna_filter,
+                                   facets) {
   as.data.frame(cbind(data.frame(ambient_rna_filter), colData(sce))) %>%
     group_by(.dots = facets) %>%
     summarize(

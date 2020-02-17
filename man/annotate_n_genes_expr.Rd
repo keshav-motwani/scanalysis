@@ -4,10 +4,10 @@
 \alias{annotate_n_genes_expr}
 \title{Add number of genes expressed per barcode to colData(sce)$n_genes_expr}
 \usage{
-annotate_n_genes_expr(sce)
+annotate_n_genes_expr(sce, name = "n_genes_expr", alt_exp = NULL)
 }
 \arguments{
-\item{sce}{}
+\item{sce}{SingleCellExperiment object}
 }
 \value{
 

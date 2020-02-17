@@ -4,7 +4,7 @@
 \alias{annotate_total_umi_count}
 \title{Add number of total umis per barcode to colData(sce)$total_umi}
 \usage{
-annotate_total_umi_count(sce)
+annotate_total_umi_count(sce, name = "total_umi", alt_exp = NULL)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}

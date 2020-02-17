@@ -1,9 +1,9 @@
 #' Cache and retrieve intermediate steps if path exists
 #'
-#' @param file_path File path at which to cache
-#' @param fn Function whose reslt to cache
+#' @param file_path file path at which to cache
+#' @param fn function whose result to cache
 #'
-#' @return Cached object
+#' @return cached object
 #' @export
 #'
 #' @examples
@@ -13,8 +13,10 @@ cache = function(file_path, fn) {
     write = readr::write_csv
     read = readr::read_csv
   } else {
-    write = function(object, path) qs::qsave(object,  path, nthreads = 32)
-    read = function(path) qs::qread(path, nthreads = 32)
+    write = function(object, path)
+      qs::qsave(object,  path, nthreads = 32)
+    read = function(path)
+      qs::qread(path, nthreads = 32)
   }
 
   if (!file.exists(file_path)) {

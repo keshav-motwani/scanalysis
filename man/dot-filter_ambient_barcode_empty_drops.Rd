@@ -9,9 +9,9 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{fdr}{Upper limit for FDR}
+\item{fdr}{upper limit for FDR}
 
-\item{lower_limit_umi}{Lower limit for UMI, below which all barcodes are assumed to be ambient}
+\item{lower_limit_umi}{lower limit for UMI, below which all barcodes are assumed to be ambient}
 }
 \value{
 Boolean filter with TRUE for cells and FALSE for ambient RNA. Attribute named data containing output of emptyDrops function

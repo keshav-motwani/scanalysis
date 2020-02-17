@@ -6,17 +6,19 @@
 #' empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each barcode to the profile of barcodes below
 #'
 #' @param sce SingleCellExperiment object
-#' @param n_cells Number of input cells (used in cellranger cutoff computation)
+#' @param n_cells number of input cells (used in cellranger cutoff computation)
 #' @param fdr FDR threshold for keeping a cell for emptyDrops
-#' @param lower_umi_limit Number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only
+#' @param lower_umi_limit number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only
 #'
 #' @return List for each method in containing filter for method and attributes with details specific to each method.
 #' @export
 #'
 #' @examples
 #' NULL
-filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 100) {
-
+filter_ambient_barcode = function(sce,
+                                  n_cells,
+                                  fdr = 0.01,
+                                  lower_umi_limit = 100) {
   filters = list()
   filters$inflection = .filter_ambient_barcode_inflection(sce)
   filters$empty_drops = .filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit)
@@ -48,8 +50,8 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' Get filter for cells based on emptyDrops algorithm
 #'
 #' @param sce SingleCellExperiment object
-#' @param fdr Upper limit for FDR
-#' @param lower_limit_umi Lower limit for UMI, below which all barcodes are assumed to be ambient
+#' @param fdr upper limit for FDR
+#' @param lower_limit_umi lower limit for UMI, below which all barcodes are assumed to be ambient
 #'
 #' @importFrom DropletUtils emptyDrops
 #' @importFrom dplyr as_tibble mutate
@@ -92,7 +94,7 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' Get filter for cells based on inflection point
 #'
 #' @param sce SingleCellExperiment object
-#' @param n_cells Number of cells expected
+#' @param n_cells number of cells expected
 #'
 #' @importFrom DropletUtils barcodeRanks
 #'
@@ -103,7 +105,8 @@ filter_ambient_barcode = function(sce, n_cells, fdr = 0.01, lower_umi_limit = 10
 #' NULL
 .filter_ambient_barcode_cellranger = function(sce, n_cells) {
   bcrank = barcodeRanks(counts(sce))
-  cutoff = quantile(sort(bcrank$total, decreasing = TRUE)[1:n_cells], 0.99, na.rm = TRUE)/10
+  cutoff = quantile(sort(bcrank$total, decreasing = TRUE)[1:n_cells], 0.99, na.rm = TRUE) /
+    10
   filter = bcrank$total > cutoff
   attributes(filter)$value = cutoff
   return(filter)

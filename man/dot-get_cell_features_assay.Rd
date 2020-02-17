@@ -9,11 +9,11 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{features}{Row names from assay object of relevant alternate experiment}
+\item{features}{row names from assay object of relevant alternate experiment}
 
-\item{assay}{Assay to use (counts, logcounts, etc.)}
+\item{assay}{assay to use (counts, logcounts, etc.)}
 
-\item{alt_exp}{Name of the altExp to use (if any)}
+\item{alt_exp}{name of the altExp to use (if any)}
 }
 \value{
 data.frame with rows as cells and columns as features

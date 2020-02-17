@@ -9,9 +9,9 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{sample_name}{Name of sample}
+\item{sample_name}{name of sample}
 
-\item{ambient_rna_filter}{Result from filter_ambient_rna function}
+\item{ambient_rna_filter}{result from filter_ambient_rna function}
 }
 \value{
 

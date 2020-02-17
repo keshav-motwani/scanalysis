@@ -3,7 +3,7 @@
 #' @param seurat Seurat object
 #'
 #' @importFrom S4Vectors metadata<-
-#' @importFrom SingleCellExperiment altExps
+#' @importFrom SingleCellExperiment altExps colData
 #' @importFrom Seurat DefaultAssay as.SingleCellExperiment VariableFeatures
 #'
 #' @return
@@ -12,7 +12,6 @@
 #' @examples
 #' NULL
 seurat_to_sce = function(seurat, default_assay = NULL) {
-
   if (is.null(default_assay)) {
     if ("SCT" %in% names(seurat@assays)) {
       default_assay = "SCT"
@@ -31,13 +30,17 @@ seurat_to_sce = function(seurat, default_assay = NULL) {
 
   metadata(result)$default_assay = default_assay
 
+  if ("vdj" %in% colnames(colData(result))) {
+    result$vdj = as(result$vdj, "CompressedSplitDFrameList")
+  }
+
   return(result)
 }
 
 #' Convert Seurat assay to SingleCellExperiment
 #'
 #' @param seurat Seurat object
-#' @param assay Assay to convert
+#' @param assay assay to convert
 #'
 #' @importFrom S4Vectors metadata<-
 #' @importFrom Seurat as.SingleCellExperiment VariableFeatures
@@ -48,10 +51,10 @@ seurat_to_sce = function(seurat, default_assay = NULL) {
 #' @examples
 #' NULL
 .seurat_assay_to_sce = function(seurat, assay) {
-
   result = as.SingleCellExperiment(seurat, assay = assay)
 
-  if (!is.null(seurat@assays[[assay]]@misc)) metadata(result) = seurat@assays[[assay]]@misc
+  if (!is.null(seurat@assays[[assay]]@misc))
+    metadata(result) = seurat@assays[[assay]]@misc
   metadata(result)$scaled = seurat@assays[[assay]]@scale.data
   metadata(result)$variable_features = VariableFeatures(seurat, assay = assay)
 
@@ -74,7 +77,6 @@ seurat_to_sce = function(seurat, default_assay = NULL) {
 #' @examples
 #' NULL
 sce_to_seurat = function(sce) {
-
   main = .sce_to_assay(sce, return_assay = FALSE)
 
   alt_exps = as.list(altExps(sce))

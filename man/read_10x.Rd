@@ -4,12 +4,17 @@
 \alias{read_10x}
 \title{Read 10X gene expression and VDJ data into a SingleCellExperiment object}
 \usage{
-read_10x(gene_expr_path = getwd(), vdj_path = NA)
+read_10x(
+  gene_expr_path = getwd(),
+  vdj_path = NA,
+  top_n_barcodes = NULL,
+  nonzero_barcodes = FALSE
+)
 }
 \arguments{
-\item{gene_expr_path}{Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified}
+\item{gene_expr_path}{path to gene expression data - this path must contain mtx, features, and barcodes file}
 
-\item{vdj_path}{Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified}
+\item{vdj_path}{path to vdj data - this path must contain all_contig_annotations.csv}
 }
 \value{
 

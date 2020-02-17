@@ -6,34 +6,37 @@
 \usage{
 plot_features(
   sce_list,
-  assay,
-  alt_exp = NULL,
   features,
   x,
   color = x,
+  fill = x,
   facet_rows = c(".feature"),
   facet_columns = c(".sample"),
+  assay = "logcounts",
+  alt_exp = NULL,
   ...
 )
 }
 \arguments{
-\item{sce_list}{List of SingleCellExperiment objects}
+\item{sce_list}{list of SingleCellExperiment objects}
 
-\item{assay}{Assay to obtain data from (counts, logcounts, etc)}
-
-\item{alt_exp}{Alternate experiment to obtain data from}
-
-\item{features}{Numeric features to plot - can be from reducedDims, colData, or assay data}
+\item{features}{numeric features to plot - can be from reducedDims, colData, or assay data}
 
 \item{x}{colData variable to plot on x-axis}
 
 \item{color}{colData variable to color points by}
 
-\item{facet_rows}{Variables from colData to facet on, can also include ".sample" or ".feature" as described below}
+\item{fill}{colData variable to fill by}
 
-\item{facet_columns}{Variables from colData to facet on, can also include ".sample" or ".feature" as described below}
+\item{facet_rows}{variables from colData to facet on, can also include ".sample" or ".feature" as described below}
 
-\item{...}{Parameters to ggexp::plot_distributions}
+\item{facet_columns}{variables from colData to facet on, can also include ".sample" or ".feature" as described below}
+
+\item{assay}{assay to obtain data from (counts, logcounts, etc)}
+
+\item{alt_exp}{alternate experiment to obtain data from}
+
+\item{...}{other parameters passed to ggexp::plot_distributions}
 }
 \value{
 ggplot object

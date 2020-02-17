@@ -9,7 +9,7 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{features}{Names of dimensions to retreive in format of [red_dim_name]_[dimension_number] (e.g. PCA_1)}
+\item{features}{names of dimensions to retreive in format of [red_dim_name]_[dimension_number] (e.g. PCA_1)}
 }
 \value{
 data.frame with rows as cells and columns as features

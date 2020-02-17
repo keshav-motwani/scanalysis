@@ -1,19 +1,19 @@
 #' Scatterplot of two features of interest from colData with annotated thresholds and counts based on filters
 #'
-#' @param sce_list List of SingleCellExperiment object
-#' @param x Numeric column from colData that is in all objects in sce_list
-#' @param y Numeric column from colData that is in all objects in sce_list
-#' @param color Column from colData that is in all objects in sce_list
-#' @param shape Column from colData that is in all objects in sce_list
-#' @param x_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
-#' @param y_filters List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
-#' @param x_log Boolean to use log x-axis
-#' @param y_log Boolean to use log y-axis
-#' @param text_size Font size for annotations
-#' @param facet_rows Columns to facet on
-#' @param facet_columns Columns to facet on
-#' @param facet_type Either "wrap" or "grid", same as ggplot
-#' @param ... params passed into either facet_wrap or facet_grid, depending on facet_type parameter
+#' @param sce_list list of SingleCellExperiment object
+#' @param x numeric column from colData that is in all objects in sce_list
+#' @param y numeric column from colData that is in all objects in sce_list
+#' @param color column from colData that is in all objects in sce_list
+#' @param shape column from colData that is in all objects in sce_list
+#' @param x_filters list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
+#' @param y_filters list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values
+#' @param x_log whether to use log x-axis
+#' @param y_log whether to use log y-axis
+#' @param text_size font size for annotations
+#' @param facet_rows columns to facet on
+#' @param facet_columns columns to facet on
+#' @param facet_type either "wrap" or "grid", same as ggplot
+#' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
 #' @importFrom ggexp theme_ggexp plot_facets
@@ -40,7 +40,6 @@ plot_gex_bivariate_qc = function(sce_list,
                                  facet_columns = NULL,
                                  facet_type = "grid",
                                  ...) {
-
   if (is.null(names(sce_list))) {
     names(sce_list) = paste0("sample_", 1:length(sce_list))
   }
@@ -84,9 +83,12 @@ plot_gex_bivariate_qc = function(sce_list,
       shape = shape
     )) +
     geom_point(alpha = 0.5) +
-    geom_density2d(color = "blue", alpha = 0.5) +
-    theme_ggexp() +
-    scale_color_viridis_c()
+    geom_density_2d(color = "black", alpha = 1) +
+    theme_ggexp()
+
+  if (is.numeric(data[, color, drop = TRUE])) {
+    plot = plot + scale_color_viridis_c()
+  }
 
   xlim = c(min(data[, x, drop = TRUE]), max(data[, x, drop = TRUE]))
   ylim = c(min(data[, y, drop = TRUE]), max(data[, y, drop = TRUE]))
@@ -203,7 +205,7 @@ plot_gex_univariate_qc = function(sce_list,
     counts$.null = "all"
   }
 
-  plot = ggplot(data, aes_string(x = x, y = y)) +
+  plot = ggplot(data, aes_string(x = x, y = y, color = color)) +
     geom_density_ridges2(
       aes_string(point_color = color, point_shape = shape),
       alpha = .2,
@@ -265,7 +267,7 @@ plot_gex_univariate_qc = function(sce_list,
                             guide = guide_colorbar(available_aes = c("point_colour")))
   } else {
     plot = plot +
-      scale_color_viridis_d(aesthetics = c("point_colour"))
+      scale_color_hue(aesthetics = c("point_colour"))
   }
 
   plot = plot + scale_y_discrete(expand = c(0, 0.005))
@@ -332,8 +334,8 @@ plot_gex_univariate_qc = function(sce_list,
       filter = paste0("filter_", 1:3),
       count = apply(as.matrix(counts[, c("x1", "x2")]), 1,
                     function(row)
-                      sum(x >= row["x1"] &
-                            x < row["x2"]))
+                      sum(x > row["x1"] &
+                            x <= row["x2"]))
     )
   }
 
@@ -411,8 +413,8 @@ plot_gex_univariate_qc = function(sce_list,
       filter = paste0("filter_", 1:9),
       count = apply(as.matrix(counts[, c("x1", "x2", "y1", "y2")]), 1,
                     function(row)
-                      sum(x >= row["x1"] &
-                            x < row["x2"] &
+                      sum(x > row["x1"] &
+                            x <= row["x2"] &
                             y > row["y1"] &
                             y <= row["y2"]))
     )
@@ -420,7 +422,7 @@ plot_gex_univariate_qc = function(sce_list,
 
   counts = data %>%
     group_by(.dots = facets) %>%
-    summarize(counts = list(count_fn(!!as.name(x), !!as.name(y)))) %>%
+    summarize(counts = list(count_fn(!!as.name(x),!!as.name(y)))) %>%
     unnest(cols = c(counts)) %>%
     left_join(counts, by = "filter")
 
@@ -437,7 +439,7 @@ plot_gex_univariate_qc = function(sce_list,
       mutate(y = sqrt(ifelse(y1 == 0, 1, y1) * (y2)))
   } else {
     counts = counts %>%
-      mutate(x = 0.5 * (y1 + y2))
+      mutate(y = 0.5 * (y1 + y2))
   }
 
   counts$.sample = sample_name

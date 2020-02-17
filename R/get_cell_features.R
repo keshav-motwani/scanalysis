@@ -1,9 +1,9 @@
 #' Get feature from assay data, colData, or reducedDims at once from main experiment or alternate experiments
 #'
 #' @param sce SingleCellExperiment object
-#' @param features Names of features desired. It will first check row names of the assay data, then column names of the colData, then column names of each of the reducedDims slots. Only those found will be returned
-#' @param assay Assay to use (counts, logcounts, etc.)
-#' @param alt_exp Name of the altExp to use (if any)
+#' @param features names of features desired. It will first check row names of the assay data, then column names of the colData, then column names of each of the reducedDims slots. Only those found will be returned
+#' @param assay assay to use (counts, logcounts, etc.)
+#' @param alt_exp name of the altExp to use (if any)
 #'
 #' @importFrom SummarizedExperiment colData
 #' @importFrom dplyr bind_cols
@@ -17,7 +17,10 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
   exp_assay_data = .get_cell_features_assay_explicit_exp(sce, features, assay)
   coldata_data = .get_cell_features_coldata(sce, features)
   reduced_dimensions_data = .get_cell_features_reduced_dimensions(sce, features)
-  result = bind_cols(assay_data, exp_assay_data, coldata_data, reduced_dimensions_data)
+  result = bind_cols(assay_data,
+                     exp_assay_data,
+                     coldata_data,
+                     reduced_dimensions_data)
   result$barcode = colData(sce)$Barcode
   return(result)
 }
@@ -25,9 +28,9 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' Get feature from assay (from alternate experiment)
 #'
 #' @param sce SingleCellExperiment object
-#' @param features Row names from assay object of relevant alternate experiment
-#' @param assay Assay to use (counts, logcounts, etc.)
-#' @param alt_exp Name of the altExp to use (if any)
+#' @param features row names from assay object of relevant alternate experiment
+#' @param assay assay to use (counts, logcounts, etc.)
+#' @param alt_exp name of the altExp to use (if any)
 #'
 #' @return data.frame with rows as cells and columns as features
 #' @keywords internal
@@ -45,9 +48,9 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' Get feature from assay (from alternate experiment)
 #'
 #' @param sce SingleCellExperiment object
-#' @param features Row names from assay object of relevant alternate experiment
-#' @param assay Assay to use (counts, logcounts, etc.)
-#' @param alt_exp Name of the altExp to use (if any)
+#' @param features row names from assay object of relevant alternate experiment
+#' @param assay assay to use (counts, logcounts, etc.)
+#' @param alt_exp name of the altExp to use (if any)
 #'
 #' @importFrom purrr map
 #' @importFrom dplyr bind_rows
@@ -58,11 +61,17 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @examples
 #' NULL
 .get_cell_features_assay_explicit_exp = function(sce, features, assay) {
+  features = features[grepl("///", features)]
   exps = unique(unlist(map(strsplit(features, "///"), 1)))
   result = list()
   for (exp in exps) {
-    exp_features = unique(unlist(map(strsplit(features[grepl(exp, features)], "///"), 2)))
-    exp_features = .get_cell_features_assay(sce, features = exp_features, assay = assay, alt_exp = exp)
+    exp_features = unique(unlist(map(strsplit(
+      features[grepl(exp, features)], "///"
+    ), 2)))
+    exp_features = .get_cell_features_assay(sce,
+                                            features = exp_features,
+                                            assay = assay,
+                                            alt_exp = exp)
     colnames(exp_features) = paste0(exp, "///", colnames(exp_features))
     result = c(result, list(exp_features))
   }
@@ -72,7 +81,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' Get feature from column metadata
 #'
 #' @param sce SingleCellExperiment object
-#' @param features Column names from column metadata
+#' @param features column names from colData
 #'
 #' @return data.frame with rows as cells and columns as features
 #' @keywords internal
@@ -88,7 +97,7 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' Get feature from reduced dimensional representation
 #'
 #' @param sce SingleCellExperiment object
-#' @param features Names of dimensions to retreive in format of [red_dim_name]_[dimension_number] (e.g. PCA_1)
+#' @param features names of dimensions to retreive in format of [red_dim_name]_[dimension_number] (e.g. PCA_1)
 #'
 #' @importFrom purrr map_dfc
 #' @importFrom SingleCellExperiment reducedDims

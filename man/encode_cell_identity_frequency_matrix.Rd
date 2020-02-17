@@ -12,13 +12,13 @@ encode_cell_identity_frequency_matrix(
 )
 }
 \arguments{
-\item{sce_list}{List of SCE objects, all containing relevant attributes in colData as columns}
+\item{sce_list}{Llist of SCE objects, all containing relevant attributes in colData as columns}
 
-\item{attributes}{Column names from colData which to encode}
+\item{attributes}{column names from colData which to encode}
 
-\item{group_by}{Column names from colData which to group by (compute frequencies per group)}
+\item{group_by}{column names from colData which to group by (compute frequencies per group)}
 
-\item{normalize}{Normalization method - either "none" or "relative_frequency"}
+\item{normalize}{normalization method - either "none" or "relative_frequency"}
 }
 \value{
 

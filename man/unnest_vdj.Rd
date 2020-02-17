@@ -8,6 +8,8 @@ unnest_vdj(sce, include_all = TRUE)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object with a column named vdj containing contig_annotations in colData}
+
+\item{include_all}{whether to include all metadata, including metadata about each cell (from all columns in colData)}
 }
 \value{
 DataFrame with row for each vdj sequence containing cell-level metadata

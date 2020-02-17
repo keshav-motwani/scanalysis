@@ -54,7 +54,7 @@ plot_volcano(
 
 \item{facet_type}{either "wrap" or "grid", corresponding to facet_wrap and facet_grid respectively}
 
-\item{...}{params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
+\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 ggplot2 object

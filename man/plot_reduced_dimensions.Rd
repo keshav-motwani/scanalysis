@@ -15,37 +15,37 @@ plot_reduced_dimensions(
   point_size = 1,
   text_size = 1,
   facet_rows = c(),
-  facet_columns = c(".feature"),
+  facet_columns = c(),
   facet_type = "grid",
   ...
 )
 }
 \arguments{
-\item{sce_list}{List of SingleCellExperiment objects to plot}
+\item{sce_list}{list of SingleCellExperiment objects to plot}
 
-\item{type}{Name of reducedDim attribute to plot}
+\item{type}{name of reducedDim attribute to plot}
 
-\item{assay}{Assay to obtain data from (ex: counts, logcounts)}
+\item{assay}{assay to obtain data from (ex: counts, logcounts)}
 
-\item{alt_exp}{Alternate experiment to obtain data from}
+\item{alt_exp}{alternate experiment to obtain data from}
 
-\item{features}{Features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot}
+\item{features}{features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot}
 
-\item{alpha}{Alpha for points}
+\item{alpha}{alpha for points}
 
-\item{point_size}{Size of points}
+\item{point_size}{size of points}
 
-\item{text_size}{Size of font for text annotation}
+\item{text_size}{size of font for text annotation}
 
-\item{facet_rows}{Variables from colData to facet on, can also include ".sample" or ".feature" as described below}
+\item{facet_rows}{variables from colData to facet on, can also include ".sample" or ".feature" as described below}
 
-\item{facet_columns}{Variables from colData to facet on, can also include ".sample" or ".feature" as described below}
+\item{facet_columns}{variables from colData to facet on, can also include ".sample" or ".feature" as described below}
 
-\item{facet_type}{Either "wrap" or "grid", same as ggplot}
+\item{facet_type}{either "wrap" or "grid", same as ggplot}
 
-\item{...}{Other parameters to be passed to ggexp::plot_pairwise_scatterplot}
+\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 
-\item{label_value}{Boolean to annotate text label for the value - only works if all features are discrete}
+\item{label_value}{boolean to annotate text label for the value - only works if all features are discrete}
 }
 \value{
 ggplot object
@@ -54,9 +54,9 @@ ggplot object
 Features are min-max normalized per feature, and the range of each feature is annotated per facet to consolidate multiple features into one color scale.
 }
 \details{
-If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added in.
+If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added into the data frame being plotted.
 
-In almost all cases, you would want to facet by feature. This is by default included in facet_columns, but if you add additional faceting variables to facet_columns, be sure to also include ".feature". To be clear, ".feature" can also be included in facet_rows. This is not included within the code to allow for flexibility if you want features to be faceted in the rows or columns.
+In almost all cases, you would want to facet by feature, so be sure to also include ".feature" in either facet_columns or facet_rows
 }
 \examples{
 library(scanalysis)

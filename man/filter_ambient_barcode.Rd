@@ -9,11 +9,11 @@ filter_ambient_barcode(sce, n_cells, fdr = 0.01, lower_umi_limit = 100)
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{n_cells}{Number of input cells (used in cellranger cutoff computation)}
+\item{n_cells}{number of input cells (used in cellranger cutoff computation)}
 
 \item{fdr}{FDR threshold for keeping a cell for emptyDrops}
 
-\item{lower_umi_limit}{Number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only}
+\item{lower_umi_limit}{number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only}
 }
 \value{
 List for each method in containing filter for method and attributes with details specific to each method.

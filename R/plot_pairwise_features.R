@@ -1,14 +1,16 @@
 #' Plot pairwise scatterplot of cell-level data
 #'
-#' @param sce_list List of SingleCellExperiment objects to plot
-#' @param assay Assay to obtain data from (ex: counts, logcounts)
-#' @param alt_exp Alternate experiment to obtain data from
-#' @param x Numeric features to plot on x axis - can be from reducedDims, colData, or assay data
-#' @param y Numeric features to plot on y axis - can be from reducedDims, colData, or assay data
-#' @param color Column from reducedDims, colData, or assay data to color by
-#' @param shape Column from reducedDims, colData, or assay data to shape by
-#' @param size Column from reducedDims, colData, or assay data to size by
-#' @param ... Other parameters to be passed to ggexp::plot_pairwise_scatterplot
+#' @param sce_list list of SingleCellExperiment objects to plot
+#' @param x numeric features to plot on x axis - can be from reducedDims, colData, or assay data
+#' @param y numeric features to plot on y axis - can be from reducedDims, colData, or assay data
+#' @param color column from reducedDims, colData, or assay data to color by
+#' @param shape column from reducedDims, colData, or assay data to shape by
+#' @param size column from reducedDims, colData, or assay data to size by
+#' @param facet_rows columns from colData to facet on
+#' @param facet_columns columns from colData to facet on
+#' @param assay assay to obtain data from (ex: counts, logcounts)
+#' @param alt_exp alternate experiment to obtain data from
+#' @param ... other parameters to be passed to ggexp::plot_pairwise_scatterplot
 #'
 #' @importFrom ggexp plot_pairwise_scatterplot
 #' @importFrom purrr imap_dfr
@@ -20,10 +22,10 @@
 #' @examples
 #' NULL
 plot_pairwise_features = function(sce_list,
-                                  assay = "logcounts",
-                                  alt_exp = NULL,
                                   x,
                                   y = x,
+                                  assay = "logcounts",
+                                  alt_exp = NULL,
                                   color = NULL,
                                   shape = NULL,
                                   size = NULL,

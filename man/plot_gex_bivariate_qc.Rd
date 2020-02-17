@@ -22,33 +22,33 @@ plot_gex_bivariate_qc(
 )
 }
 \arguments{
-\item{sce_list}{List of SingleCellExperiment object}
+\item{sce_list}{list of SingleCellExperiment object}
 
-\item{x}{Numeric column from colData that is in all objects in sce_list}
+\item{x}{numeric column from colData that is in all objects in sce_list}
 
-\item{y}{Numeric column from colData that is in all objects in sce_list}
+\item{y}{numeric column from colData that is in all objects in sce_list}
 
-\item{color}{Column from colData that is in all objects in sce_list}
+\item{color}{column from colData that is in all objects in sce_list}
 
-\item{shape}{Column from colData that is in all objects in sce_list}
+\item{shape}{column from colData that is in all objects in sce_list}
 
-\item{x_filters}{List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
+\item{x_filters}{list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
 
-\item{y_filters}{List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
+\item{y_filters}{list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values}
 
-\item{x_log}{Boolean to use log x-axis}
+\item{x_log}{whether to use log x-axis}
 
-\item{y_log}{Boolean to use log y-axis}
+\item{y_log}{whether to use log y-axis}
 
-\item{text_size}{Font size for annotations}
+\item{text_size}{font size for annotations}
 
-\item{facet_rows}{Columns to facet on}
+\item{facet_rows}{columns to facet on}
 
-\item{facet_columns}{Columns to facet on}
+\item{facet_columns}{columns to facet on}
 
-\item{facet_type}{Either "wrap" or "grid", same as ggplot}
+\item{facet_type}{either "wrap" or "grid", same as ggplot}
 
-\item{...}{params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
+\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 

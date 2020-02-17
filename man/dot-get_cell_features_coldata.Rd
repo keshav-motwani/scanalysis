@@ -9,7 +9,7 @@
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{features}{Column names from column metadata}
+\item{features}{column names from colData}
 }
 \value{
 data.frame with rows as cells and columns as features

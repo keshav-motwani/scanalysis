@@ -11,7 +11,6 @@
 #' @examples
 #' data = get_pbmc_10k_data()
 get_multi_sample_pbmc_10k = function() {
-
   bfc = BiocFileCache("example_data", ask = FALSE)
 
   link = "http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_10k_v3/pbmc_10k_v3_raw_feature_bc_matrix.tar.gz"
@@ -45,7 +44,6 @@ get_multi_sample_pbmc_10k = function() {
 #' @examples
 #' data = get_pbmc_5k_v3()
 get_pbmc_5k_v3 = function() {
-
   bfc = BiocFileCache("example_data", ask = FALSE)
 
   link = "http://cf.10xgenomics.com/samples/cell-exp/3.0.2/5k_pbmc_v3/5k_pbmc_v3_filtered_feature_bc_matrix.tar.gz"
@@ -71,7 +69,6 @@ get_pbmc_5k_v3 = function() {
 #' @examples
 #' data = get_pbmc_5k_nextgem()
 get_pbmc_5k_nextgem = function() {
-
   bfc = BiocFileCache("example_data", ask = FALSE)
 
   link = "http://cf.10xgenomics.com/samples/cell-exp/3.0.2/5k_pbmc_v3_nextgem/5k_pbmc_v3_nextgem_filtered_feature_bc_matrix.tar.gz"

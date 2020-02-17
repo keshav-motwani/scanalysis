@@ -4,14 +4,16 @@
 \alias{filter_pct_mito}
 \title{Get filter for percentage of mitochondrial reads expressed per barcode}
 \usage{
-filter_pct_mito(sce, nmads, type)
+filter_pct_mito(sce, nmads, type, column = "pct_mito")
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}
 
-\item{nmads}{Number of median absolute deviations from the median}
+\item{nmads}{number of median absolute deviations from the median}
 
-\item{type}{Either "both", "lower", or "higher", referring to which side to filter on}
+\item{type}{either "both", "lower", or "higher", referring to which side to filter on}
+
+\item{column}{column in colData containing percentage of mitochondrial reads}
 }
 \value{
 Boolean filter with TRUE for cells and FALSE for outliers. Contains attribute with number of median absolute deviations specified.
@@ -20,7 +22,7 @@ Boolean filter with TRUE for cells and FALSE for outliers. Contains attribute wi
 Wrapper around scater::isOutlier, arguments type and nmads refer to the same thing. For mitochondrial reads, uses non-log transformed values for deciding cutoffs.
 }
 \details{
-Ensure that \code{\link{add_pct_mito}} has been run before this or that a column named pct_mito is present in colData(sce)
+Ensure that \code{\link{add_pct_gene}} has been run before this or that a column named pct_mito is present in colData(sce)
 }
 \examples{
 NULL

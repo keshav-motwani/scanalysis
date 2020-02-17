@@ -7,12 +7,12 @@
 cache(file_path, fn)
 }
 \arguments{
-\item{file_path}{File path at which to cache}
+\item{file_path}{file path at which to cache}
 
-\item{fn}{Function whose reslt to cache}
+\item{fn}{function whose result to cache}
 }
 \value{
-Cached object
+cached object
 }
 \description{
 Cache and retrieve intermediate steps if path exists

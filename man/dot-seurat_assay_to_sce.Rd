@@ -9,7 +9,7 @@
 \arguments{
 \item{seurat}{Seurat object}
 
-\item{assay}{Assay to convert}
+\item{assay}{assay to convert}
 }
 \value{
 

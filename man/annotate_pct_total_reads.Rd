@@ -4,7 +4,7 @@
 \alias{annotate_pct_total_reads}
 \title{Add percentage of total reads that each gene takes up across the whole dataset to rowData(sce)$pct_reads}
 \usage{
-annotate_pct_total_reads(sce)
+annotate_pct_total_reads(sce, name = "pct_reads", alt_exp = NULL)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}
