@@ -12,9 +12,11 @@
   n_annotate_top,
   annotations,
   annotations_if_threshold,
+  annotations_if_column,
   p_value_threshold,
   fold_change_threshold,
   p_value_rank_threshold,
+  rank_by,
   facet_rows,
   facet_columns
 )

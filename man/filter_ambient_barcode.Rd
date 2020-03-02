@@ -4,7 +4,13 @@
 \alias{filter_ambient_barcode}
 \title{Get filter to remove ambient RNA barcodes based on the combination of multiple methods:}
 \usage{
-filter_ambient_barcode(sce, n_cells, fdr = 0.01, lower_umi_limit = 100)
+filter_ambient_barcode(
+  sce,
+  n_cells,
+  fdr = 0.01,
+  lower_umi_limit = 100,
+  n_iters = 10000
+)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}

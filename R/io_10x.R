@@ -52,9 +52,15 @@ read_10x = function(gene_expr_path = getwd(),
 #' @examples
 #' NULL
 .read_10x_gene_expr = function(path) {
-  sce = read10xCounts(path, col.names = TRUE) %>%
-    splitAltExps(ifelse(grepl("^HTO_", rownames(.)), "HTO", "gene")) %>%
-    splitAltExps(ifelse(rowData(.)$Type ==  "Antibody Capture", "ADT", "gene"))
+  sce = read10xCounts(path, col.names = TRUE)
+
+  if (any(grepl("^HTO", rownames(sce)))) {
+    sce = splitAltExps(sce, ifelse(grepl("^HTO", rownames(sce)), "HTO", "gene"))
+  }
+
+  if (any(rowData(sce)$Type == "Antibody Capture")) {
+    sce = splitAltExps(sce, ifelse(rowData(sce)$Type ==  "Antibody Capture", "ADT", "gene"))
+  }
 
   rownames(sce) = uniquifyFeatureNames(rowData(sce)$ID, rowData(sce)$Symbol)
 
@@ -82,10 +88,15 @@ read_10x = function(gene_expr_path = getwd(),
     filter(
       high_confidence,
       is_cell,
-      productive == "True" | productive,
       chain %in% c("TRA", "TRB", "IGL", "IGK", "IGH")
     ) %>%
     as("DataFrame")
+
+  if (is.logical(vdj$productive)) {
+    vdj = vdj[which(vdj$productive), ]
+  } else {
+    vdj = vdj[vdj$productive == "True", ]
+  }
 
   return(vdj)
 }

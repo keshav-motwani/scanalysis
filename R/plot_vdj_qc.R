@@ -14,8 +14,8 @@
 #' @param ... other params passed into either facet_wrap or facet_grid, depending on facet_type parameter
 #'
 #' @import ggplot2
-#' @importFrom purrr map map2
-#' @importFrom dplyr summarise select group_by arrange desc
+#' @importFrom purrr map map2 imap_dfr
+#' @importFrom dplyr summarise select group_by arrange summarize desc
 #'
 #' @return
 #' @export
@@ -33,13 +33,18 @@ plot_vdj_gex_univariate_qc = function(sce_list,
                                 y = "count_TRA_TRB_IGL_IGK_IGH",
                                 ...)
 
-  order = attributes(vdj_filters[[1]])$allowed_values %>%
+  order = imap_dfr(vdj_filters, ~ attributes(.x)$allowed_values %>%
+                     mutate(.sample = .y)) %>%
+    group_by(.sample) %>%
     arrange(desc(allowed), count_TRA_TRB_IGL_IGK_IGH)
 
-  plot$data$count_TRA_TRB_IGL_IGK_IGH = factor(plot$data$count_TRA_TRB_IGL_IGK_IGH,
-                                               levels = order$count_TRA_TRB_IGL_IGK_IGH)
+  yintercepts = summarize(order, yintercept = sum(allowed) + 0.9)
 
-  plot = plot + geom_hline(yintercept = sum(order$allowed) + 0.90,
+  plot$data$count_TRA_TRB_IGL_IGK_IGH = factor(plot$data$count_TRA_TRB_IGL_IGK_IGH,
+                                               levels = distinct(ungroup(order), count_TRA_TRB_IGL_IGK_IGH, allowed)$count_TRA_TRB_IGL_IGK_IGH)
+
+  plot = plot + geom_hline(data = yintercepts,
+                           aes(yintercept = yintercept),
                            linetype = "dashed")
 
   return(plot)

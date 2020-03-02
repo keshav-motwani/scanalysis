@@ -19,12 +19,12 @@ annotate_chain_count = function(sce) {
   if ("vdj" %in% colnames(colData(sce))) {
     chain_count = unnest_vdj(sce) %>%
       as_tibble() %>%
-      count(barcode, chain) %>%
-      pivot_wider(id_cols = barcode,
+      count(Barcode, chain) %>%
+      pivot_wider(id_cols = Barcode,
                   values_from = n,
                   names_from = chain)
 
-    chain_count = column_to_rownames(chain_count, "barcode")[colData(sce)$Barcode,]
+    chain_count = column_to_rownames(chain_count, "Barcode")[colData(sce)$Barcode,]
 
     chain_types = c("TRA", "TRB", "IGL", "IGK", "IGH")
 

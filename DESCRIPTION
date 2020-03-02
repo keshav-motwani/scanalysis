@@ -3,7 +3,7 @@ Type: Package
 Title: Multi-Sample Visualization and Immune Repertoire Analysis Utilities for Single-Cell Data
 Version: 0.1.0
 Author: Keshav Motwani
-Maintainer: Keshav Motwani <keshavmot2@gmail.com> <keshav.motwani@pathology.ufl.edu>
+Maintainer: Keshav Motwani<keshavmot2@gmail.com><keshav.motwani@pathology.ufl.edu>
 Description: scanalysis is a framework with easy-to-use yet flexible utilities for the analysis of single-cell data. There are two major emphases in scanalysis: to be able to quickly generate exploratory analysis figures that are publication-quality and immune repertoire analysis.
 License: MIT
 Encoding: UTF-8
@@ -15,5 +15,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://keshavmot2.github.io/scanalysis/, https://github.com/keshavmot2/scanalysis
-BugReports: https://github.com/keshavmot2/scanalysis/issues
+URL: https://keshav-motwani.github.io/scanalysis/, https://github.com/keshav-motwani/scanalysis
+BugReports: https://github.com/keshav-motwani/scanalysis/issues

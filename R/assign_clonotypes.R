@@ -22,8 +22,11 @@ assign_clonotypes = function(sce,
                              trb_range = c(0, 1),
                              igl_range = c(0, 2),
                              igk_range = c(0, 2),
-                             igh_range = c(0, 1)) {
+                             igh_range = c(0, 1),
+                             name = "clonotype") {
+
   col_data = colData(sce)
+
   indices = col_data$count_TRA >= tra_range[1] &
     col_data$count_TRB >= trb_range[1] &
     col_data$count_IGL >= igl_range[1] &
@@ -38,41 +41,23 @@ assign_clonotypes = function(sce,
   vdj = unnest_vdj(sce[, indices], FALSE) %>%
     as_tibble() %>%
     filter(chain %in% chains) %>%
-    group_by(barcode) %>%
+    group_by(Barcode) %>%
     summarise_all(function(x)
-      paste(sort(x), collapse = "_")) %>%
+      paste(sort(unique(x)), collapse = "_")) %>%
     unite(
       data = .,
-      col = clonotype,!!clonotype_fields,
+      col = clonotype, !!clonotype_fields,
       sep = "///",
       remove = TRUE,
       na.rm = TRUE
     ) %>%
-    select(barcode, clonotype)
+    select(Barcode, clonotype)
 
-  counts = table(vdj$clonotype)
-  counts = data.frame(clonotype = names(counts),
-                      clonotype_count = as.numeric(counts))
+  vdj = column_to_rownames(vdj, "Barcode")[colData(sce)$Barcode, , drop = FALSE]
 
-  vdj = left_join(vdj, counts, by = "clonotype")
-
-  for (i in 2:max(counts$clonotype_count)) {
-    vdj[, paste0("clonotype_count_", i)] = ifelse(
-      greater_than_equal(vdj$clonotype_count, i),
-      vdj$clonotype,
-      sprintf("< %s counts", i)
-    )
-  }
-
-  vdj = column_to_rownames(vdj, "barcode")[colData(sce)$Barcode,]
+  colnames(vdj) = gsub("clonotype", name, colnames(vdj))
 
   colData(sce) = cbind(colData(sce), vdj)
 
   return(sce)
-}
-
-greater_than_equal = function(vector, value) {
-  result = vector >= value
-  result[is.na(result)] = FALSE
-  result
 }

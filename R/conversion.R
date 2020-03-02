@@ -125,8 +125,8 @@ sce_to_seurat = function(sce) {
   }
   seurat = as.Seurat(sce, counts = counts, data = data)
 
-  if (!is.null(metadata(sce)$scaled)) {
-    seurat@assays[[1]]@scale.data = metadata(sce)$scaled
+  if (!is.null(metadata(sce)$scaled) && all(dim(metadata(sce)$scaled) != 0)) {
+    seurat@assays[[1]]@scale.data = metadata(sce)$scaled[, colnames(seurat)]
   }
 
   if (return_assay) {

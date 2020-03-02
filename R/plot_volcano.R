@@ -33,15 +33,18 @@ plot_volcano = function(data,
                         label = "gene",
                         annotations = c(),
                         annotations_if_threshold = c(),
+                        annotations_if_column = NULL,
                         n_annotate_top = 10,
                         p_value_threshold = 0.05,
                         fold_change_threshold = 1.5,
                         p_value_rank_threshold = 100,
+                        rank_by = "p_value",
                         alpha = 0.5,
                         facet_rows = c(),
                         facet_columns = c(),
                         facet_type = "grid",
                         ...) {
+
   data[, paste0("log10_", p_value)] = -log10(data[, p_value])
 
   annotation_data = .prepare_volcano_annotations(
@@ -52,9 +55,11 @@ plot_volcano = function(data,
     n_annotate_top,
     annotations,
     annotations_if_threshold,
+    annotations_if_column,
     p_value_threshold,
     fold_change_threshold,
     p_value_rank_threshold,
+    rank_by,
     facet_rows,
     facet_columns
   )
@@ -94,7 +99,7 @@ plot_volcano = function(data,
                      ...) +
     theme_ggexp()
 
-  plot = plot + labs(x = "log(Fold Change)", y = "-log10(p-value)")
+  plot = plot + labs(x = "log(Fold Change)", y = "-log_10(p-value)")
 
   return(plot)
 }
@@ -128,9 +133,11 @@ plot_volcano = function(data,
                                         n_annotate_top,
                                         annotations,
                                         annotations_if_threshold,
+                                        annotations_if_column,
                                         p_value_threshold,
                                         fold_change_threshold,
                                         p_value_rank_threshold,
+                                        rank_by,
                                         facet_rows,
                                         facet_columns) {
   all_annotation_data = data %>%
@@ -143,48 +150,27 @@ plot_volcano = function(data,
     filter(!!as.name(label) %in% annotations_if_threshold) %>%
     bind_rows(all_annotation_data %>% filter(!!as.name(label) %in% annotations))
 
-  top_annotation_data = .prepare_volcano_top_annotations(
+  if (is.logical(all_annotation_data[, annotations_if_column])) {
+    annotation_column_data = all_annotation_data[all_annotation_data[, annotations_if_column], ]
+  } else {
+    annotation_column_data = all_annotation_data[!is.na(all_annotation_data[, annotations_if_column]), ]
+  }
+
+  top_annotation_data = select_top_de_genes(
     all_annotation_data,
     n_annotate_top,
     fold_change,
     p_value,
-    facet_rows,
-    facet_columns
+    c(facet_rows, facet_columns),
+    rank_by
   )
 
-  annotation_data = bind_rows(top_annotation_data, requested_annotation_data)
+  annotation_data = bind_rows(top_annotation_data,
+                              requested_annotation_data,
+                              annotation_column_data)
   annotation_data$rank = NULL
 
   annotation_data = annotation_data[!duplicated(annotation_data),]
 
   return(annotation_data)
-}
-
-#' Prepare the top N annotations for volcano plot
-#'
-#' @param data differential expression results
-#' @param n_annotate_top number of top DE genes to annotate
-#' @param fold_change column containing fold change data (x-axis)
-#' @param p_value column containing p-value data (y-axis is -log10(p_value))
-#' @param facet_rows columns for faceting by row
-#' @param facet_columns columns for faceting by column
-#'
-#' @importFrom dplyr arrange mutate group_by top_n
-#'
-#' @return
-#' @keywords internal
-#'
-#' @examples
-#' NULL
-.prepare_volcano_top_annotations = function(data,
-                                            n_annotate_top,
-                                            fold_change,
-                                            p_value,
-                                            facet_rows,
-                                            facet_columns) {
-  arrange(data,!!as.name(p_value),-abs(!!as.name(fold_change))) %>%
-    mutate(rank = seq_len(nrow(.))) %>%
-    group_by(.dots = c(facet_rows, facet_columns),
-             !!as.name(fold_change) > 0) %>%
-    top_n(round(n_annotate_top / 2),-rank)
 }

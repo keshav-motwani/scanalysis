@@ -4,7 +4,7 @@
 \alias{.filter_ambient_barcode_empty_drops}
 \title{Get filter for cells based on emptyDrops algorithm}
 \usage{
-.filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit)
+.filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit, n_iters)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}

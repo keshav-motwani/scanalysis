@@ -12,7 +12,8 @@ assign_clonotypes(
   trb_range = c(0, 1),
   igl_range = c(0, 2),
   igk_range = c(0, 2),
-  igh_range = c(0, 1)
+  igh_range = c(0, 1),
+  name = "clonotype"
 )
 }
 \arguments{

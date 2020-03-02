@@ -35,7 +35,9 @@ plot_gex_bivariate_qc = function(sce_list,
                                  y_filters = NULL,
                                  x_log = TRUE,
                                  y_log = TRUE,
+                                 alpha = 0.5,
                                  text_size = 3,
+                                 point_size = 1,
                                  facet_rows = NULL,
                                  facet_columns = NULL,
                                  facet_type = "grid",
@@ -82,7 +84,7 @@ plot_gex_bivariate_qc = function(sce_list,
       color = color,
       shape = shape
     )) +
-    geom_point(alpha = 0.5) +
+    geom_point(alpha = alpha, size = point_size) +
     geom_density_2d(color = "black", alpha = 1) +
     theme_ggexp()
 
@@ -90,27 +92,20 @@ plot_gex_bivariate_qc = function(sce_list,
     plot = plot + scale_color_viridis_c()
   }
 
-  xlim = c(min(data[, x, drop = TRUE]), max(data[, x, drop = TRUE]))
-  ylim = c(min(data[, y, drop = TRUE]), max(data[, y, drop = TRUE]))
-
   if (x_log) {
     plot = plot +
       scale_x_log10(
         breaks = trans_breaks("log10", function(x)
           10 ^ x),
-        labels = trans_format("log10", math_format(10 ^ .x)),
-        limits = xlim
+        labels = trans_format("log10", math_format(10 ^ .x))
       )
-  } else {
-    plot = plot + xlim(xlim)
   }
 
   if (y_log) {
     plot = plot + scale_y_log10(
       breaks = trans_breaks("log10", function(x)
         10 ^ x),
-      labels = trans_format("log10", math_format(10 ^ .x)),
-      limits = ylim
+      labels = trans_format("log10", math_format(10 ^ .x))
     )
   }
 
@@ -185,7 +180,9 @@ plot_gex_univariate_qc = function(sce_list,
                                   color = NULL,
                                   shape = NULL,
                                   x_log = TRUE,
+                                  alpha = 0.5,
                                   text_size = 3,
+                                  point_size = 1,
                                   facet_rows = NULL,
                                   facet_columns = NULL,
                                   facet_type = "wrap",
@@ -209,8 +206,9 @@ plot_gex_univariate_qc = function(sce_list,
     geom_density_ridges2(
       aes_string(point_color = color, point_shape = shape),
       alpha = .2,
-      point_alpha = 0.5,
-      jittered_points = TRUE
+      point_alpha = alpha,
+      jittered_points = TRUE,
+      point_size = point_size
     ) +
     theme_ggexp()
 
@@ -219,8 +217,7 @@ plot_gex_univariate_qc = function(sce_list,
       scale_x_log10(
         breaks = trans_breaks("log10", function(x)
           10 ^ x),
-        labels = trans_format("log10", math_format(10 ^ .x)),
-        limits = c(min(data[, x, drop = TRUE]), max(data[, x, drop = TRUE]))
+        labels = trans_format("log10", math_format(10 ^ .x))
       )
   }
 

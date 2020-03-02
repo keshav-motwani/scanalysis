@@ -11,9 +11,12 @@ plot_reduced_dimensions(
   alt_exp = NULL,
   features,
   label = NULL,
-  alpha = 0.3,
-  point_size = 1,
-  text_size = 1,
+  alpha = 1,
+  point_size = 0.05,
+  text_size = 3,
+  lower_quantile = 0,
+  upper_quantile = 1,
+  min_value = NULL,
   facet_rows = c(),
   facet_columns = c(),
   facet_type = "grid",
@@ -36,6 +39,12 @@ plot_reduced_dimensions(
 \item{point_size}{size of points}
 
 \item{text_size}{size of font for text annotation}
+
+\item{lower_quantile}{quantile which should be used to determine the lower limit of the color bar}
+
+\item{upper_quantile}{quantile which should be used to determine the upper limit of the color bar}
+
+\item{min_value}{minimum feature value, below which to set to this value}
 
 \item{facet_rows}{variables from colData to facet on, can also include ".sample" or ".feature" as described below}
 
@@ -60,10 +69,9 @@ In almost all cases, you would want to facet by feature, so be sure to also incl
 }
 \examples{
 library(scanalysis)
-library(scater)
 
-sce = mockSCE() \%>\%
-    logNormCounts() \%>\%
+sce = scater::mockSCE() \%>\%
+    scater::logNormCounts() \%>\%
     scater::runPCA()
 
 plot_reduced_dimensions(sce_list = list(sample_1 = sce, sample_2 = sce),

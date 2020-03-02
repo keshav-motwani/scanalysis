@@ -18,10 +18,11 @@
 filter_ambient_barcode = function(sce,
                                   n_cells,
                                   fdr = 0.01,
-                                  lower_umi_limit = 100) {
+                                  lower_umi_limit = 100,
+                                  n_iters = 10000) {
   filters = list()
   filters$inflection = .filter_ambient_barcode_inflection(sce)
-  filters$empty_drops = .filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit)
+  filters$empty_drops = .filter_ambient_barcode_empty_drops(sce, fdr, lower_umi_limit, n_iters)
   filters$knee = .filter_ambient_barcode_knee(sce)
   filters$cellranger = .filter_ambient_barcode_cellranger(sce, n_cells)
 
@@ -61,8 +62,8 @@ filter_ambient_barcode = function(sce,
 #'
 #' @examples
 #' NULL
-.filter_ambient_barcode_empty_drops = function(sce, fdr, lower_umi_limit) {
-  out = emptyDrops(counts(sce), lower_umi_limit) %>%
+.filter_ambient_barcode_empty_drops = function(sce, fdr, lower_umi_limit, n_iters) {
+  out = emptyDrops(counts(sce), lower_umi_limit, niters = n_iters) %>%
     as_tibble() %>%
     mutate(cell = FDR <= fdr) %>%
     mutate(cell = ifelse(cell == TRUE, "cell", "ambient")) %>%

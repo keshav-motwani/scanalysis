@@ -13,6 +13,9 @@
 #' @param alpha alpha for points
 #' @param point_size size of points
 #' @param text_size size of font for text annotation
+#' @param lower_quantile quantile which should be used to determine the lower limit of the color bar
+#' @param upper_quantile quantile which should be used to determine the upper limit of the color bar
+#' @param min_value minimum feature value, below which to set to this value
 #' @param facet_rows variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_columns variables from colData to facet on, can also include ".sample" or ".feature" as described below
 #' @param facet_type either "wrap" or "grid", same as ggplot
@@ -33,10 +36,9 @@
 #'
 #' @examples
 #' library(scanalysis)
-#' library(scater)
 #'
-#' sce = mockSCE() %>%
-#'     logNormCounts() %>%
+#' sce = scater::mockSCE() %>%
+#'     scater::logNormCounts() %>%
 #'     scater::runPCA()
 #'
 #' plot_reduced_dimensions(sce_list = list(sample_1 = sce, sample_2 = sce),
@@ -50,9 +52,12 @@ plot_reduced_dimensions = function(sce_list,
                                    alt_exp = NULL,
                                    features,
                                    label = NULL,
-                                   alpha = 0.3,
-                                   point_size = 1,
-                                   text_size = 1,
+                                   alpha = 1,
+                                   point_size = 0.05,
+                                   text_size = 3,
+                                   lower_quantile = 0,
+                                   upper_quantile = 1,
+                                   min_value = NULL,
                                    facet_rows = c(),
                                    facet_columns = c(),
                                    facet_type = "grid",
@@ -77,29 +82,32 @@ plot_reduced_dimensions = function(sce_list,
       values_to = "value"
     )
 
+  if (!is.null(min_value)) {
+    data$value[data$value < min_value] = min_value
+  }
+
   data$.sample = factor(data$.sample, levels = names(sce_list))
   data$.feature = factor(data$.feature, levels = features)
 
   if (is.numeric(data$value)) {
     min_max = data %>%
       group_by(.dots = c(facet_rows, facet_columns)) %>%
-      summarize(min = min(value, na.rm = TRUE),
-                max = max(value, na.rm = TRUE)) %>%
+      summarize(min = quantile(value, lower_quantile, na.rm = TRUE),
+                max = quantile(value, upper_quantile, na.rm = TRUE)) %>%
       mutate(value = paste0(round(min, 2), "-", round(max, 2)))
 
     data = data %>%
       group_by(.dots = c(".feature")) %>%
-      mutate(value = (value - min(value, na.rm = TRUE)) / (max(value, na.rm = TRUE) - min(value, na.rm = TRUE))) %>%
-      arrange(value)
+      mutate(value = (value - quantile(value, lower_quantile, na.rm = TRUE)) / (quantile(value, upper_quantile, na.rm = TRUE) - quantile(value, lower_quantile, na.rm = TRUE)))
 
   } else {
     data$value = factor(as.character(data$value),
                         levels = c("NA", mixedsort(as.character(
                           unique(data$value[data$value != "NA"])
                         ), na.last = FALSE)))
-
-    data = data[sample(1:nrow(data), nrow(data)),]
   }
+
+  data = arrange(data, !is.na(value), value)
 
   plot = ggplot(data, aes_string(
     x = paste0((type), "_1"),
@@ -123,7 +131,8 @@ plot_reduced_dimensions = function(sce_list,
       hjust = 1,
       vjust = 1.2,
       size = 3,
-      inherit.aes = FALSE
+      inherit.aes = FALSE,
+      show.legend = FALSE
     )
   }
 
@@ -169,7 +178,11 @@ plot_reduced_dimensions = function(sce_list,
     plot = plot +
       guides(colour = guide_legend(override.aes = list(alpha = 1, size = 5)))
   } else {
-    plot = plot + scale_color_viridis_c()
+    plot = plot + scale_color_viridis_c(
+      breaks = c(0, 1),
+      labels = c("min", "max"),
+      limits = c(0, 1)
+    )
   }
 
   return(plot + theme(legend.title = element_blank()))
