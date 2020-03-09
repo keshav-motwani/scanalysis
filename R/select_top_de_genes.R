@@ -11,6 +11,7 @@
 #' @importFrom dplyr arrange mutate group_by top_n
 #'
 #' @return
+#' @export
 #'
 #' @examples
 #' NULL

@@ -7,11 +7,16 @@
 .get_cell_annotations(sce_list, cell_features)
 }
 \arguments{
-\item{cell_features}{}
+\item{sce_list}{list of SingleCellExperiment objects}
+
+\item{cell_features}{columns from colData}
 }
 \value{
 
 }
 \description{
 Get cell annotations for feature_heatmap
+}
+\examples{
+NULL
 }

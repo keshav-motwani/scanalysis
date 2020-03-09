@@ -82,23 +82,30 @@ plot_reduced_dimensions = function(sce_list,
       values_to = "value"
     )
 
-  if (!is.null(min_value)) {
-    data$value[data$value < min_value] = min_value
-  }
-
   data$.sample = factor(data$.sample, levels = names(sce_list))
   data$.feature = factor(data$.feature, levels = features)
 
   if (is.numeric(data$value)) {
     min_max = data %>%
       group_by(.dots = c(facet_rows, facet_columns)) %>%
-      summarize(min = quantile(value, lower_quantile, na.rm = TRUE),
-                max = quantile(value, upper_quantile, na.rm = TRUE)) %>%
+      summarize(
+        min = quantile(value, lower_quantile, na.rm = TRUE),
+        max = quantile(value, upper_quantile, na.rm = TRUE)
+      ) %>%
       mutate(value = paste0(round(min, 2), "-", round(max, 2)))
+
+    if (!is.null(min_value)) {
+      data$value[data$value < min_value] = min_value
+    }
 
     data = data %>%
       group_by(.dots = c(".feature")) %>%
-      mutate(value = (value - quantile(value, lower_quantile, na.rm = TRUE)) / (quantile(value, upper_quantile, na.rm = TRUE) - quantile(value, lower_quantile, na.rm = TRUE)))
+      mutate(value = (value - quantile(value, lower_quantile, na.rm = TRUE)) / (
+        quantile(value, upper_quantile, na.rm = TRUE) - quantile(value, lower_quantile, na.rm = TRUE)
+      ))
+
+    data$value[data$value > 1] =  1
+    data$value[data$value < 0] =  0
 
   } else {
     data$value = factor(as.character(data$value),
@@ -107,7 +114,7 @@ plot_reduced_dimensions = function(sce_list,
                         ), na.last = FALSE)))
   }
 
-  data = arrange(data, !is.na(value), value)
+  data = arrange(data,!is.na(value), value)
 
   plot = ggplot(data, aes_string(
     x = paste0((type), "_1"),
@@ -178,11 +185,14 @@ plot_reduced_dimensions = function(sce_list,
     plot = plot +
       guides(colour = guide_legend(override.aes = list(alpha = 1, size = 5)))
   } else {
-    plot = plot + scale_color_viridis_c(
-      breaks = c(0, 1),
-      labels = c("min", "max"),
-      limits = c(0, 1)
-    )
+    plot = plot +
+      scale_color_gradient(
+        low = "#E8E8E8",
+        high = "firebrick",
+        breaks = c(0, 1),
+        labels = c("min", "max"),
+        limits = c(0, 1)
+      )
   }
 
   return(plot + theme(legend.title = element_blank()))

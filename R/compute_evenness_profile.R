@@ -6,6 +6,10 @@
 #' @param max_alpha maximum Renyi entropy alpha
 #' @param alpha_steps number of steps in between min_alpha and max_alpha
 #'
+#' @importFrom purrr map_lgl map_dbl map2_dfr map
+#' @importFrom dplyr as_tibble mutate group_by group_keys group_split
+#' @importFrom tidyr unite
+#'
 #' @return
 #' @export
 #'
@@ -19,35 +23,38 @@ compute_evenness_profile_matrix = function(sce_list,
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
 
-  stopifnot(all(purrr::map_lgl(
+  stopifnot(all(map_lgl(
     sce_list, ~ "clonotype" %in% colnames(colData(.x))
   )))
 
-  data = purrr::map2_dfr(
+  data = map2_dfr(
     sce_list,
     names(sce_list),
-    ~ dplyr::as_tibble(colData(.x)) %>%
-      dplyr::mutate(.sample = .y)
+    ~ as_tibble(colData(.x)) %>%
+      mutate(.sample = .y)
   )
 
   data = data %>%
-    dplyr::group_by(.dots = group_by)
+    group_by(.dots = group_by)
 
-  if (ncol(dplyr::group_keys(data)) > 0) {
-    groups = tidyr::unite(dplyr::group_keys(data), col = group,!!group_by)$group
+  if (ncol(group_keys(data)) > 0) {
+    groups = unite(group_keys(data), col = group,!!group_by)$group
   } else {
     groups = ""
   }
 
   count_vectors = data %>%
-    dplyr::group_split() %>%
-    purrr::map( ~ dplyr::pull(.x, clonotype)) %>%
-    purrr::map(table)
+    group_split() %>%
+    map( ~ dplyr::pull(.x, clonotype)) %>%
+    map(table)
 
   matrix = t(compute_evenness_profile(count_vectors, min_alpha, max_alpha, alpha_steps))
   rownames(matrix) = groups
 
-  attributes(matrix)$group_annotations = dplyr::group_keys(data)
+  attributes(matrix)$group_annotations = as.data.frame(group_keys(data))
+  attributes(matrix)$group_annotations$total_reads = map_dbl(count_vectors, sum)
+  attributes(matrix)$group_annotations$total_reads = map_dbl(count_vectors, sum)
+
   return(matrix)
 }
 

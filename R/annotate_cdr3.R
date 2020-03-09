@@ -25,6 +25,7 @@ annotate_cdr3 = function(sce,
                          chain_match = "TRB",
                          max_dist = 1,
                          method = "hamming") {
+
   vdj_data_all = unnest_vdj(sce, include_all = FALSE)
   vdj_data = vdj_data_all %>%
     filter(chain == chain_match)

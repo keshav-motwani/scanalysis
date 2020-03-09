@@ -9,6 +9,8 @@ plot_vdj_gex_univariate_qc(
   x_filters = NULL,
   vdj_filters = NULL,
   x,
+  facet_rows = NULL,
+  facet_columns = NULL,
   ...
 )
 }
@@ -19,23 +21,11 @@ plot_vdj_gex_univariate_qc(
 
 \item{x}{numeric column from colData that is in all objects in sce_list}
 
-\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
-
-\item{y}{discrete column from colData that is in all objects in sce_list to split histograms by}
-
-\item{color}{column from colData that is in all objects in sce_list}
-
-\item{shape}{column from colData that is in all objects in sce_list}
-
-\item{x_log}{whether to use log x-axis}
-
-\item{text_size}{font size for annotations}
-
 \item{facet_rows}{columns to facet on}
 
 \item{facet_columns}{columns to facet on}
 
-\item{facet_type}{either "wrap" or "grid", same as ggplot}
+\item{...}{other params passed into plot_gex_univariate_qc}
 }
 \value{
 
