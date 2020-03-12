@@ -6,11 +6,10 @@
 \usage{
 plot_reduced_dimensions(
   sce_list,
-  type = "PCA",
-  assay = "logcounts",
-  alt_exp = NULL,
+  type,
   features,
   label = NULL,
+  shape = NULL,
   alpha = 1,
   point_size = 0.05,
   text_size = 3,
@@ -20,6 +19,8 @@ plot_reduced_dimensions(
   facet_rows = c(),
   facet_columns = c(),
   facet_type = "grid",
+  assay = "logcounts",
+  alt_exp = NULL,
   ...
 )
 }
@@ -28,11 +29,11 @@ plot_reduced_dimensions(
 
 \item{type}{name of reducedDim attribute to plot}
 
-\item{assay}{assay to obtain data from (ex: counts, logcounts)}
-
-\item{alt_exp}{alternate experiment to obtain data from}
-
 \item{features}{features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot}
+
+\item{label}{feature to add text for annotation}
+
+\item{shape}{feature to shape points by}
 
 \item{alpha}{alpha for points}
 
@@ -52,9 +53,11 @@ plot_reduced_dimensions(
 
 \item{facet_type}{either "wrap" or "grid", same as ggplot}
 
-\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
+\item{assay}{assay to obtain data from (ex: counts, logcounts)}
 
-\item{label_value}{boolean to annotate text label for the value - only works if all features are discrete}
+\item{alt_exp}{alternate experiment to obtain data from}
+
+\item{...}{other params passed into either facet_wrap or facet_grid, depending on facet_type parameter}
 }
 \value{
 ggplot object

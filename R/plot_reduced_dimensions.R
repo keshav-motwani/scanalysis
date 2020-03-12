@@ -7,9 +7,10 @@
 #' In almost all cases, you would want to facet by feature, so be sure to also include ".feature" in either facet_columns or facet_rows
 #'
 #' @param sce_list list of SingleCellExperiment objects to plot
-#' @param features features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot
 #' @param type name of reducedDim attribute to plot
-#' @param label_value boolean to annotate text label for the value - only works if all features are discrete
+#' @param features features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot
+#' @param label feature to add text for annotation
+#' @param shape feature to shape points by
 #' @param alpha alpha for points
 #' @param point_size size of points
 #' @param text_size size of font for text annotation
@@ -29,7 +30,6 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom ggexp plot_facets theme_ggexp
 #' @importFrom ggrepel geom_label_repel
-#' @importFrom gtools mixedsort
 #'
 #' @return ggplot object
 #' @export
@@ -47,11 +47,10 @@
 #'                         facet_rows = ".feature",
 #'                         switch = "y")
 plot_reduced_dimensions = function(sce_list,
-                                   type = "PCA",
-                                   assay = "logcounts",
-                                   alt_exp = NULL,
+                                   type,
                                    features,
                                    label = NULL,
+                                   shape = NULL,
                                    alpha = 1,
                                    point_size = 0.05,
                                    text_size = 3,
@@ -61,6 +60,8 @@ plot_reduced_dimensions = function(sce_list,
                                    facet_rows = c(),
                                    facet_columns = c(),
                                    facet_type = "grid",
+                                   assay = "logcounts",
+                                   alt_exp = NULL,
                                    ...) {
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
@@ -69,7 +70,7 @@ plot_reduced_dimensions = function(sce_list,
     sce_list,
     ~ get_cell_features(
       .x,
-      c(features, facet_rows, facet_columns, label),
+      c(features, facet_rows, facet_columns, label, shape),
       assay,
       alt_exp
     ) %>%
@@ -119,7 +120,8 @@ plot_reduced_dimensions = function(sce_list,
   plot = ggplot(data, aes_string(
     x = paste0((type), "_1"),
     y = paste0((type), "_2"),
-    color = "value"
+    color = "value",
+    shape = shape
   )) +
     geom_point(alpha = alpha,
                size = point_size) +

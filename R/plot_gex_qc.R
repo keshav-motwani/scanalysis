@@ -122,7 +122,8 @@ plot_gex_bivariate_qc = function(sce_list,
       color = "black",
       size = text_size,
       label.padding = unit(0.1, "lines"),
-      alpha = 0.5
+      alpha = 0.5,
+      inherit.aes = FALSE
     ) +
     geom_vline(data = counts %>% filter(x1_anno == 1),
                aes(xintercept = x1),
@@ -314,6 +315,7 @@ plot_gex_univariate_qc = function(sce_list,
                                           x_log,
                                           sample_name,
                                           facets) {
+
   x_scale_limits = .prepare_gex_scale_limits(data, x, x_filter)
 
   counts = data.frame(
@@ -331,7 +333,7 @@ plot_gex_univariate_qc = function(sce_list,
       filter = paste0("filter_", 1:3),
       count = apply(as.matrix(counts[, c("x1", "x2")]), 1,
                     function(row)
-                      sum(x > row["x1"] &
+                      sum(x >= row["x1"] &
                             x <= row["x2"]))
     )
   }
@@ -459,17 +461,17 @@ plot_gex_univariate_qc = function(sce_list,
 .prepare_gex_scale_limits = function(data, var, filter) {
   if (!is.null(filter)) {
     scale_limits = c(
-      min =  min(data[, var, drop = TRUE]),
+      min = 0.99 * min(data[, var, drop = TRUE]),
       lower = max(attributes(filter)$thresholds[1], min(data[, var, drop = TRUE])),
       higher = min(attributes(filter)$thresholds[2], max(data[, var, drop = TRUE])),
-      max = max(data[, var, drop = TRUE])
+      max = 1.01 * max(data[, var, drop = TRUE])
     )
   } else {
     scale_limits = c(
-      min =  min(data[, var, drop = TRUE]),
+      min =  0.99 * min(data[, var, drop = TRUE]),
       lower = min(data[, var, drop = TRUE]),
       higher = max(data[, var, drop = TRUE]),
-      max = max(data[, var, drop = TRUE])
+      max = 1.01  * max(data[, var, drop = TRUE])
     )
   }
   return(scale_limits)
