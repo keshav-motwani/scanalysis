@@ -30,6 +30,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom ggexp plot_facets theme_ggexp
 #' @importFrom ggrepel geom_label_repel
+#' @importFrom gtools mixedsort
 #'
 #' @return ggplot object
 #' @export
@@ -146,7 +147,7 @@ plot_reduced_dimensions = function(sce_list,
   }
 
   if (!is.null(label)) {
-    if (label %in% features) {
+    if (label %in% features | label == "value") {
       color = "value"
       label = "value"
     } else {
@@ -168,7 +169,8 @@ plot_reduced_dimensions = function(sce_list,
         x = "x",
         y = "y",
         label = label,
-        color = color
+        color = color,
+        inherit.aes = FALSE
       ),
       label.padding = unit(0.1, "lines"),
       alpha = 1,
