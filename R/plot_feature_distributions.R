@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' NULL
-plot_features = function(sce_list,
+plot_feature_distributions = function(sce_list,
                          features,
                          x,
                          color = x,
@@ -71,3 +71,7 @@ plot_features = function(sce_list,
 
   return(plot)
 }
+
+#' @export
+#' @rdname plot_feature_distributions
+plot_features = plot_feature_distributions

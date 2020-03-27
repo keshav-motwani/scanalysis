@@ -13,6 +13,7 @@
 #' @param ... other parameters to be passed to ggexp::plot_pairwise_scatterplot
 #'
 #' @importFrom ggexp plot_pairwise_scatterplot
+#' @importFrom ggrepel geom_label_repel
 #' @importFrom purrr imap_dfr
 #' @importFrom dplyr mutate
 #'
@@ -28,9 +29,10 @@ plot_pairwise_features = function(sce_list,
                                   alt_exp = NULL,
                                   color = NULL,
                                   shape = NULL,
-                                  size = NULL,
+                                  label = NULL,
                                   facet_rows = c(),
                                   facet_columns = c(),
+                                  text_size = 3,
                                   ...) {
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
@@ -38,7 +40,7 @@ plot_pairwise_features = function(sce_list,
   data = imap_dfr(sce_list,
                   ~ get_cell_features(
                     .x,
-                    c(x, y, color, size, facet_rows, facet_columns),
+                    c(x, y, color, shape, label, facet_rows, facet_columns),
                     assay,
                     alt_exp
                   ) %>%
@@ -50,11 +52,32 @@ plot_pairwise_features = function(sce_list,
     y = intersect(y, colnames(data)),
     color = color,
     shape = shape,
-    size = size,
     facet_rows = facet_rows,
     facet_columns = facet_columns,
     ...
   )
+
+  if (!is.null(label)) {
+    annotations = plot$data %>%
+      group_by(.dots = c(facet_rows, facet_columns, label)) %>%
+      summarize(x = median(.xvalue),
+                y = median(.yvalue))
+
+    plot = plot + geom_label_repel(
+      data = annotations,
+      aes_string(
+        x = "x",
+        y = "y",
+        label = label,
+        color = color,
+        inherit.aes = FALSE
+      ),
+      label.padding = unit(0.1, "lines"),
+      alpha = 1,
+      fill = "white",
+      size = text_size
+    )
+  }
 
   return(plot)
 }

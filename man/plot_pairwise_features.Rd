@@ -12,9 +12,10 @@ plot_pairwise_features(
   alt_exp = NULL,
   color = NULL,
   shape = NULL,
-  size = NULL,
+  label = NULL,
   facet_rows = c(),
   facet_columns = c(),
+  text_size = 3,
   ...
 )
 }
@@ -33,13 +34,13 @@ plot_pairwise_features(
 
 \item{shape}{column from reducedDims, colData, or assay data to shape by}
 
-\item{size}{column from reducedDims, colData, or assay data to size by}
-
 \item{facet_rows}{columns from colData to facet on}
 
 \item{facet_columns}{columns from colData to facet on}
 
 \item{...}{other parameters to be passed to ggexp::plot_pairwise_scatterplot}
+
+\item{size}{column from reducedDims, colData, or assay data to size by}
 }
 \value{
 ggplot object
