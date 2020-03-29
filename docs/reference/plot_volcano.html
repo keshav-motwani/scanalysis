@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot volcano plot with annotations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/plot_volcano.R'><code>R/plot_volcano.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/plot_volcano.R'><code>R/plot_volcano.R</code></a></small>
     <div class="hidden name"><code>plot_volcano.Rd</code></div>
     </div>
 
@@ -140,10 +140,12 @@
   <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"gene"</span>,
   <span class='kw'>annotations</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
   <span class='kw'>annotations_if_threshold</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
+  <span class='kw'>annotations_if_column</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>n_annotate_top</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>p_value_threshold</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>fold_change_threshold</span> <span class='kw'>=</span> <span class='fl'>1.5</span>,
   <span class='kw'>p_value_rank_threshold</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>rank_by</span> <span class='kw'>=</span> <span class='st'>"p_value"</span>,
   <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
   <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
@@ -216,7 +218,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
+      <td><p>other params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
     </tr>
     </table>
 
@@ -241,7 +243,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

@@ -108,7 +108,7 @@ empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each b
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -127,7 +127,7 @@ empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each b
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get filter to remove ambient RNA barcodes based on the combination of multiple methods:</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/filter_ambient_barcode.R'><code>R/filter_ambient_barcode.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/filter_ambient_barcode.R'><code>R/filter_ambient_barcode.R</code></a></small>
     <div class="hidden name"><code>filter_ambient_barcode.Rd</code></div>
     </div>
 
@@ -138,7 +138,13 @@ cellranger (v2) - all barcodes below 10<!-- % of the 99th percentile of total UM
 empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each barcode to the profile of barcodes below</p>
     </div>
 
-    <pre class="usage"><span class='fu'>filter_ambient_barcode</span>(<span class='no'>sce</span>, <span class='no'>n_cells</span>, <span class='kw'>fdr</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>lower_umi_limit</span> <span class='kw'>=</span> <span class='fl'>100</span>)</pre>
+    <pre class="usage"><span class='fu'>filter_ambient_barcode</span>(
+  <span class='no'>sce</span>,
+  <span class='no'>n_cells</span>,
+  <span class='kw'>fdr</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
+  <span class='kw'>lower_umi_limit</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>n_iters</span> <span class='kw'>=</span> <span class='fl'>10000</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,7 +155,7 @@ empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each b
     </tr>
     <tr>
       <th>n_cells</th>
-      <td><p>Number of input cells (used in cellranger cutoff computation)</p></td>
+      <td><p>number of input cells (used in cellranger cutoff computation)</p></td>
     </tr>
     <tr>
       <th>fdr</th>
@@ -157,7 +163,7 @@ empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each b
     </tr>
     <tr>
       <th>lower_umi_limit</th>
-      <td><p>Number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only</p></td>
+      <td><p>number of total UMIs below which a barcode is assumed to contain ambient RNA, used in emptyDrops method only</p></td>
     </tr>
     </table>
 
@@ -182,7 +188,7 @@ empty_drops - uses the algorithm from DropletUtils::emptyDrops to compare each b
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

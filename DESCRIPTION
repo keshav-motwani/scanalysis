@@ -34,7 +34,8 @@ Imports:
     tidyr
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 Remotes:
     keshav-motwani/ggexp
 VignetteBuilder: knitr

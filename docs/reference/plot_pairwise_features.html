@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot pairwise scatterplot of cell-level data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/plot_pairwise_features.R'><code>R/plot_pairwise_features.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/plot_pairwise_features.R'><code>R/plot_pairwise_features.R</code></a></small>
     <div class="hidden name"><code>plot_pairwise_features.Rd</code></div>
     </div>
 
@@ -134,15 +134,16 @@
 
     <pre class="usage"><span class='fu'>plot_pairwise_features</span>(
   <span class='no'>sce_list</span>,
-  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"logcounts"</span>,
-  <span class='kw'>alt_exp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>x</span>,
   <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"logcounts"</span>,
+  <span class='kw'>alt_exp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
   <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
+  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -151,39 +152,47 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sce_list</th>
-      <td><p>List of SingleCellExperiment objects to plot</p></td>
-    </tr>
-    <tr>
-      <th>assay</th>
-      <td><p>Assay to obtain data from (ex: counts, logcounts)</p></td>
-    </tr>
-    <tr>
-      <th>alt_exp</th>
-      <td><p>Alternate experiment to obtain data from</p></td>
+      <td><p>list of SingleCellExperiment objects to plot</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>Numeric features to plot on x axis - can be from reducedDims, colData, or assay data</p></td>
+      <td><p>numeric features to plot on x axis - can be from reducedDims, colData, or assay data</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>Numeric features to plot on y axis - can be from reducedDims, colData, or assay data</p></td>
+      <td><p>numeric features to plot on y axis - can be from reducedDims, colData, or assay data</p></td>
+    </tr>
+    <tr>
+      <th>assay</th>
+      <td><p>assay to obtain data from (ex: counts, logcounts)</p></td>
+    </tr>
+    <tr>
+      <th>alt_exp</th>
+      <td><p>alternate experiment to obtain data from</p></td>
     </tr>
     <tr>
       <th>color</th>
-      <td><p>Column from reducedDims, colData, or assay data to color by</p></td>
+      <td><p>column from reducedDims, colData, or assay data to color by</p></td>
     </tr>
     <tr>
       <th>shape</th>
-      <td><p>Column from reducedDims, colData, or assay data to shape by</p></td>
+      <td><p>column from reducedDims, colData, or assay data to shape by</p></td>
     </tr>
     <tr>
-      <th>size</th>
-      <td><p>Column from reducedDims, colData, or assay data to size by</p></td>
+      <th>facet_rows</th>
+      <td><p>columns from colData to facet on</p></td>
+    </tr>
+    <tr>
+      <th>facet_columns</th>
+      <td><p>columns from colData to facet on</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other parameters to be passed to ggexp::plot_pairwise_scatterplot</p></td>
+      <td><p>other parameters to be passed to ggexp::plot_pairwise_scatterplot</p></td>
+    </tr>
+    <tr>
+      <th>size</th>
+      <td><p>column from reducedDims, colData, or assay data to size by</p></td>
     </tr>
     </table>
 
@@ -208,7 +217,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

@@ -103,7 +103,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -142,6 +142,12 @@
       <tr>
         
         <td>
+          <p><code><a href="annotate_ambient_profile.html">annotate_ambient_profile()</a></code> </p>
+        </td>
+        <td><p>Add average of ambient feature reads to rowData</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="annotate_cdr3.html">annotate_cdr3()</a></code> </p>
         </td>
         <td><p>Annotate CDR3 sequences stored in colData(sce)$vdj based on a reference dataset (for example, Ag-specific data)</p></td>
@@ -150,19 +156,25 @@
         <td>
           <p><code><a href="annotate_chain_count.html">annotate_chain_count()</a></code> </p>
         </td>
-        <td><p>Annotate number of TRA, TRB, IGL, and IGH reads per barcode</p></td>
+        <td><p>Annotate number of TRA, TRB, IGL, IGK, and IGH reads per barcode</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="annotate_clonotype_count.html">annotate_clonotype_count()</a></code> </p>
+        </td>
+        <td><p>Annotate number of occurrences of a given clonotype in a sample</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="annotate_n_cells_expr.html">annotate_n_cells_expr()</a></code> </p>
+        </td>
+        <td><p>Add number of cells with nonzero expression for each gene to rowData(sce)$num_cells_expr</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="annotate_n_genes_expr.html">annotate_n_genes_expr()</a></code> </p>
         </td>
         <td><p>Add number of genes expressed per barcode to colData(sce)$n_genes_expr</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="annotate_num_cells_expr.html">annotate_num_cells_expr()</a></code> </p>
-        </td>
-        <td><p>Add number of cells with nonzero expression for each gene to rowData(sce)$num_cells_expr</p></td>
       </tr><tr>
         
         <td>
@@ -214,6 +226,18 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="dot-get_cell_annotations.html">.get_cell_annotations()</a></code> </p>
+        </td>
+        <td><p>Get cell annotations for feature_heatmap</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dot-get_feature_annotations.html">.get_feature_annotations()</a></code> </p>
+        </td>
+        <td><p>Get feature annotations for feature_heatmap</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="encode_cell_identity_frequency_long.html">encode_cell_identity_frequency_long()</a></code> </p>
         </td>
         <td><p>Encode frequencies of (combinations) of values in columns from colData into a long data frame</p></td>
@@ -244,12 +268,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="filter_chain_count.html">filter_chain_count()</a></code> </p>
-        </td>
-        <td><p>Get filter for barcodes based on the number of chains for TRA, TRB, IGL, and IGH present</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="filter_n_genes_expr.html">filter_n_genes_expr()</a></code> </p>
         </td>
         <td><p>Get filter for number of genes expressed per barcode based on log transformed values</p></td>
@@ -265,6 +283,12 @@
           <p><code><a href="filter_total_umi.html">filter_total_umi()</a></code> </p>
         </td>
         <td><p>Get filter for total umis per barcode based on log transformed values outside (either above, below, or both based on type parameter) nmads median absolute deviations from the median</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_vdj_chain_count.html">filter_vdj_chain_count()</a></code> </p>
+        </td>
+        <td><p>Get filter for barcodes based on the number of chains for TRA, TRB, IGL, IGK, and IGH present</p></td>
       </tr><tr>
         
         <td>
@@ -298,15 +322,27 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="get_row_data.html">get_row_data()</a></code> </p>
+        </td>
+        <td><p>Get rowData from either the main experiment or altExps</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="plot_barcode_qc.html">plot_barcode_qc()</a></code> </p>
         </td>
         <td><p>QC plot of UMI rank vs total number of UMIs per barcode</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot_features.html">plot_features()</a></code> </p>
+          <p><code><a href="plot_feature_distributions.html">plot_feature_distributions()</a></code> <code><a href="plot_feature_distributions.html">plot_features()</a></code> </p>
         </td>
         <td><p>Plot feature distributions from SingleCellExperiment objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_feature_heatmap.html">plot_feature_heatmap()</a></code> </p>
+        </td>
+        <td><p>Plot heatmap of features across cells with annotations</p></td>
       </tr><tr>
         
         <td>
@@ -334,9 +370,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="plot_vdj_qc.html">plot_vdj_qc()</a></code> </p>
+          <p><code><a href="plot_vdj_gex_univariate_qc.html">plot_vdj_gex_univariate_qc()</a></code> </p>
         </td>
-        <td><p>Plot number of VDJ chains versus colData variable of interest with annotated filters</p></td>
+        <td><p>Scatterplot of two features of interest from colData with annotated thresholds and counts based on filters</p></td>
       </tr><tr>
         
         <td>
@@ -349,6 +385,12 @@
           <p><code><a href="read_10x.html">read_10x()</a></code> </p>
         </td>
         <td><p>Read 10X gene expression and VDJ data into a SingleCellExperiment object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="select_top_de_genes.html">select_top_de_genes()</a></code> </p>
+        </td>
+        <td><p>Select the top DE genes, ranked on either fold change or -log10(p-value)</p></td>
       </tr><tr>
         
         <td>
@@ -377,7 +419,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

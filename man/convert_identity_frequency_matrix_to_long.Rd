@@ -4,21 +4,10 @@
 \alias{convert_identity_frequency_matrix_to_long}
 \title{Convert an identity frequency matrix}
 \usage{
-convert_identity_frequency_matrix_to_long(
-  data,
-  attributes,
-  group_by,
-  normalize
-)
+convert_identity_frequency_matrix_to_long(matrix)
 }
 \arguments{
-\item{data}{data frame to encode}
-
-\item{attributes}{columns to use to define features}
-
-\item{group_by}{columns to use to define groups}
-
-\item{normalize}{normalization method}
+\item{matrix}{result from encode_*_identity_frequency_long}
 }
 \value{
 

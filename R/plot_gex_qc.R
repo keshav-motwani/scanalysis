@@ -35,9 +35,9 @@ plot_gex_bivariate_qc = function(sce_list,
                                  y_filters = NULL,
                                  x_log = TRUE,
                                  y_log = TRUE,
-                                 alpha = 0.5,
+                                 alpha = 1,
                                  text_size = 3,
-                                 point_size = 1,
+                                 point_size = 0.5,
                                  facet_rows = NULL,
                                  facet_columns = NULL,
                                  facet_type = "grid",
@@ -85,7 +85,7 @@ plot_gex_bivariate_qc = function(sce_list,
       shape = shape
     )) +
     geom_point(alpha = alpha, size = point_size) +
-    geom_density_2d(color = "black", alpha = 1) +
+    geom_density_2d(color = "gray", alpha = 0.5) +
     theme_ggexp()
 
   if (is.numeric(data[, color, drop = TRUE])) {
@@ -181,9 +181,9 @@ plot_gex_univariate_qc = function(sce_list,
                                   color = NULL,
                                   shape = NULL,
                                   x_log = TRUE,
-                                  alpha = 0.5,
+                                  alpha = 1,
                                   text_size = 3,
-                                  point_size = 1,
+                                  point_size = 0.5,
                                   facet_rows = NULL,
                                   facet_columns = NULL,
                                   facet_type = "wrap",

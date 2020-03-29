@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot reduced dimensional plot with multiple features</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/plot_reduced_dimensions.R'><code>R/plot_reduced_dimensions.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/plot_reduced_dimensions.R'><code>R/plot_reduced_dimensions.R</code></a></small>
     <div class="hidden name"><code>plot_reduced_dimensions.Rd</code></div>
     </div>
 
@@ -134,17 +134,21 @@
 
     <pre class="usage"><span class='fu'>plot_reduced_dimensions</span>(
   <span class='no'>sce_list</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"PCA"</span>,
-  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"logcounts"</span>,
-  <span class='kw'>alt_exp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>type</span>,
   <span class='no'>features</span>,
   <span class='kw'>label</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
-  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>lower_quantile</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>upper_quantile</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>min_value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
-  <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".feature"</span>),
+  <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
   <span class='kw'>facet_type</span> <span class='kw'>=</span> <span class='st'>"grid"</span>,
+  <span class='kw'>assay</span> <span class='kw'>=</span> <span class='st'>"logcounts"</span>,
+  <span class='kw'>alt_exp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -153,55 +157,71 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sce_list</th>
-      <td><p>List of SingleCellExperiment objects to plot</p></td>
+      <td><p>list of SingleCellExperiment objects to plot</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>Name of reducedDim attribute to plot</p></td>
-    </tr>
-    <tr>
-      <th>assay</th>
-      <td><p>Assay to obtain data from (ex: counts, logcounts)</p></td>
-    </tr>
-    <tr>
-      <th>alt_exp</th>
-      <td><p>Alternate experiment to obtain data from</p></td>
+      <td><p>name of reducedDim attribute to plot</p></td>
     </tr>
     <tr>
       <th>features</th>
-      <td><p>Features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot</p></td>
+      <td><p>features to plot - can be from reducedDims, colData, or assay data, but note that all must be either numeric or categorical for one plot</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>feature to add text for annotation</p></td>
+    </tr>
+    <tr>
+      <th>shape</th>
+      <td><p>feature to shape points by</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Alpha for points</p></td>
+      <td><p>alpha for points</p></td>
     </tr>
     <tr>
       <th>point_size</th>
-      <td><p>Size of points</p></td>
+      <td><p>size of points</p></td>
     </tr>
     <tr>
       <th>text_size</th>
-      <td><p>Size of font for text annotation</p></td>
+      <td><p>size of font for text annotation</p></td>
+    </tr>
+    <tr>
+      <th>lower_quantile</th>
+      <td><p>quantile which should be used to determine the lower limit of the color bar</p></td>
+    </tr>
+    <tr>
+      <th>upper_quantile</th>
+      <td><p>quantile which should be used to determine the upper limit of the color bar</p></td>
+    </tr>
+    <tr>
+      <th>min_value</th>
+      <td><p>minimum feature value, below which to set to this value</p></td>
     </tr>
     <tr>
       <th>facet_rows</th>
-      <td><p>Variables from colData to facet on, can also include ".sample" or ".feature" as described below</p></td>
+      <td><p>variables from colData to facet on, can also include ".sample" or ".feature" as described below</p></td>
     </tr>
     <tr>
       <th>facet_columns</th>
-      <td><p>Variables from colData to facet on, can also include ".sample" or ".feature" as described below</p></td>
+      <td><p>variables from colData to facet on, can also include ".sample" or ".feature" as described below</p></td>
     </tr>
     <tr>
       <th>facet_type</th>
-      <td><p>Either "wrap" or "grid", same as ggplot</p></td>
+      <td><p>either "wrap" or "grid", same as ggplot</p></td>
+    </tr>
+    <tr>
+      <th>assay</th>
+      <td><p>assay to obtain data from (ex: counts, logcounts)</p></td>
+    </tr>
+    <tr>
+      <th>alt_exp</th>
+      <td><p>alternate experiment to obtain data from</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other parameters to be passed to ggexp::plot_pairwise_scatterplot</p></td>
-    </tr>
-    <tr>
-      <th>label_value</th>
-      <td><p>Boolean to annotate text label for the value - only works if all features are discrete</p></td>
+      <td><p>other params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
     </tr>
     </table>
 
@@ -210,53 +230,21 @@
     <p>ggplot object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added in.</p>
-<p>In almost all cases, you would want to facet by feature. This is by default included in facet_columns, but if you add additional faceting variables to facet_columns, be sure to also include ".feature". To be clear, ".feature" can also be included in facet_rows. This is not included within the code to allow for flexibility if you want features to be faceted in the rows or columns.</p>
+    <p>If multiple SingleCellExperiments are provided in the sce_list, and you want to facet by this, you can add ".sample" to one of the faceting variables, as this is implicitly added into the data frame being plotted.</p>
+<p>In almost all cases, you would want to facet by feature, so be sure to also include ".feature" in either facet_columns or facet_rows</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>scanalysis</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>scater</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: SingleCellExperiment</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: SummarizedExperiment</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: GenomicRanges</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: stats4</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: BiocGenerics</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: parallel</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘BiocGenerics’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:parallel’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-#&gt; <span class='message'>    clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-#&gt; <span class='message'>    parLapplyLB, parRapply, parSapply, parSapplyLB</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    IQR, mad, sd, var, xtabs</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
-#&gt; <span class='message'>    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
-#&gt; <span class='message'>    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
-#&gt; <span class='message'>    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
-#&gt; <span class='message'>    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
-#&gt; <span class='message'>    union, unique, unsplit, which, which.max, which.min</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: S4Vectors</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘S4Vectors’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    expand.grid</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: IRanges</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: GenomeInfoDb</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: Biobase</span></div><div class='output co'>#&gt; <span class='message'>Welcome to Bioconductor</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    Vignettes contain introductory material; view with</span>
-#&gt; <span class='message'>    'browseVignettes()'. To cite Bioconductor, see</span>
-#&gt; <span class='message'>    'citation("Biobase")', and for packages 'citation("pkgname")'.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘Biobase’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:scanalysis’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    cache</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: DelayedArray</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: matrixStats</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘matrixStats’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:Biobase’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    anyMissing, rowMedians</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: BiocParallel</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘DelayedArray’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:matrixStats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    aperm, apply, rowsum</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: ggplot2</span></div><div class='input'>
-<span class='no'>sce</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/scater/man/mockSCE.html'>mockSCE</a></span>() <span class='kw'>%&gt;%</span>
-    <span class='fu'><a href='https://rdrr.io/pkg/scater/man/logNormCounts.html'>logNormCounts</a></span>() <span class='kw'>%&gt;%</span>
+
+<span class='no'>sce</span> <span class='kw'>=</span> <span class='kw pkg'>scater</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/scater/man/mockSCE.html'>mockSCE</a></span>() <span class='kw'>%&gt;%</span>
+    <span class='kw pkg'>scater</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/scater/man/logNormCounts.html'>logNormCounts</a></span>() <span class='kw'>%&gt;%</span>
     <span class='kw pkg'>scater</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/scater/man/runPCA.html'>runPCA</a></span>()
 
 <span class='fu'>plot_reduced_dimensions</span>(<span class='kw'>sce_list</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>sample_1</span> <span class='kw'>=</span> <span class='no'>sce</span>, <span class='kw'>sample_2</span> <span class='kw'>=</span> <span class='no'>sce</span>),
                         <span class='kw'>features</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Gene_0001"</span>, <span class='st'>"Gene_0002"</span>, <span class='st'>"Gene_0003"</span>),
                         <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='st'>".sample"</span>,
                         <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='st'>".feature"</span>,
-                        <span class='kw'>switch</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='img'><img src='plot_reduced_dimensions-1.png' alt='' width='700' height='433' /></div></pre>
+                        <span class='kw'>switch</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in data.frame(dim1 = reducedDims(sce)@listData[[type]][, 1], dim2 = reducedDims(sce)@listData[[type]][,     2]): argument "type" is missing, with no default</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -273,7 +261,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

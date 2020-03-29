@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Function to use for assigning clonotypes based on custom definition</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/assign_clonotypes.R'><code>R/assign_clonotypes.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/assign_clonotypes.R'><code>R/assign_clonotypes.R</code></a></small>
     <div class="hidden name"><code>assign_clonotypes.Rd</code></div>
     </div>
 
@@ -136,10 +136,12 @@
   <span class='no'>sce</span>,
   <span class='kw'>clonotype_fields</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"v_gene"</span>, <span class='st'>"cdr3"</span>, <span class='st'>"j_gene"</span>),
   <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TRA"</span>, <span class='st'>"TRB"</span>),
-  <span class='kw'>tra_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
+  <span class='kw'>tra_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span>),
   <span class='kw'>trb_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
   <span class='kw'>igl_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span>),
-  <span class='kw'>igh_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>)
+  <span class='kw'>igk_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span>),
+  <span class='kw'>igh_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
+  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"clonotype"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -158,7 +160,7 @@
       <td><p>chains which to include in clonotype definition(e.g., c("TRA", "TRB"))</p></td>
     </tr>
     <tr>
-      <th>tra/trb/igl/igh_range</th>
+      <th>tra/trb/igl/igk/igh_range</th>
       <td><p>vector of length 2 with minimum and maximum number of unique chains (inclusive)</p></td>
     </tr>
     </table>
@@ -184,7 +186,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get filter for number of genes expressed per barcode based on log transformed values</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/filter_gex_outliers.R'><code>R/filter_gex_outliers.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/filter_gex_outliers.R'><code>R/filter_gex_outliers.R</code></a></small>
     <div class="hidden name"><code>filter_n_genes_expr.Rd</code></div>
     </div>
 
@@ -132,7 +132,7 @@
     <p>Wrapper around scater::isOutlier, arguments type and nmads refer to the same thing. For number of genes expressed, uses log transformed values for deciding cutoffs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>filter_n_genes_expr</span>(<span class='no'>sce</span>, <span class='no'>nmads</span>, <span class='no'>type</span>)</pre>
+    <pre class="usage"><span class='fu'>filter_n_genes_expr</span>(<span class='no'>sce</span>, <span class='no'>nmads</span>, <span class='no'>type</span>, <span class='kw'>column</span> <span class='kw'>=</span> <span class='st'>"n_genes_expr"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,14 +149,15 @@
       <th>type</th>
       <td><p>Either "both", "lower", or "higher", referring to which side to filter on</p></td>
     </tr>
+    <tr>
+      <th>column</th>
+      <td><p>column in colData containing number of genes expressed</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Boolean filter with TRUE for cells and FALSE for outliers. Contains attribute with number of median absolute deviations specified.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Ensure that <code>add_num_genes_expr</code> has been run before this or that a column named num_genes_expr is present in colData(sce)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>NULL</span></div><div class='output co'>#&gt; NULL</div></pre>
@@ -166,7 +167,6 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
@@ -176,7 +176,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

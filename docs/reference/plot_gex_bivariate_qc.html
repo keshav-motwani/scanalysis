@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Scatterplot of two features of interest from colData with annotated thresholds and counts based on filters</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/plot_gex_qc.R'><code>R/plot_gex_qc.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/plot_gex_qc.R'><code>R/plot_gex_qc.R</code></a></small>
     <div class="hidden name"><code>plot_gex_bivariate_qc.Rd</code></div>
     </div>
 
@@ -142,7 +142,9 @@
   <span class='kw'>y_filters</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>x_log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>y_log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>facet_columns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>facet_type</span> <span class='kw'>=</span> <span class='st'>"grid"</span>,
@@ -154,59 +156,59 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sce_list</th>
-      <td><p>List of SingleCellExperiment object</p></td>
+      <td><p>list of SingleCellExperiment object</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>Numeric column from colData that is in all objects in sce_list</p></td>
+      <td><p>numeric column from colData that is in all objects in sce_list</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>Numeric column from colData that is in all objects in sce_list</p></td>
+      <td><p>numeric column from colData that is in all objects in sce_list</p></td>
     </tr>
     <tr>
       <th>color</th>
-      <td><p>Column from colData that is in all objects in sce_list</p></td>
+      <td><p>column from colData that is in all objects in sce_list</p></td>
     </tr>
     <tr>
       <th>shape</th>
-      <td><p>Column from colData that is in all objects in sce_list</p></td>
+      <td><p>column from colData that is in all objects in sce_list</p></td>
     </tr>
     <tr>
       <th>x_filters</th>
-      <td><p>List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
+      <td><p>list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
     </tr>
     <tr>
       <th>y_filters</th>
-      <td><p>List of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
+      <td><p>list of filters for each SCE object in sce_list from scater::isOutlier, or a vector with attribute named thresholds that is a vector with min and max allowed values</p></td>
     </tr>
     <tr>
       <th>x_log</th>
-      <td><p>Boolean to use log x-axis</p></td>
+      <td><p>whether to use log x-axis</p></td>
     </tr>
     <tr>
       <th>y_log</th>
-      <td><p>Boolean to use log y-axis</p></td>
+      <td><p>whether to use log y-axis</p></td>
     </tr>
     <tr>
       <th>text_size</th>
-      <td><p>Font size for annotations</p></td>
+      <td><p>font size for annotations</p></td>
     </tr>
     <tr>
       <th>facet_rows</th>
-      <td><p>Columns to facet on</p></td>
+      <td><p>columns to facet on</p></td>
     </tr>
     <tr>
       <th>facet_columns</th>
-      <td><p>Columns to facet on</p></td>
+      <td><p>columns to facet on</p></td>
     </tr>
     <tr>
       <th>facet_type</th>
-      <td><p>Either "wrap" or "grid", same as ggplot</p></td>
+      <td><p>either "wrap" or "grid", same as ggplot</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
+      <td><p>other params passed into either facet_wrap or facet_grid, depending on facet_type parameter</p></td>
     </tr>
     </table>
 
@@ -233,7 +235,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">

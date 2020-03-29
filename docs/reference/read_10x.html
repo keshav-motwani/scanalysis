@@ -105,7 +105,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/keshavmot2/scanalysis">
+  <a href="https://github.com/keshav-motwani/scanalysis">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Read 10X gene expression and VDJ data into a SingleCellExperiment object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/keshavmot2/scanalysis/blob/master/R/io_10x.R'><code>R/io_10x.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/keshav-motwani/scanalysis/blob/master/R/io_10x.R'><code>R/io_10x.R</code></a></small>
     <div class="hidden name"><code>read_10x.Rd</code></div>
     </div>
 
@@ -132,26 +132,23 @@
     <p>VDJ data is stored in colData(sce)$vdj for now. This makes it easy to manipulate using the tidyverse for assignment of clonotypes, etc.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_10x</span>(<span class='kw'>gene_expr_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(), <span class='kw'>vdj_path</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+    <pre class="usage"><span class='fu'>read_10x</span>(
+  <span class='kw'>gene_expr_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span>(),
+  <span class='kw'>vdj_path</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>top_n_barcodes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nonzero_barcodes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>gene_expr_path</th>
-      <td><p>Path to gene expression data - can be full path to the cellranger count output for the sample, or the output path of cellranger count if sample name is specified</p></td>
+      <td><p>path to gene expression data - this path must contain mtx, features, and barcodes file</p></td>
     </tr>
     <tr>
       <th>vdj_path</th>
-      <td><p>Path to vdj data - can be full path to the cellranger vdj output for the sample, or the output path of cellranger vdj if sample name is specified</p></td>
-    </tr>
-    <tr>
-      <th>gene_expr_sample_name</th>
-      <td><p>Sample name to be used in traversing the file directory structure if general output path is specified</p></td>
-    </tr>
-    <tr>
-      <th>vdj_sample_name</th>
-      <td><p>Sample name to be used in traversing the file directory structure if general output path is specified</p></td>
+      <td><p>path to vdj data - this path must contain all_contig_annotations.csv</p></td>
     </tr>
     </table>
 
@@ -178,7 +175,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Keshav Motwani <keshav.motwani@pathology.ufl.edu>.</p>
+  <p>Developed by Keshav Motwani<keshav.motwani@pathology.ufl.edu>.</p>
 </div>
 
 <div class="pkgdown">
