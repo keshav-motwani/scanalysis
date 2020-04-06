@@ -21,9 +21,8 @@ encode_cell_identity_frequency_matrix = function(sce_list,
   if (is.null(names(sce_list)))
     names(sce_list) = paste0("sample_", 1:length(sce_list))
 
-  data = map2_dfr(sce_list,
-                  names(sce_list),
-                  ~ as.data.frame(colData(.x)) %>%
+  data = imap_dfr(sce_list,
+                  ~ as.data.frame(colData(.x)[, c(attributes, group_by), drop = FALSE]) %>%
                     mutate(.sample = .y))
 
   group_by = unique(c(group_by, ".sample"))
@@ -55,7 +54,7 @@ encode_cell_identity_frequency_long = function(sce_list,
     names(sce_list) = paste0("sample_", 1:length(sce_list))
 
   data = imap_dfr(sce_list,
-                  ~ as.data.frame(colData(.x)) %>%
+                  ~ as.data.frame(colData(.x)[, c(attributes, group_by), drop = FALSE]) %>%
                     mutate(.sample = .y))
 
   group_by = unique(c(group_by, ".sample"))
@@ -87,7 +86,7 @@ encode_vdj_identity_frequency_matrix = function(sce_list,
                                                 group_by = c(),
                                                 normalize = "none") {
   data = imap_dfr(sce_list,
-                  ~ unnest_vdj(.x) %>%
+                  ~ unnest_vdj(.x)[, c(attributes, group_by), drop = FALSE] %>%
                     mutate(.sample = .y))
 
   group_by = unique(c(group_by, ".sample"))
