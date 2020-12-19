@@ -35,6 +35,7 @@ plot_barcode_qc = function(sce_list,
                            text_size = 2,
                            alpha = 0.5,
                            ...) {
+
   stopifnot(names(sce_list) == names(ambient_rna_filters))
 
   data = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
@@ -115,6 +116,7 @@ plot_barcode_qc = function(sce_list,
 #' @examples
 #' NULL
 .prepare_barcode_plot_data = function(sce, sample_name, ambient_rna_filter) {
+
   bcrank = barcodeRanks(counts(sce))
 
   rank_total =
@@ -126,8 +128,9 @@ plot_barcode_qc = function(sce_list,
     )
 
   rank_total = cbind(rank_total, colData(sce))
+  rank_total = as.data.frame(rank_total[, unique(colnames(rank_total)), drop = FALSE])
 
-  return(as.data.frame(rank_total))
+  return(rank_total)
 }
 
 #' Prepare cutoff values for each method
@@ -142,6 +145,7 @@ plot_barcode_qc = function(sce_list,
 #' @examples
 #' NULL
 .prepare_barcode_cutoffs = function(sce, sample_name, ambient_rna_filter) {
+
   hlines = data.frame(
     y = c(
       attributes(ambient_rna_filter$knee)$value,
@@ -151,7 +155,9 @@ plot_barcode_qc = function(sce_list,
     color = c("knee", "inflection", "cellranger"),
     .sample = sample_name
   )
+
   return(hlines)
+
 }
 
 
@@ -174,6 +180,7 @@ plot_barcode_qc = function(sce_list,
                                    sample_name,
                                    ambient_rna_filter,
                                    facets) {
+
   as.data.frame(cbind(data.frame(ambient_rna_filter), colData(sce))) %>%
     group_by(.dots = facets) %>%
     summarize(
@@ -196,4 +203,5 @@ plot_barcode_qc = function(sce_list,
       )
     ) %>%
     mutate(.sample = sample_name)
+
 }
