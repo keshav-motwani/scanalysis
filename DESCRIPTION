@@ -32,7 +32,8 @@ Imports:
     scales,
     scater,
     tibble,
-    tidyr
+    tidyr,
+    qs
 Suggests: 
     knitr,
     rmarkdown,
