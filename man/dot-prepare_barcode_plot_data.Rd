@@ -4,7 +4,7 @@
 \alias{.prepare_barcode_plot_data}
 \title{Prepare data for plotting barcode QC plot}
 \usage{
-.prepare_barcode_plot_data(sce, sample_name, ambient_rna_filter)
+.prepare_barcode_plot_data(sce, sample_name, ambient_rna_filter, metadata)
 }
 \arguments{
 \item{sce}{SingleCellExperiment object}
