@@ -39,7 +39,7 @@ plot_barcode_qc = function(sce_list,
   stopifnot(names(sce_list) == names(ambient_rna_filters))
 
   data = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
-                  .prepare_barcode_plot_data)
+                  ~ .prepare_barcode_plot_data(..1, ..2, ..3, c(color, shape, facet_rows, facet_columns)))
 
   hlines = pmap_dfr(list(sce_list, names(sce_list), ambient_rna_filters),
                     .prepare_barcode_cutoffs)
@@ -115,7 +115,7 @@ plot_barcode_qc = function(sce_list,
 #'
 #' @examples
 #' NULL
-.prepare_barcode_plot_data = function(sce, sample_name, ambient_rna_filter) {
+.prepare_barcode_plot_data = function(sce, sample_name, ambient_rna_filter, metadata) {
 
   bcrank = barcodeRanks(counts(sce))
 
@@ -127,7 +127,7 @@ plot_barcode_qc = function(sce_list,
       .sample = sample_name
     )
 
-  rank_total = cbind(rank_total, colData(sce))
+  rank_total = cbind(rank_total, colData(sce)[, intersect(metadata, colnames(colData(sce))), drop = FALSE])
   rank_total = as.data.frame(rank_total[, unique(colnames(rank_total)), drop = FALSE])
 
   return(rank_total)
