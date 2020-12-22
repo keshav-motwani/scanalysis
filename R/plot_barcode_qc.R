@@ -181,7 +181,7 @@ plot_barcode_qc = function(sce_list,
                                    ambient_rna_filter,
                                    facets) {
 
-  as.data.frame(cbind(data.frame(ambient_rna_filter), colData(sce))) %>%
+  as.data.frame(cbind(data.frame(ambient_rna_filter), colData(sce)[, facets, drop = FALSE])) %>%
     group_by(.dots = facets) %>%
     summarize(
       label = paste0(
