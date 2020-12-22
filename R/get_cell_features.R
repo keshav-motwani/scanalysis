@@ -13,15 +13,19 @@
 #' @examples
 #' NULL
 get_cell_features = function(sce, features, assay, alt_exp = NULL) {
+
   assay_data = .get_cell_features_assay(sce, features, assay, alt_exp)
   exp_assay_data = .get_cell_features_assay_explicit_exp(sce, features, assay)
   coldata_data = .get_cell_features_coldata(sce, features)
   reduced_dimensions_data = .get_cell_features_reduced_dimensions(sce, features)
+
   result = bind_cols(assay_data,
                      exp_assay_data,
                      coldata_data,
                      reduced_dimensions_data)
+
   result$barcode = colData(sce)$Barcode
+
   return(result)
 }
 
@@ -38,11 +42,15 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @examples
 #' NULL
 .get_cell_features_assay = function(sce, features, assay, alt_exp) {
+
   rownames_intersection = intersect(features, rownames(get_assay_data(sce, assay, alt_exp)))
+
   matrix = t(as.matrix(get_assay_data(sce, assay, alt_exp)[rownames_intersection, , drop = FALSE]))
   feature_values = data.frame(matrix)
   colnames(feature_values) = rownames_intersection
+
   return(feature_values)
+
 }
 
 #' Get feature from assay (from alternate experiment)
@@ -61,10 +69,13 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @examples
 #' NULL
 .get_cell_features_assay_explicit_exp = function(sce, features, assay) {
+
   features = features[grepl("///", features)]
   exps = unique(unlist(map(strsplit(features, "///"), 1)))
+
   result = list()
   for (exp in exps) {
+
     exp_features = unique(unlist(map(strsplit(
       features[grepl(exp, features)], "///"
     ), 2)))
@@ -73,9 +84,17 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
                                             assay = assay,
                                             alt_exp = exp)
     colnames(exp_features) = paste0(exp, "///", colnames(exp_features))
+
     result = c(result, list(exp_features))
+
   }
-  return(bind_rows(result))
+
+  result = bind_rows(result)
+
+  if (nrow(result) == 0) result = NULL
+
+  return(result)
+
 }
 
 #' Get feature from column metadata
@@ -89,9 +108,12 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @examples
 #' NULL
 .get_cell_features_coldata = function(sce, features) {
+
   colnames_intersection = intersect(features, colnames(SummarizedExperiment::colData(sce)))
   feature_values = as.data.frame(SummarizedExperiment::colData(sce)[, colnames_intersection, drop = FALSE])
+
   return(feature_values)
+
 }
 
 #' Get feature from reduced dimensional representation
@@ -108,17 +130,26 @@ get_cell_features = function(sce, features, assay, alt_exp = NULL) {
 #' @examples
 #' NULL
 .get_cell_features_reduced_dimensions = function(sce, features) {
+
   if (length(reducedDims(sce)) > 0) {
+
     reduced_dimensions_names = names(reducedDims(sce))
     reduced_dimensions = map_dfc(reduced_dimensions_names, ~ {
       data = as.data.frame(reducedDim(sce, .x))
       colnames(data) = paste0(.x, "_", 1:ncol(data))
       data
     })
+
     colnames_intersection = intersect(features, colnames(reduced_dimensions))
+
     feature_values = as.data.frame(reduced_dimensions[, colnames_intersection, drop = FALSE])
+
   } else {
+
     feature_values = NULL
+
   }
+
   return(feature_values)
+
 }
