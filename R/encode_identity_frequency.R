@@ -154,7 +154,8 @@ encode_vdj_identity_frequency_long = function(sce_list,
     unite(identity, !!attributes, remove = FALSE, sep = "///") %>%
     unite(group, !!group_by, remove = FALSE)
 
-  row_annotations = group_keys(data)
+  row_annotations = group_keys(data) %>%
+    unite(group, !!group_by, remove = FALSE)
 
   matrix = data %>%
     group_by(identity, group) %>%
@@ -164,6 +165,8 @@ encode_vdj_identity_frequency_long = function(sce_list,
     as.matrix()
 
   matrix[is.na(matrix)] = 0
+
+  matrix = matrix[row_annotations$group, ]
 
   if (normalize == "relative_frequency") {
     row_names = rownames(matrix)
