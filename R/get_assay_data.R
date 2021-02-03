@@ -14,7 +14,7 @@
 #' NULL
 get_assay_data = function(sce, assay, alt_exp = NULL) {
   if (is.null(alt_exp) ||
-      alt_exp == metadata(sce)$default_assay ||
+      (!is.null(metadata(sce)$default_assay) && alt_exp == metadata(sce)$default_assay) ||
       (is.null(metadata(sce)$default_assay) && alt_exp == "RNA")) {
     data = sce
   } else {
